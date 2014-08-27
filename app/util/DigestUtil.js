@@ -18,7 +18,7 @@ DigestUtil.prototype.getIv = function()
 DigestUtil.prototype.check = function(headNode, key, bodyStr)
 {
     var self = this;
-    if(headNode.digestType == "3des")
+    if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
         console.log(bodyStr);
         var decipher = crypto.createDecipheriv('des-ede3-cfb', new Buffer(key, "base64"), self.getIv());
@@ -34,7 +34,7 @@ DigestUtil.prototype.generate = function(headNode, key, bodyStr)
 {
     console.log(bodyStr);
     var self = this;
-    if(headNode.digestType == "3des")
+    if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
         var cipher = crypto.createCipheriv('des-ede3-cfb', new Buffer(key, "base64"), self.getIv());
         var crypted = cipher.update(bodyStr, 'utf8', 'base64');

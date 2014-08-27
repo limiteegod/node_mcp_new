@@ -10,9 +10,7 @@ CmdFactory.prototype.handle = function(headNode, bodyStr, cb)
     console.log(cmdGroup);
     if(cmdGroup[1] == "A")
     {
-        userControl.handle(headNode, bodyStr, function(err, backBodyNode){
-            cb(err, backBodyNode);
-        });
+        userControl.handle(headNode, bodyStr, cb);
     }
 };
 

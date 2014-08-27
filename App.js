@@ -61,22 +61,23 @@ app.post("/main/interface.htm", function(req, res){
     var bodyStr = msgNode.body;
     console.log(bodyStr);
     cmdFactory.handle(headNode, bodyStr, function(err, bodyNode){
-        if(bodyNode.code == undefined)
+        var key;
+        if(bodyNode.code == undefined && headNode.key)
         {
             bodyNode.code = errCode.E0000.code;
             bodyNode.description = errCode.E0000.description;
-        }
-        if(headNode.key)
-        {
-            var decodedBodyStr = digestUtil.generate(headNode, headNode.key, JSON.stringify(bodyNode));
+
+            key = headNode.key;
+            headNode.digestType = "3des";
             headNode.key = undefined;
-            res.json({head:headNode, body:decodedBodyStr});
         }
         else
         {
-            headNode.digestType = undefined;
-            res.json({head:headNode, body:JSON.stringify(bodyNode)});
+            key = digestUtil.getEmptyKey();
+            headNode.digestType = "3des-empty";
         }
+        var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
+        res.json({head:headNode, body:decodedBodyStr});
     });
 });
 
