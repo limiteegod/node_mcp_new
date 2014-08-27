@@ -62,7 +62,18 @@ app.post("/main/interface.htm", function(req, res){
     console.log(bodyStr);
     cmdFactory.handle(headNode, bodyStr, function(err, bodyNode){
         var key;
-        if(bodyNode.code == undefined && headNode.key)
+        if(err)
+        {
+            key = digestUtil.getEmptyKey();
+            headNode.digestType = "3des-empty";
+            if(bodyNode == undefined)
+            {
+                bodyNode = {};
+            }
+            bodyNode.code = err.code;
+            bodyNode.description = err.description;
+        }
+        else
         {
             bodyNode.code = errCode.E0000.code;
             bodyNode.description = errCode.E0000.description;
@@ -70,11 +81,6 @@ app.post("/main/interface.htm", function(req, res){
             key = headNode.key;
             headNode.digestType = "3des";
             headNode.key = undefined;
-        }
-        else
-        {
-            key = digestUtil.getEmptyKey();
-            headNode.digestType = "3des-empty";
         }
         var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
         res.json({head:headNode, body:decodedBodyStr});

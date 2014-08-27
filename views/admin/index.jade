@@ -1,29 +1,7 @@
 doctype html
 html(lang="en")
-    head
-        include ../includes/script.jade
-        script(type='text/javascript').
-            KISSY.use("io,node,json", function(S, Io, Node, Json){
-                var cookies = CurSite.getCookie();
-                var key = cookies["st"];
-                var headNode = {cmd:"A02", digestType:"3des", userId:cookies["userId"], userType:cookies["userType"]};
-                var body = {uniqueId:CurSite.createUUID()};
-                var msgNode = CurSite.encrypt(headNode, key, Json.stringify(body));
-                Io({type:"post", url:CurSite.interPath, data:{message:Json.stringify(msgNode)}, success:function(data){
-                        if(data.head.digestType)
-                        {
-                            var backBodyStr = data.body;
-                            var decodedBodyStr = CurSite.decrypt(data.head, key, backBodyStr);
-                            alert(decodedBodyStr);
-                            var backBodyNode = Json.parse(decodedBodyStr);
-                        }
-                        else
-                        {
-                            var decodedBodyStr = data.body;
-                            var backBodyNode = Json.parse(decodedBodyStr);
-                            alert(backBodyNode.description);
-                        }
-                }});
-            });
-    body
-        h1 welcome to admin page.
+    frameset(frameborder="0", rows="80,*")
+        frame(src="./admin_top.html", frameborder="0")
+        frameset(frameborder="0", cols="200,*")
+            frame(src="./admin_left.html", frameborder="0")
+            frame(id="mainFrame", frameborder="no", border="0", name="mainFrame", src="./admin_main.html")

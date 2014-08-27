@@ -142,7 +142,7 @@ CurSite.getDefaultIv = function()
 
 CurSite.encrypt = function(headNode, key, bodyStr)
 {
-    if(!key)
+    if(headNode.digestType == "3des-empty")
     {
         key = CurSite.getDefualtKey();
     }
@@ -154,7 +154,7 @@ CurSite.encrypt = function(headNode, key, bodyStr)
 
 CurSite.decrypt = function(headNode, key, encodedBodyStr)
 {
-    if(!key)
+    if(headNode.digestType == "3des-empty")
     {
         key = CurSite.getDefualtKey();
     }

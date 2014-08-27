@@ -21,7 +21,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 {
                     if(data.length == 0) //user not exists
                     {
-                        userCb(err, errCode.E0002);
+                        userCb(errCode.E0002);
                     }
                     else
                     {
@@ -40,7 +40,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 }
                 catch (err)
                 {
-                    userCb(err, errCode.E0003);
+                    userCb(errCode.E0003);
                 }
             },
             //check uniqueId
@@ -48,7 +48,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 uniqueIdService.exists(bodyNode.uniqueId, function(err, data){
                     if(err)
                     {
-                        userCb(null, errCode.E0004);
+                        userCb(errCode.E0004);
                     }
                     else
                     {
@@ -95,7 +95,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 stInfoTable.find({_id:headNode.userId}, {lastActiveTime:1, st:1}).toArray(function(err, stInfoData){
                     if(stInfoData.length == 0)
                     {
-                        userCb(null, errCode.E0005);
+                        userCb(errCode.E0005);
                     }
                     else
                     {
@@ -103,7 +103,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                         if(now.getTime() - stInfoData[0].lastActiveTime > prop.loginExpiredSeconds*1000)
                         {
                             //expired
-                            userCb(null, errCode.E0005);
+                            userCb(errCode.E0005);
                         }
                         else
                         {
@@ -121,7 +121,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 }
                 catch (err)
                 {
-                    userCb(err, errCode.E0003);
+                    userCb(errCode.E0003);
                 }
             },
             //check uniqueId
@@ -129,7 +129,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 uniqueIdService.exists(bodyNode.uniqueId, function(err, data){
                     if(err)
                     {
-                        userCb(null, errCode.E0004);
+                        userCb(errCode.E0004);
                     }
                     else
                     {
@@ -147,7 +147,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
                 {
                     if(data.length == 0) //user not exists
                     {
-                        userCb(err, errCode.E0002);
+                        userCb(errCode.E0002);
                     }
                     else
                     {
@@ -159,7 +159,7 @@ UserControl.prototype.handle = function(headNode, bodyStr, userCb)
             userCb(err, backBodyNode);
         });
     }
-}
+};
 
 var userControl = new UserControl();
 module.exports = userControl;

@@ -1,0 +1,66 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        link(rel='stylesheet', type='text/css', href='./js/tree/assets/dpl-min.css')
+        script(type='text/javascript').
+            KISSY.use("io,node,json,tree", function(S, Io, Node, Json, Tree){
+
+                var tree = new Tree({
+                    content : "权限管理",
+                    expanded : true,
+                    showRootNode:false,
+                    render : "#treeContainer"
+                });
+
+                var cookies = CurSite.getCookie();
+                var key = cookies["st"];
+                var headNode = {cmd:"AD01", digestType:"3des", userId:cookies["userId"], userType:cookies["userType"]};
+                var body = {uniqueId:CurSite.createUUID()};
+                var msgNode = CurSite.encrypt(headNode, key, Json.stringify(body));
+                Io({type:"post", url:CurSite.interPath, data:{message:Json.stringify(msgNode)}, success:function(data){
+                        var backBodyStr = data.body;
+                        var decodedBodyStr = CurSite.decrypt(data.head, key, backBodyStr);
+                        var backBodyNode = Json.parse(decodedBodyStr);
+                        if(backBodyNode.code == '0000')
+                        {
+                            var rst = backBodyNode.rst;
+                            for(var i = 0; i < rst.length; i++)
+                            {
+                                if(rst[i].operation.parentId < 0)
+                                {
+                                    var tNode = new Tree.Node({
+                                        content : rst[i].operation.name,
+                                        tree : tree
+                                    });
+                                    for(var j = 0; j < rst.length; j++)
+                                    {
+                                        if(rst[j].operation.parentId == rst[i].operation._id)
+                                        {
+                                            var cNode = new Tree.Node({
+                                                content : rst[j].operation.name,
+                                                tree : tree,
+                                                tUrl: rst[j].operation.url
+                                            });
+                                            tNode.addChild(cNode);
+                                        }
+                                    }
+                                    tree.addChild(tNode);
+                                }
+                            }
+                            tree.render();
+                            tree.on("click", function(e) {
+                                var tUrl = e.target.get("tUrl");
+                                if(tUrl == undefined)
+                                    return;
+                                parent.document.getElementById("mainFrame").src = e.target.get("tUrl") + "?frameId=mainFrame";
+                            });
+                        }
+                        else
+                        {
+                            alert(backBodyNode.description);
+                        }
+                }});
+            });
+    body
+        #treeContainer(style="width: 160px;font-size:14px;")
