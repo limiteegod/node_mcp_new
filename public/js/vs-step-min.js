@@ -42,6 +42,10 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
         step: {
             //from 1 to pages.length
             value:1
+        },
+        data: {
+            //array to save the step data
+            value:[]
         }
     };
 
@@ -74,11 +78,11 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
             });
             var cWidth = self.get("width") - 10;
             var cHeight = self.get("height") - 10;
-            var cTable = Node.one('<div style="overflow-x: hidden;position:absolute;left:5px;top:30px;width:' + cWidth + 'px;height:' + (cHeight - 25) + 'px;"></div>');
+            var cTable = Node.one('<div style="overflow-x: hidden;position:absolute;left:5px;top:30px;width:' + cWidth + 'px;height:' + (cHeight - 25 - 30 - 4) + 'px;"></div>');
             self.titleNode = Node.one('<div style="overflow-x: hidden;border-bottom:1px solid #28afae;left:5px;top:7px;position:absolute;width:' + cWidth + 'px;height:18px;">&nbsp;' + title + '</div>');
             var frame = Node.one('<iframe id="' + wId + '" frameborder="no" border="0" style="width:' + cWidth + 'px;height:' + (cHeight - 25) + 'px;"></iframe>');
-            var bottomField = Node.one('<div style="overflow-x: hidden;border-top:1px solid #28afae;left:5px;top:' + (cHeight - 28) + 'px;position:absolute;width:' + cWidth + 'px;height:26px;"></div>');
-            var sureButton = Node.one('<input type="button" value="上一步" style="margin-left:' + (cWidth - 140) + 'px"/>');
+            var bottomField = Node.one('<div style="overflow-x: hidden;border-top:1px solid #28afae;left:5px;top:' + (cHeight - 30) + 'px;position:absolute;width:' + cWidth + 'px;height:28px;"></div>');
+            var sureButton = Node.one('<input type="button" value="上一步" style="margin-left:' + (cWidth - 160) + 'px"/>');
             var cancelButton = Node.one('<input type="button" value="下一步" style="margin-left: 4px;"/>');
             bottomField.append(sureButton);
             bottomField.append(cancelButton);

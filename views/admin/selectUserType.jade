@@ -3,7 +3,20 @@ html(lang="en")
     head
         include ../includes/script.jade
         script(type='text/javascript').
-            //
+            KISSY.use("io,node,json", function(S, Io, Node, Json){
+                var backValueNode = Node.one("#backValue");
+                var getData = function()
+                {
+                    var type = Node.one("#type").val();
+                    var data = {type:type};
+                    return JSON.stringify(data);
+                };
+                var bodyNode = Node.one("body");
+                bodyNode.on("focusout", function(e) {
+                    backValueNode.val(getData());
+                });
+                backValueNode.val(getData());  //init default value of backValue element
+            });
     body
         #treeContainer(style="width: 160px;font-size:14px;")
         input(id="backValue", type="hidden", value="{}")
@@ -13,4 +26,4 @@ html(lang="en")
                 td
                     select(id="type", name="type")
                         - each val in rst
-                            option(value=val._Id)=val.name
+                            option(value=val._id)=val.name
