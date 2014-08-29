@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            //
+    body
+        #treeContainer(style="width: 160px;font-size:14px;")
+        input(id="backValue", type="hidden", value="{}")
+        table
+            tr
+                td 类型*
+                td
+                    select(id="type", name="type")
+                        - each val in rst
+                            option(value=val._Id)=val.name

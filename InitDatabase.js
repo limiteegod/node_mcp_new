@@ -80,7 +80,7 @@ async.waterfall([
             {"name":"权限管理", "code":"manOp",
                 "children":[
                     {"name":"添加项目", "code":"addOperation", "url":""},
-                    {"name":"角色权限", "code":"userOperation", "url":""}
+                    {"name":"角色权限", "code":"userOperation", "url":"admin_setOperation.html"}
                 ]
             },
             {"name":"期次管理", "code":"manTerm",

@@ -40,6 +40,7 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
             value:undefined
         },
         step: {
+            //from 1 to pages.length
             value:1
         }
     };
@@ -89,7 +90,8 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
 
             self.cTable = cTable;
 
-            sureButton.on("click", function(){  //点击了确定按钮
+            //last step
+            sureButton.on("click", function(){
                 var sureEvent = self.get("sureEvent");
                 if(sureEvent != undefined)
                 {
@@ -105,6 +107,7 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
                 self.close();
             });
 
+            //next step
             cancelButton.on("click", function(){
                 var cDoc = window.frames[wId].contentDocument;
                 if(cDoc == undefined)
@@ -138,17 +141,28 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
             var self = this;
             self.widowDiv.remove();
         },
+        //when step changes, change the status of control buttons
         resetStepButton:function()
         {
             var self = this;
-            var step = parseInt(self.get("step") - 1);
-            if(step == 0)
+            var step = parseInt(self.get("step"));
+            //first step, disable the last step button
+            if(step == 1)
             {
                 self.sureButton.attr("disabled", true);
             }
             else
             {
                 self.sureButton.removeAttr("disabled");
+            }
+            //the end, disable the next button
+            if(step == self.get("pages").length)
+            {
+                self.cancelButton.attr("disabled", true);
+            }
+            else
+            {
+                self.cancelButton.removeAttr("disabled");
             }
         },
         setTitle:function()
