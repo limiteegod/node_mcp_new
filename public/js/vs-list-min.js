@@ -30,6 +30,9 @@ KISSY.add("vs-list", ["./node", "./base"], function(S, require) {
         },
         selected:{
             value:-1
+        },
+        selectedId:{
+            value:""
         }
     };
 
@@ -52,7 +55,17 @@ KISSY.add("vs-list", ["./node", "./base"], function(S, require) {
             {
                 self.container.append(self._getRowHtml(key));
             }
-            self.setSelected(self.get("selected"));
+
+            var selected = self.get("selected");
+            var selectedId = self.get("selectedId");
+            if(selected == -1 && selectedId.length > 0)
+            {
+                self.setSelectedId(selectedId);
+            }
+            else
+            {
+                self.setSelected(selected);
+            }
             self._setActionListener();
         },
         _getRowHtml:function(row)
@@ -102,8 +115,29 @@ KISSY.add("vs-list", ["./node", "./base"], function(S, require) {
                 var selector = 'div[row="' + index + '"]';
                 var tNode = self.container.one(selector);
                 tNode.css("background", "#DDDDDD");
+
+                var selectedDataNode = self.get("data")[index];
+                self.set("selectedId", selectedDataNode._id);
+            }
+            else
+            {
+                self.set("selectedId", "");
             }
             self.set("selected", index);
+        },
+        //set selection by data._id
+        setSelectedId:function(id)
+        {
+            var self = this;
+            var data = self.get("data");
+            for(var key in data)
+            {
+                if(data[key]._id == id)
+                {
+                    self.setSelected(key);
+                    break;
+                }
+            }
         },
         getSelectedData:function()
         {

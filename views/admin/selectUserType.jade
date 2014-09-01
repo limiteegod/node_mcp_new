@@ -4,7 +4,10 @@ html(lang="en")
         include ../includes/script.jade
         script(type='text/javascript').
             KISSY.use("io,node,json,vs-list", function(S, Io, Node, Json, VsList){
-                var list = new VsList("#userTypeList", {});
+                var selectedId = Node.one("#selectedId").val();
+                console.log('selectedId:');
+                console.log(selectedId);
+                var list = new VsList("#userTypeList", {selectedId:selectedId});
 
                 var backValueNode = Node.one("#backValue");
                 var getData = function()
@@ -27,6 +30,7 @@ html(lang="en")
             });
     body
         input(id="backValue", type="hidden", value="")
+        input(id="selectedId", type="hidden", value=selectedId)
         #userTypeList(class="container", style="width:180px;height:700px;")
             ol
                 - each val in rst

@@ -20,12 +20,6 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
     S.extend(VsStep, Base);
 
     VsStep.ATTRS = {
-        width:{
-            value:310
-        },
-        height:{
-            value:310
-        },
         title:{
             value:''
         },
@@ -59,6 +53,9 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
             var body = self.container;
             var bodyWidth = self.container.width();
             var bodyHeight = self.container.height();
+            self.set("width", bodyWidth);
+            self.set("height", bodyHeight);
+
             var left = (bodyWidth - self.get("width"))/2;
             var top = (bodyHeight - self.get("height"))/2;
             var html = self.container.html();
@@ -160,7 +157,7 @@ KISSY.add("vs-step", ["./node", "./base"], function(S, require) {
             var title = cDoc.getElementsByTagName("title")[0];
             if(title)
             {
-                self.titleNode.html(title.innerText);
+                self.titleNode.html(title.innerHTML);
             }
         },
         toPage:function(index)

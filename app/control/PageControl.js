@@ -19,6 +19,15 @@ PageControl.prototype.handle = function(headNode, bodyNode, cb)
         var userTypeTable = db.get("userType");
         userTypeTable.find({}, {name:1}).toArray(function(err,data){
             backBodyNode.rst = data;
+            var fromData = JSON.parse(digestUtil.check({digestType:'3des-empty'}, digestUtil.getEmptyKey(), bodyNode.data));
+            if(fromData[0])
+            {
+                backBodyNode.selectedId = fromData[0]._id;
+            }
+            else
+            {
+                backBodyNode.selectedId = backBodyNode.rst[0]._id;
+            }
             cb(null, backBodyNode);
         });
     }
