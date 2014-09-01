@@ -5,7 +5,7 @@ var errCode = require("./app/config/ErrCode.js");
 var digestUtil = require("./app/util/DigestUtil.js");
 
 
-app.use(express.logger());
+//app.use(express.logger());
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');

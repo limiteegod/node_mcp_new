@@ -167,6 +167,13 @@
 }
 
 
+.vs_grid_content {
+    overflow: hidden;
+    float:left;
+    cursor:pointer;
+}
+
+
 .clearfix { display: inline-table; }
 /* Hides from IE-mac \*/
 * html .clearfix { height: 1%; }

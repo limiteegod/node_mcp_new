@@ -4,15 +4,15 @@ html(lang="en")
         include ../includes/script.jade
         script(type='text/javascript').
             KISSY.use("io,node,json,vs-data-select,vs-round-input,vs-step", function(S, Io, Node, Json, VsDataSelect, VsRoundInput, VsStep){
-                var step = new VsStep("#myWindow", {title:"权限设置", width:600, height:480,
+                var step = new VsStep("#myWindow", {title:"权限设置", width:800, height:680,
                     sureEvent:function(data){
 
                     },
                     pages:[
                         'admin_selectUserType.html',
-                        'admin_selectUserType.html'
+                        'admin_selectOperation.html'
                     ]
                 });
             });
     body
-        #myWindow(class="container", style="width:620px;height:500px;")
+        #myWindow(class="container", style="width:820px;height:700px;")

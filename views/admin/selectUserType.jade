@@ -3,27 +3,31 @@ html(lang="en")
     head
         include ../includes/script.jade
         script(type='text/javascript').
-            KISSY.use("io,node,json", function(S, Io, Node, Json){
+            KISSY.use("io,node,json,vs-list", function(S, Io, Node, Json, VsList){
+                var list = new VsList("#userTypeList", {});
+
                 var backValueNode = Node.one("#backValue");
                 var getData = function()
                 {
-                    var type = Node.one("#type").val();
-                    var data = {type:type};
-                    return JSON.stringify(data);
+                    var data = list.getSelectedData();
+                    if(!data)
+                    {
+                        data = {};
+                    }
+                    console.log("user type data:");
+                    console.log(data);
+                    var encodedBody = CurSite.encrypt({digestType:"3des-empty"}, null, Json.stringify(data)).body;
+                    return encodedBody;
                 };
-                var bodyNode = Node.one("body");
-                bodyNode.on("focusout", function(e) {
+                backValueNode.on("click", function(e) {
+                    console.log("generate data.......");
                     backValueNode.val(getData());
                 });
                 backValueNode.val(getData());  //init default value of backValue element
             });
     body
-        #treeContainer(style="width: 160px;font-size:14px;")
-        input(id="backValue", type="hidden", value="{}")
-        table
-            tr
-                td 类型*
-                td
-                    select(id="type", name="type")
-                        - each val in rst
-                            option(value=val._id)=val.name
+        input(id="backValue", type="hidden", value="")
+        #userTypeList(class="container", style="width:180px;height:700px;")
+            ol
+                - each val in rst
+                    li(value=val._id)= val.name

@@ -19,18 +19,14 @@ KISSY.add("vs-panel", ["./node", "./base"], function(S, require) {
     S.extend(VsPanel, Base);
 
     VsPanel.ATTRS = {
-        width:{
-            value:310
-        },
-        height:{
-            value:310
-        }
     };
 
     S.augment(VsPanel, {
         _init:function()
         {
             var self = this;
+            self.set("width", self.container.width());
+            self.set("height", self.container.height());
             var html = self.container.html();
             self.set("title", self.container.attr("title"));
             self.container.html("");

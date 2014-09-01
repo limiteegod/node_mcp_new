@@ -105,6 +105,15 @@ CurSite.arrayCopyAndExclude = function(data, index)
     }
     return newArray;
 };
+CurSite.getFrameDocById = function(wId)
+{
+    var cDoc = window.frames[wId].contentDocument;
+    if(cDoc == undefined)
+    {
+        cDoc = window.frames[wId].document;
+    }
+    return cDoc;
+};
 /**
  * get cookies
  */

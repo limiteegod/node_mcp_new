@@ -1,0 +1,15 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-list,vs-panel", function(S, Io, Node, Json, VsList, VsPanel){
+                var panel = new VsPanel("#userTypePanel");
+                var list = new VsList("#userTypeList", {});
+            });
+    body
+        #userTypePanel(class="container", title="user types", style="width:180px;height:400px;")
+            #userTypeList(class="container", style="width:180px;height:700px;")
+                ol
+                    - each val in rst
+                        li(value=val._id)= val.name

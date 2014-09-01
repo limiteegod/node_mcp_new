@@ -1,0 +1,47 @@
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-list,vs-panel", function(S, Io, Node, Json, VsList, VsPanel){
+                var panel = new VsPanel("#userTypePanel");
+                var list = new VsList("#userTypeList", {});
+
+                var tPanel = new VsPanel("#tUserTypePanel");
+                var tList = new VsList("#tUserTypeList", {});
+
+                var backValueNode = Node.one("#backValue");
+                var getData = function()
+                {
+                    var data = {};
+                    var encodedBody = CurSite.encrypt({digestType:"3des-empty"}, null, Json.stringify(data)).body;
+                    return encodedBody;
+                };
+                backValueNode.on("click", function(e) {
+                    backValueNode.val(getData());
+                });
+                backValueNode.val(getData());  //init default value of backValue element
+            });
+    body
+        div=data[0]._id + '(' + data[0].name + ')'
+        input(id="backValue", type="hidden", value="")
+        #userTypePanel(class="container", title="availabe operations", style="width:180px;height:400px;")
+            #userTypeList(class="container", style="width:180px;height:700px;")
+                ol
+                    - each val in rst
+                        li(value=val._id)= val.name
+        #operation(class="container", title="", style="width:80px;height:400px;float:left;")
+            div.clearfix
+                div(style="width:80px;height:180px;")
+            div.clearfix
+                input(type='button', style='width:40px;margin-left:20px', value='>>')
+            div.clearfix
+                input(type='button', style='width:40px;margin-left:20px', value='<<')
+            div.clearfix
+                input(type='button', style='width:40px;margin-left:20px', value='>')
+            div.clearfix
+                input(type='button', style='width:40px;margin-left:20px', value='<')
+        #tUserTypePanel(class="container", title="target operations", style="width:180px;height:400px;")
+            #tUserTypeList(class="container", style="width:180px;height:700px;")
+                ol
+                    - each val in rst
+                        li(value=val._id)= val.name
