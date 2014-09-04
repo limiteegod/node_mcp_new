@@ -40,7 +40,7 @@ app.get('/:name', function(req, res, next){
     {
         var jadePathArray = path[1].split("_");
         var jadePath = jadePathArray.join("/");
-        var headNode = {cmd:jadePath};
+        var headNode = {cmd:jadePathArray};
         pageControl.handle(headNode, req.query, function(err, data){
             if(err) throw err;
             console.log(data);
