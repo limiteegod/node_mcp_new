@@ -1,0 +1,27 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            //
+    body
+        #myWindow.container
+        table
+            tr
+                td 名称*
+                td
+                    #name.container
+            tr
+                td 父级*
+                td
+                    #dataSelect
+            tr
+                td url*
+                td
+                    #url.container
+            tr
+                td 类型*
+                td
+                    select(id="type" name="type")
+                        option(value="") a
+        input(id="submit", value="提交", type="button")

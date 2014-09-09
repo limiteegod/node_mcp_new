@@ -1,0 +1,11 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        link(rel='stylesheet', type='text/css', href='./js/tree/assets/dpl-min.css')
+        script(type='text/javascript').
+            KISSY.use("io,node,json,tree", function(S, Io, Node, Json, Tree){
+
+            });
+    body
+        #treeContainer(style="width: 160px;font-size:14px;")

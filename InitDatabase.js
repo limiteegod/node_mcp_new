@@ -77,17 +77,25 @@ async.waterfall([
     //保存可用操作
     function(cb) {
         var operationData = [
-            {"name":"权限管理", "code":"manOp",
+            {"name":"权限管理", "code":"manOp", hasChildren:1,
                 "children":[
-                    {"name":"添加项目", "code":"addOperation", "url":""},
-                    {"name":"角色权限", "code":"userOperation", "url":"admin_setOperation.html"}
+                    {"name":"添加项目", "code":"addOperation", "url":"admin_addOperation.html", hasChildren:0},
+                    {"name":"角色权限", "code":"userOperation", "url":"admin_setOperation.html", hasChildren:0}
                 ]
             },
-            {"name":"期次管理", "code":"manTerm",
+            {"name":"期次管理", "code":"manTerm", hasChildren:1,
                 "children":[
-                    {"name":"在售期次", "code":"termOnSale", "url":""},
-                    {"name":"期次详情", "code":"termDetail", "url":""}
+                    {"name":"在售期次", "code":"termOnSale", "url":"", hasChildren:0},
+                    {"name":"期次详情", "code":"termDetail", "url":"", hasChildren:0}
                 ]
+            }
+            ,
+            {"name":"用户管理", "code":"manUser", hasChildren:0,
+                "children":[]
+            }
+            ,
+            {"name":"订单管理", "code":"manOrder", hasChildren:0,
+                "children":[]
             }
         ];
         init.saveOperation(operationData, function(data){

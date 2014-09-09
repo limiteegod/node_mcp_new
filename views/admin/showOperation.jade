@@ -5,11 +5,27 @@ html(lang="en")
         script(type='text/javascript').
             KISSY.use("io,node,json,vs-tree,vs-panel", function(S, Io, Node, Json, VsTree, VsPanel){
                 var panel = new VsPanel("#userTypePanel");
-                var tree = new VsTree("#userTypeTree", {});
+                var tree = new VsTree("#userTypeTree", {getChildren:function(_id){
+                    var cookies = CurSite.getCookie();
+                    var key = cookies["st"];
+                    var headNode = {cmd:"AD02", digestType:"3des", userId:cookies["userId"], userType:cookies["userType"]};
+                    var body = {uniqueId:CurSite.createUUID(), cond:{parentId:_id}};
+                    var msgNode = CurSite.encrypt(headNode, key, Json.stringify(body));
+                    Io({type:"post", async:false, url:CurSite.interPath, data:{message:Json.stringify(msgNode)}, success:function(data){
+                        var backBodyStr = data.body;
+                        var decodedBodyStr = CurSite.decrypt(data.head, key, backBodyStr);
+                        var backBodyNode = Json.parse(decodedBodyStr);
+                        if(backBodyNode.code == '0000')
+                        {
+                            console.log(backBodyNode);
+                        }
+                    }});
+                }});
             });
     body
         #userTypePanel(class="container", title="operations", style="width:180px;height:400px;")
-            #userTypeTree(class="container", style="width:180px;height:700px;")
+            #userTypeTree(class="container", style="width:220px;height:700px;margin:0px;")
                 ol
                     - each val in rst
-                        li(value=val._id)= val.name
+                        if(val.parentId < 0)
+                            li(value=val._id, hasChildren=val.hasChildren)= val.name

@@ -26,11 +26,8 @@ AdminControl.prototype.handle = function(headNode, bodyStr, userCb)
         },
         //check body
         function(user, headNode, bodyNode, cb){
-            var cmd = headNode.cmd;
-            if(cmd == "AD01")
-            {
-                self.handleAD01(user, headNode, bodyNode, cb);
-            }
+            var cmd = 'handle' + headNode.cmd;
+            self[cmd](user, headNode, bodyNode, cb);
         }
     ], function (err, backBodyNode) {
         userCb(err, backBodyNode);
@@ -47,9 +44,15 @@ AdminControl.prototype.handle = function(headNode, bodyStr, userCb)
 AdminControl.prototype.handleAD01 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
+    var cond = bodyNode.cond;
+    if(cond == undefined)
+    {
+        cond = {};
+    }
+    cond.userTypeId = user.userTypeId;
     var userOperationTable = db.get("userOperation");
     var operationTable = db.get("operation");
-    userOperationTable.find({userTypeId:user.userTypeId}, {userTypeId:1, operationId:1}).toArray(function(err, data){
+    userOperationTable.find(cond, {userTypeId:1, operationId:1}).toArray(function(err, data){
         async.each(data, function(row, callback) {
             operationTable.find({_id:row.operationId}, {name:1, url:1, parentId:1}).toArray(function(err, data){
                 row.operation = data[0];
@@ -63,6 +66,28 @@ AdminControl.prototype.handleAD01 = function(user, headNode, bodyNode, cb)
                 cb(null, backBodyNode);
             }
         });
+    });
+};
+
+/**
+ * find operation by condition
+ * @param user
+ * @param headNode
+ * @param bodyNode
+ * @param cb
+ */
+AdminControl.prototype.handleAD02 = function(user, headNode, bodyNode, cb)
+{
+    var backBodyNode = {};
+    var cond = bodyNode.cond;
+    if(cond == undefined)
+    {
+        cond = {};
+    }
+    var operationTable = db.get("operation");
+    operationTable.find(cond, {name:1, url:1, parentId:1, hasChildren:1}).toArray(function(err, data){
+        backBodyNode.rst = data;
+        cb(err, backBodyNode);
     });
 };
 

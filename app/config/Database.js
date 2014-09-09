@@ -90,7 +90,8 @@ var operation = new Table("operation", "mysql", [
     new Column("_id", "int", 11, false, undefined, true, true),
     new Column("name", "varchar", 40, false, undefined),
     new Column("url", "varchar", 100, false, ""),
-    new Column("parentId", "int", 11, false, -1)]);
+    new Column("parentId", "int", 11, false, -1),
+    new Column("hasChildren", "int", 11, false, 0)]);
 db.put(operation);
 //角色可用操作表
 var userOperation = new Table("userOperation", "mysql", [

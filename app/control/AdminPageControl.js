@@ -68,11 +68,16 @@ AdminPageControl.prototype.showOperation = function(headNode, bodyNode, cb)
     var self = this;
     var backBodyNode = {title:"show operation"};
     var operationTable = db.get("operation");
-    operationTable.find({}, {name:1}).toArray(function(err,data){
+    operationTable.find({parentId:{$lt:0}}, {name:1, parentId:1, hasChildren:1}).toArray(function(err,data){
+        if(err) cb(err, {});
         backBodyNode.rst = data;
-        //backBodyNode.data = JSON.parse(digestUtil.check({digestType:'3des-empty'}, null, bodyNode.data));
         cb(null, backBodyNode);
     });
+};
+
+AdminPageControl.prototype.addOperation = function(headNode, bodyNode, cb)
+{
+    cb(null, {});
 };
 
 AdminPageControl.prototype.setOperation = function(headNode, bodyNode, cb)
