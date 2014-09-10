@@ -1,4 +1,7 @@
 var express = require('express'), app = express();
+var http = require('http');
+var httpServer = http.createServer(app);
+var io = require('socket.io')(httpServer);
 var cmdFactory = require("./app/control/CmdFactory.js");
 var pageControl = require("./app/control/PageControl.js");
 var errCode = require("./app/config/ErrCode.js");
@@ -87,4 +90,19 @@ app.post("/main/interface.htm", function(req, res){
     });
 });
 
-app.listen(9080);
+io.on('connection', function(socket){
+    console.log('a user connected');
+
+    socket.on('chat message', function(msg){
+        console.log('message: ' + msg);
+
+        io.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+});
+
+
+httpServer.listen(9080);
