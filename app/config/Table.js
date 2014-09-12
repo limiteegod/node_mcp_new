@@ -177,7 +177,6 @@ Table.prototype.condition = function(data, parentKey)
                 //如果没有相关的列，则直接忽略
                 continue;
             }
-            console.log(typeof data[key]);
             var kv = "(";
             if(typeof data[key] == 'object')
             {
@@ -292,7 +291,6 @@ Table.prototype.find = function(data, columns)
     var sql = "select ";
     var keyStr = '';
     var i = 0;
-    console.log(columns._id);
     if(columns._id == undefined)
     {
         columns._id = 1;

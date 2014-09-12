@@ -126,6 +126,20 @@ var stInfo = new Table("stInfo", "mysql", [
     new Column("st", "varchar", 32, false, undefined)
 ]);
 db.put(stInfo);
+//machine
+var machine = new Table("machine", "mysql", [
+    new Column("_id", "varchar", 40, false, undefined, true, false),
+    new Column("ip", "varchar", 40, false, undefined)
+]);
+db.put(machine);
+//process info
+var proInfo = new Table("proInfo", "mysql", [
+    new Column("_id", "int", 11, false, undefined, true, true),
+    new Column("status", "int", 11, false, -1),
+    new Column("machineId", "varchar", 40, false, undefined),
+    new Column("proc", "varchar", 80, false, undefined)
+]);
+db.put(proInfo);
 module.exports = db;
 
 

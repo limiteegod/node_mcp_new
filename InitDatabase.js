@@ -146,6 +146,19 @@ async.waterfall([
         userCmdTable.save({"cmdCode":"A01", "userTypeId":typedata["manager"]});
         userCmdTable.save({"cmdCode":"A02", "userTypeId":typedata["manager"]});
         cb(null);
+    },
+    //add ip
+    function(cb)
+    {
+        var machineTable = db.get("machine");
+        machineTable.save({"_id":"server", "ip":"192.168.11.147"});
+        machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
+
+        var proInfoTable = db.get("proInfo");
+        proInfoTable.save({"machineId":"workLocal", "proc":"/usr/sbin/mysqld"});
+        proInfoTable.save({"machineId":"workLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
+        proInfoTable.save({"machineId":"workLocal", "proc":"scheduler"});
+        cb(null);
     }
 ], function (err, result) {
     console.log('err: ', err); // -> null

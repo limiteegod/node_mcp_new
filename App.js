@@ -6,7 +6,9 @@ var cmdFactory = require("./app/control/CmdFactory.js");
 var pageControl = require("./app/control/PageControl.js");
 var errCode = require("./app/config/ErrCode.js");
 var digestUtil = require("./app/util/DigestUtil.js");
-
+var net = require('net');
+var osUtil = require('./app/util/OsUtil.js');
+var monitorFactory = require('./app/common/MonitorFactory.js');
 
 //app.use(express.logger());
 
@@ -104,5 +106,66 @@ io.on('connection', function(socket){
     });
 });
 
+//listen data from other machine
+var HOST = osUtil.getLocaleIp();
+var PORT = 9081;
+net.createServer(function(sock) {
+    var buf = new Buffer(10*1024);
+    //current length of buf
+    var curBufLen = 0;
+    //data length of the data that will be received from terminal.
+    var tBufLen = 0;
+    // 我们获得一个连接 - 该连接自动关联一个socket对象
+    console.log('CONNECTED: ' +
+        sock.remoteAddress + ':' + sock.remotePort);
+    // 为这个socket实例添加一个"data"事件处理函数
+    sock.on('data', function(data) {
+        //append data to buffer
+        data.copy(buf, curBufLen, 0, data.length);
+        curBufLen += data.length;
+
+        console.log("data append length:" + data.length);
+        if(tBufLen == 0 && curBufLen >= 4)    //command start point.
+        {
+            tBufLen = buf.readInt32BE(0);
+            console.log("cmd data length:" + tBufLen);
+        }
+        console.log("curBufLen:" + curBufLen + ",tBufLen:" + tBufLen);
+
+        //cmd data all received
+        while(curBufLen >= tBufLen + 4 && tBufLen > 0)
+        {
+            var cmdDataBuf = new Buffer(tBufLen);
+            buf.copy(cmdDataBuf, 0, 4, tBufLen + 4);
+            if(curBufLen > tBufLen + 4)
+            {
+                curBufLen = curBufLen - tBufLen - 4;
+                var exchangeBuf = new Buffer(curBufLen);
+                buf.copy(exchangeBuf, 0, tBufLen + 4, tBufLen + curBufLen + 4);
+                exchangeBuf.copy(buf, 0, 0, curBufLen);
+            }
+            else
+            {
+                curBufLen = 0;
+            }
+            tBufLen = 0;
+            if(curBufLen >= 4)    //command start point.
+            {
+                tBufLen = buf.readInt32BE(0);
+            }
+            monitorFactory.handle(cmdDataBuf, function(err, backbodyNode){
+
+            });
+        }
+        console.log("curBufLen:" + curBufLen + ",tBufLen:" + tBufLen);
+    });
+
+    // 为这个socket实例添加一个"close"事件处理函数
+    sock.on('close', function(data) {
+        console.log('CLOSED: ' +
+            sock.remoteAddress + ' ' + sock.remotePort);
+    });
+
+}).listen(PORT, HOST);
 
 httpServer.listen(9080);

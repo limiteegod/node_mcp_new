@@ -12,7 +12,7 @@ DigestUtil.prototype.getIv = function()
         i += 4;
     }
     return iv8;
-}
+};
 
 //解密
 DigestUtil.prototype.check = function(headNode, key, bodyStr)
@@ -21,6 +21,10 @@ DigestUtil.prototype.check = function(headNode, key, bodyStr)
     if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
         console.log(bodyStr);
+        if(headNode.digestType == "3des-empty")
+        {
+            var key = self.getEmptyKey();
+        }
         var decipher = crypto.createDecipheriv('des-ede3-cfb', new Buffer(key, "base64"), self.getIv());
         var dec = decipher.update(bodyStr, 'base64', 'utf8');
         dec += decipher.final('utf8');
@@ -36,6 +40,10 @@ DigestUtil.prototype.generate = function(headNode, key, bodyStr)
     var self = this;
     if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
+        if(headNode.digestType == "3des-empty")
+        {
+            var key = self.getEmptyKey();
+        }
         var cipher = crypto.createCipheriv('des-ede3-cfb', new Buffer(key, "base64"), self.getIv());
         var crypted = cipher.update(bodyStr, 'utf8', 'base64');
         crypted += cipher.final('base64');
