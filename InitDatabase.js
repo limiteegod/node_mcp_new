@@ -151,13 +151,18 @@ async.waterfall([
     function(cb)
     {
         var machineTable = db.get("machine");
-        machineTable.save({"_id":"server", "ip":"192.168.11.147"});
+        machineTable.save({"_id":"server", "ip":"192.168.1.100"});
         machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
+        machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
 
         var proInfoTable = db.get("proInfo");
         proInfoTable.save({"machineId":"workLocal", "proc":"/usr/sbin/mysqld"});
         proInfoTable.save({"machineId":"workLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
         proInfoTable.save({"machineId":"workLocal", "proc":"scheduler"});
+
+        proInfoTable.save({"machineId":"homeLocal", "proc":"/usr/sbin/mysqld"});
+        proInfoTable.save({"machineId":"homeLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
+        proInfoTable.save({"machineId":"homeLocal", "proc":"scheduler"});
         cb(null);
     }
 ], function (err, result) {

@@ -1,6 +1,7 @@
 var async = require('async');
 var db = require('./app/config/Database.js');
 var osUtil = require('./app/util/OsUtil.js');
+var digestUtil = require('./app/util/DigestUtil.js');
 var CronJob = require("cron").CronJob;
 var net = require('net');
 
@@ -108,8 +109,10 @@ MonitorClient.prototype.startCronJob = function(procs)
     self.jobid = new CronJob('*/5 * * * * *', function () {
         var proc = procs[self.monitorIndex%procs.length];
         osUtil.getProcessInfo(proc.proc, function(data){
+            var status = 0;
             if(data)
             {
+                status = 1;
                 console.log(proc.proc + " is running!");
             }
             else
@@ -117,12 +120,27 @@ MonitorClient.prototype.startCronJob = function(procs)
                 console.log(proc.proc + " is not running!");
             }
 
-            var buf = new Buffer(proc.proc + " is not running!");
-            self.sendBuf(buf);
+            var bodyNode = {proc:proc.proc, status:status};
+            self.sendBodyNode(bodyNode);
         });
         self.monitorIndex++;
     }, null, false, 'Asia/Shanghai');
     self.jobid.start();
+};
+
+/**
+ *
+ * @param bodyNode
+ */
+MonitorClient.prototype.sendBodyNode = function(bodyNode)
+{
+    var self = this;
+    var headNode = {digestType:"3des-empty", cmd:"MT01"};
+    var decodedBodyStr = digestUtil.generate(headNode, null, JSON.stringify(bodyNode));
+    var msgNode = {head:headNode, body:decodedBodyStr};
+    var msgStr = JSON.stringify(msgNode);
+    var buf = new Buffer(msgStr);
+    self.sendBuf(buf);
 };
 
 /**
