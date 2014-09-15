@@ -19,5 +19,12 @@ TestPageControl.prototype.socket = function(headNode, bodyNode, cb)
     cb(null, backBodyNode);
 };
 
+TestPageControl.prototype.angularjs = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"angularjs"};
+    cb(null, backBodyNode);
+};
+
 var testPageControl = new TestPageControl();
 module.exports = testPageControl;
