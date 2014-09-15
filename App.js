@@ -13,7 +13,10 @@ var monitorFactory = require('./app/common/MonitorFactory.js');
 
 //app.use(express.logger());
 
-var App = function(){};
+var App = function(io){
+    var self = this;
+    self.io = io;
+};
 
 App.prototype.start = function()
 {
@@ -87,7 +90,9 @@ App.prototype.startSocket = function()
                 {
                     tBufLen = buf.readInt32BE(0);
                 }
-                monitorFactory.handle(cmdDataBuf, function(err, backbodyNode){
+                monitorFactory.handle(cmdDataBuf, function(err, headNode, bodyNode){
+                    var msgNode = {head:headNode, body:JSON.stringify(bodyNode)};
+                    self.io.emit("message", JSON.stringify(msgNode));
                 });
             }
             //console.log("curBufLen:" + curBufLen + ",tBufLen:" + tBufLen);
@@ -105,6 +110,8 @@ App.prototype.startSocket = function()
 
 App.prototype.startWeb = function()
 {
+    var self = this;
+
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
 
@@ -185,23 +192,21 @@ App.prototype.startWeb = function()
         });
     });
 
-    io.on('connection', function(socket){
+    self.io.on('connection', function(socket){
+
         console.log('a user connected');
 
-        socket.on('chat message', function(msg){
-            console.log('message: ' + msg);
-
-            io.emit('chat message', msg);
+        socket.on('message', function(msg){
+            self.io.emit('message', msg);
         });
 
         socket.on('disconnect', function(){
-            console.log('user disconnected');
         });
     });
 
     httpServer.listen(9080);
 };
 
-new App().start();
+new App(io).start();
 
 

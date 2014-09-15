@@ -1,6 +1,7 @@
 var db = require('../config/Database.js');
 var digestUtil = require("../util/DigestUtil.js");
 var adminPageControl = require("./AdminPageControl.js");
+var monitorPageControl = require("./MonitorPageControl.js");
 var testPageControl = require("./TestPageControl.js");
 
 var PageControl = function(){};
@@ -22,6 +23,11 @@ PageControl.prototype.admin = function(headNode, bodyNode, cb)
 PageControl.prototype.test = function(headNode, bodyNode, cb)
 {
     testPageControl.handle(headNode, bodyNode, cb);
+};
+
+PageControl.prototype.monitor = function(headNode, bodyNode, cb)
+{
+    monitorPageControl.handle(headNode, bodyNode, cb);
 };
 
 var pageControl = new PageControl();

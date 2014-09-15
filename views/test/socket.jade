@@ -7,12 +7,12 @@ html(lang="en")
             KISSY.use("io,node,json", function(S, Io, Node, Json){
                 var socket = io();
                 Node.one('button').on('click', function(){
-                    socket.emit('chat message', Node.one('#m').val());
+                    socket.emit('message', Node.one('#m').val());
                     Node.one('#m').val('');
                     return false;
                 });
 
-                socket.on('chat message', function(msg){
+                socket.on('message', function(msg){
                     Node.one('#messages').append(Node.one('<li>').text(msg));
                 });
             });

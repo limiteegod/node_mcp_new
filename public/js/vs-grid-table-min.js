@@ -59,10 +59,14 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
             var tfootNode = table.one("tfoot");
 
             var trNodeList = tbodyNode.all("tr");
-            var rowCount = trNodeList.length;   //行数
+            var rowCount = trNodeList.length + 1;   //行数
+            if(tfootNode)
+            {
+                rowCount++;
+            }
             var colCount = theadTrNode.all("td").length;    //列数目
 
-            self.set("row", rowCount + 2);
+            self.set("row", rowCount);
             self.set("col", colCount);
 
             table.remove();
@@ -85,14 +89,20 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
                 });
                 i++;
             });
-            j = 0;
-            data[i] = new Array();
-            tfootNode.one("tr").all("td").each(function(col){
-                data[i][j] = col.html();
-                j++;
-            });
+            //if defines the tfoot, then add to data
+            if(tfootNode)
+            {
+                j = 0;
+                data[i] = new Array();
+                tfootNode.one("tr").all("td").each(function(col){
+                    data[i][j] = col.html();
+                    j++;
+                });
+            }
 
-            var autoHeight = (rowCount + 2)*25 + 10;
+            self.set("data", data);
+
+            var autoHeight = rowCount*25 + 10;
             self.set("height", autoHeight);
 
             self.container.addClass("vs_div_talbe_border");

@@ -11,15 +11,15 @@ MonitorControl.prototype.handle = function(headNode, bodyStr, userCb)
         //check login state
         function(cb){
             var bodyNode = JSON.parse(digestUtil.check(headNode, null, bodyStr));
-            cb(null, null, headNode, bodyNode);
+            cb(null, headNode, bodyNode);
         },
         //check body
-        function(user, headNode, bodyNode, cb){
+        function(headNode, bodyNode, cb){
             var cmd = 'handle' + headNode.cmd;
-            self[cmd](user, headNode, bodyNode, cb);
+            self[cmd](headNode, bodyNode, cb);
         }
-    ], function (err, backBodyNode) {
-        userCb(err, backBodyNode);
+    ], function (err, headNode, backBodyNode) {
+        userCb(err, headNode, backBodyNode);
     });
 };
 
@@ -30,12 +30,9 @@ MonitorControl.prototype.handle = function(headNode, bodyStr, userCb)
  * @param bodyNode
  * @param cb
  */
-MonitorControl.prototype.handleMT01 = function(user, headNode, bodyNode, cb)
+MonitorControl.prototype.handleMT01 = function(headNode, bodyNode, cb)
 {
-    console.log(bodyNode);
-
-    var backBodyNode = {};
-    cb(null, backBodyNode);
+    cb(null, headNode, bodyNode);
 };
 
 module.exports = new MonitorControl();

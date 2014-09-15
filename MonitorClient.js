@@ -14,6 +14,7 @@ MonitorClient.prototype.start = function()
 {
     var self = this;
     var ip = osUtil.getLocaleIp();
+    self.ip = ip;
     var machineTable = db.get("machine");
     async.waterfall([
         //check if machine is registered or not
@@ -120,7 +121,7 @@ MonitorClient.prototype.startCronJob = function(procs)
                 console.log(proc.proc + " is not running!");
             }
 
-            var bodyNode = {proc:proc.proc, status:status};
+            var bodyNode = {_id:proc._id, proc:proc.proc, status:status};
             self.sendBodyNode(bodyNode);
         });
         self.monitorIndex++;
@@ -135,7 +136,7 @@ MonitorClient.prototype.startCronJob = function(procs)
 MonitorClient.prototype.sendBodyNode = function(bodyNode)
 {
     var self = this;
-    var headNode = {digestType:"3des-empty", cmd:"MT01"};
+    var headNode = {digestType:"3des-empty", cmd:"MT01", userId:self.ip};
     var decodedBodyStr = digestUtil.generate(headNode, null, JSON.stringify(bodyNode));
     var msgNode = {head:headNode, body:decodedBodyStr};
     var msgStr = JSON.stringify(msgNode);
