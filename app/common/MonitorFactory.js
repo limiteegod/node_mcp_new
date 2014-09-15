@@ -4,7 +4,15 @@ var MonitorFactory = function(){};
 
 MonitorFactory.prototype.handle = function(cmdDataBuf, cb)
 {
-    var msgStr = cmdDataBuf.toString("utf8");
+    var msgStr;
+    if(typeof cmdDataBuf == "string")
+    {
+        msgStr = cmdDataBuf;
+    }
+    else
+    {
+        msgStr = cmdDataBuf.toString("utf8");
+    }
     console.log(msgStr);
     var msgNode = JSON.parse(msgStr);
     var headNode = msgNode.head;

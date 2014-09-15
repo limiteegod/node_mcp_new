@@ -21,4 +21,8 @@ exports.platform = platform;
 exports.loginExpiredSeconds = 30*60;
 
 
+//machine status
+exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
+
+
 

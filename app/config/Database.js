@@ -1,6 +1,8 @@
 var Column = require('./Column.js');
 var Table = require('./Table.js');
 var dbPool = require('./DbPool.js');
+var prop = require('./Prop.js');
+
 
 var Database = function()
 {
@@ -129,7 +131,8 @@ db.put(stInfo);
 //machine
 var machine = new Table("machine", "mysql", [
     new Column("_id", "varchar", 40, false, undefined, true, false),
-    new Column("ip", "varchar", 40, false, undefined)
+    new Column("ip", "varchar", 40, false, undefined),
+    new Column("status", "int", 11, false, prop.machineStatus.stopped)
 ]);
 db.put(machine);
 //process info

@@ -151,7 +151,7 @@ async.waterfall([
     function(cb)
     {
         var machineTable = db.get("machine");
-        machineTable.save({"_id":"server", "ip":"192.168.11.147"});
+        machineTable.save({"_id":"server", "ip":"192.168.1.100"});
         machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
         machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
 

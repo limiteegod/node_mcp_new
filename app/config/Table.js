@@ -135,7 +135,7 @@ Table.prototype.getUpdateStr = function(data)
 /**
  * excute update operation
  */
-Table.prototype.update = function(condition, data, cb)
+Table.prototype.update = function(condition, data, option, cb)
 {
     var self = this;
     var sql = "update " + self.name + " set ";
@@ -228,6 +228,11 @@ Table.prototype.condition = function(data, parentKey)
             {
                 var col = self.colList[parentKey];
                 expression += self.getKvPair(col, "<=", data[key]);
+            }
+            else if(conditionArray[1] == 'ne')
+            {
+                var col = self.colList[parentKey];
+                expression += self.getKvPair(col, "!=", data[key]);
             }
             else if(conditionArray[1] == 'in')
             {

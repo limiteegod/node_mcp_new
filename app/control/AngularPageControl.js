@@ -26,5 +26,12 @@ AngularPageControl.prototype.index0 = function(headNode, bodyNode, cb)
     cb(null, backBodyNode);
 };
 
+AngularPageControl.prototype.machine = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"machine"};
+    cb(null, backBodyNode);
+};
+
 var angularPageControl = new AngularPageControl();
 module.exports = angularPageControl;

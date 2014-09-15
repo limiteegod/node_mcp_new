@@ -1,6 +1,7 @@
 var async = require('async');
 var cmdFactory = require("./CmdFactory.js");
 var digestUtil = require("../util/DigestUtil.js");
+var db = require('../config/Database.js');
 
 var MonitorControl = function(){};
 
@@ -33,6 +34,26 @@ MonitorControl.prototype.handle = function(headNode, bodyStr, userCb)
 MonitorControl.prototype.handleMT01 = function(headNode, bodyNode, cb)
 {
     cb(null, headNode, bodyNode);
+};
+
+/**
+ *
+ * @param user
+ * @param headNode
+ * @param bodyNode
+ * @param cb
+ */
+MonitorControl.prototype.handleMT02 = function(headNode, bodyNode, cb)
+{
+    var backBodyNode = {};
+    backBodyNode.uniqueId = bodyNode.uniqueId;
+
+    var machineTable = db.get("machine");
+    machineTable.find({}, {ip:1, status:1}).toArray(function(err, data){
+        if(err) throw err;
+        backBodyNode.rst = data;
+        cb(null, headNode, backBodyNode);
+    });
 };
 
 module.exports = new MonitorControl();

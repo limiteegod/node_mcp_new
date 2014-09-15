@@ -1,0 +1,44 @@
+doctype html
+html(lang="en", ng-app)
+    head
+        include ../includes/angular.jade
+        include ../includes/socket.jade
+        script(type='text/javascript').
+            function MachineListCtrl($scope) {
+                var ctrl = $scope;
+                KISSY.use("io,node,json", function(S, Io, Node, Json){
+                    var socket = io();
+
+                    socket.on('message', function(msg){
+                        console.log(msg);
+                        var msgNode = Json.parse(msg);
+                        if(msgNode.head.cmd == "MT02")
+                        {
+                            var bodyNode = Json.parse(CurSite.decrypt(msgNode.head, null, msgNode.body));
+                            ctrl.$apply(function(){
+                                ctrl.machines = bodyNode.rst;
+                            });
+                        }
+                    });
+
+                    setInterval(function(){
+                        var headNode = {cmd:"MT02", digestType:"3des-empty"};
+                        var bodyNode = {uniqueId:CurSite.createUUID()};
+                        var msgNode = CurSite.encrypt(headNode, null, Json.stringify(bodyNode));
+                        socket.emit('message', Json.stringify(msgNode));
+                    }, 10000);
+
+                    console.log("ok.............");
+                });
+                ctrl.machines = [];
+            };
+    body(ng-controller="MachineListCtrl")
+        table
+            tr
+                td _id
+                td ip
+                td status
+            tr(ng-repeat="machine in machines")
+                td {{machine._id}}
+                td {{machine.ip}}
+                td {{machine.status}}
