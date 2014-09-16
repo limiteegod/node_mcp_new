@@ -1,0 +1,30 @@
+doctype html
+html(lang="en", ng-app)
+    head
+        include ../includes/angular.jade
+        script(type='text/javascript').
+            function PhoneListCtrl($scope) {
+              $scope.phones = [
+                {"name": "Nexus S",
+                    "snippet": "Fast just got faster with Nexus S.",
+                    "age": 0},
+                {"name": "Motorola XOOM™ with Wi-Fi",
+                    "snippet": "The Next, Next Generation tablet.",
+                    "age": 1},
+                {"name": "MOTOROLA XOOM™",
+                    "snippet": "The Next, Next Generation tablet.",
+                    "age": 2}
+                ];
+              $scope.orderProp = 'age';
+            }
+    body(ng-controller="PhoneListCtrl")
+        |Search:
+        input(ng-model="query")
+        |Sort by:
+        select(ng-model="orderProp")
+            option(value="name") Alphabetical
+            option(value="age") Newest
+        ul
+            li(ng-repeat="phone in phones | filter:query | orderBy:orderProp")
+                |{{phone.name}}
+                p {{phone.snippet}}
