@@ -171,6 +171,7 @@ async.waterfall([
         {
             machineTable.save({"_id":"server", "ip":"192.168.222.234"});
             machineTable.save({"_id":"server231", "ip":"192.168.222.231"});
+            machineTable.save({"_id":"server234", "ip":"192.168.222.234"});
 
             var proInfoTable = db.get("proInfo");
             proInfoTable.save({"machineId":"server231", "proc":"/usr/sbin/mysqld"});
