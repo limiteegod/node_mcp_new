@@ -1,5 +1,6 @@
 var async = require('async');
 var db = require('./app/config/Database.js');
+var prop = require('./app/config/Prop.js');
 var operationTable = db.get("operation");
 var userTypeTable = db.get("userType");
 var userOperation = db.get("userOperation");
@@ -151,18 +152,31 @@ async.waterfall([
     function(cb)
     {
         var machineTable = db.get("machine");
-        machineTable.save({"_id":"server", "ip":"192.168.11.147"});
-        machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
-        machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
+        if(prop.target == 'dev')
+        {
+            machineTable.save({"_id":"server", "ip":"192.168.11.147"});
+            machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
+            machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
 
-        var proInfoTable = db.get("proInfo");
-        proInfoTable.save({"machineId":"workLocal", "proc":"/usr/sbin/mysqld"});
-        proInfoTable.save({"machineId":"workLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
-        proInfoTable.save({"machineId":"workLocal", "proc":"scheduler"});
+            var proInfoTable = db.get("proInfo");
+            proInfoTable.save({"machineId":"workLocal", "proc":"/usr/sbin/mysqld"});
+            proInfoTable.save({"machineId":"workLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
+            proInfoTable.save({"machineId":"workLocal", "proc":"scheduler"});
 
-        proInfoTable.save({"machineId":"homeLocal", "proc":"/usr/sbin/mysqld"});
-        proInfoTable.save({"machineId":"homeLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
-        proInfoTable.save({"machineId":"homeLocal", "proc":"scheduler"});
+            proInfoTable.save({"machineId":"homeLocal", "proc":"/usr/sbin/mysqld"});
+            proInfoTable.save({"machineId":"homeLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
+            proInfoTable.save({"machineId":"homeLocal", "proc":"scheduler"});
+        }
+        else if(prop.target == 'run')
+        {
+            machineTable.save({"_id":"server", "ip":"192.168.222.234"});
+            machineTable.save({"_id":"server231", "ip":"192.168.222.231"});
+
+            var proInfoTable = db.get("proInfo");
+            proInfoTable.save({"machineId":"server231", "proc":"/usr/sbin/mysqld"});
+            proInfoTable.save({"machineId":"server231", "proc":"/home/liming/app/mongodb/bin/mongod"});
+            proInfoTable.save({"machineId":"server231", "proc":"scheduler"});
+        }
         cb(null);
     }
 ], function (err, result) {
