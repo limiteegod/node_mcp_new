@@ -177,6 +177,7 @@ async.waterfall([
             proInfoTable.save({"machineId":"server231", "proc":"/usr/sbin/mysqld"});
             proInfoTable.save({"machineId":"server231", "proc":"/home/liming/app/mongodb/bin/mongod"});
             proInfoTable.save({"machineId":"server231", "proc":"scheduler"});
+            proInfoTable.save({"machineId":"server234", "proc":"/usr/libexec/mysqld"});
         }
         cb(null);
     }
