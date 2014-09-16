@@ -152,17 +152,19 @@ async.waterfall([
     function(cb)
     {
         var machineTable = db.get("machine");
+        var proInfoTable = db.get("proInfo");
         if(prop.target == 'dev')
         {
             machineTable.save({"_id":"server", "ip":"192.168.11.147"});
             machineTable.save({"_id":"workLocal", "ip":"192.168.11.147"});
-            machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
-
-            var proInfoTable = db.get("proInfo");
             proInfoTable.save({"machineId":"workLocal", "proc":"/usr/sbin/mysqld"});
             proInfoTable.save({"machineId":"workLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
             proInfoTable.save({"machineId":"workLocal", "proc":"scheduler"});
-
+        }
+        else if(prop.target == 'home')
+        {
+            machineTable.save({"_id":"server", "ip":"192.168.1.100"});
+            machineTable.save({"_id":"homeLocal", "ip":"192.168.1.100"});
             proInfoTable.save({"machineId":"homeLocal", "proc":"/usr/sbin/mysqld"});
             proInfoTable.save({"machineId":"homeLocal", "proc":"/home/liming/app/mongodb/bin/mongod"});
             proInfoTable.save({"machineId":"homeLocal", "proc":"scheduler"});
@@ -173,7 +175,6 @@ async.waterfall([
             machineTable.save({"_id":"server231", "ip":"192.168.222.231"});
             machineTable.save({"_id":"server234", "ip":"192.168.222.234"});
 
-            var proInfoTable = db.get("proInfo");
             proInfoTable.save({"machineId":"server231", "proc":"/usr/sbin/mysqld"});
             proInfoTable.save({"machineId":"server231", "proc":"/home/liming/app/mongodb/bin/mongod"});
             proInfoTable.save({"machineId":"server231", "proc":"scheduler"});

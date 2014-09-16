@@ -18,7 +18,7 @@ if(kvs.target)
 //runtime target
 exports.target = target;
 
-if(target == 'dev')
+if(target == 'dev' || target == 'home')
 {
     //mysql连接
     var mysql = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'node'};
