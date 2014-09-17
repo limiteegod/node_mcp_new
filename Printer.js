@@ -11,8 +11,6 @@ var Printer = function(){
     self.channelCode = 'C0001';
     self.userType = 2;
     self.key = 'cad6011f5f174a359d9a36e06aada07e';
-    self.cmd = 'P12';
-    self.jcCmd = 'T06';
 };
 
 Printer.prototype.plat = function(cmd, bodyNode, cb)
