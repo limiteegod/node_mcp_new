@@ -20,7 +20,6 @@ DigestUtil.prototype.check = function(headNode, key, bodyStr)
     var self = this;
     if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
-        console.log(bodyStr);
         if(headNode.digestType == "3des-empty")
         {
             var key = self.getEmptyKey();
@@ -36,7 +35,6 @@ DigestUtil.prototype.check = function(headNode, key, bodyStr)
 //加密
 DigestUtil.prototype.generate = function(headNode, key, bodyStr)
 {
-    console.log(bodyStr);
     var self = this;
     if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {

@@ -2,15 +2,17 @@ var http = require('http');
 var querystring = require('querystring');
 var crypto = require('crypto');
 var prop = require('../config/Prop.js');
+var digestUtil = require('./DigestUtil.js');
 var options = prop.platform.site;
 var PlatInterUtil = function(){};
 
-PlatInterUtil.prototype.get= function(userId, userType, userKey, cmd, body, cb)
+PlatInterUtil.prototype.get= function(userId, userType, channelCode, userKey, cmd, body, cb)
 {
+    body.uniqueId = digestUtil.createUUID();
     var bodyStr = JSON.stringify(body);
     console.log("send-body:");
     console.log(bodyStr);
-    var head = {userId:userId, userType:userType, digest:"", digestType:"3des", cmd:cmd, ver:prop.platform.ver};
+    var head = {userId:userId, userType:userType, channelCode:channelCode, digest:"", digestType:"3des", cmd:cmd, ver:prop.platform.ver};
     if(cmd == "AD01")
     {
         head.digestType = "";
@@ -18,15 +20,10 @@ PlatInterUtil.prototype.get= function(userId, userType, userKey, cmd, body, cb)
     var encodedBody = bodyStr;
     if(head.digestType.length > 0)
     {
-        var cipher = crypto.createCipheriv('des-ede3-cfb', new Buffer(userKey, "base64"), new Buffer(8));
-        var crypted = cipher.update(bodyStr, 'utf8', 'base64');
-        crypted += cipher.final('base64');
-        encodedBody = crypted;
+        encodedBody = digestUtil.generate(head, userKey, bodyStr);
     }
     var msgJson = {head:head, body:encodedBody};
     var msgToSend = JSON.stringify(msgJson);
-    console.log("send-msg:");
-    console.log(msgToSend);
     var post_data  = querystring.stringify({
         message:msgToSend
     });
@@ -35,12 +32,8 @@ PlatInterUtil.prototype.get= function(userId, userType, userKey, cmd, body, cb)
     };
     options.headers = headers;
     var req = http.request(options, function(res) {
-        //console.log('STATUS: ' + res.statusCode);
-        //console.log('HEADERS: ' + JSON.stringify(res.headers));
         res.setEncoding('utf8');
         res.on('data', function (chunk) {
-            console.log('back-msg: ');
-            console.log(chunk);
             cb(JSON.parse(chunk));
         });
     });
@@ -53,7 +46,7 @@ PlatInterUtil.prototype.get= function(userId, userType, userKey, cmd, body, cb)
 
 var platInterUtil = new PlatInterUtil();
 
-module.exports = platInterUtil
+module.exports = platInterUtil;
 
 
 

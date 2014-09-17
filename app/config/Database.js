@@ -3,7 +3,6 @@ var Table = require('./Table.js');
 var dbPool = require('./DbPool.js');
 var prop = require('./Prop.js');
 
-
 var Database = function()
 {
     var self = this;

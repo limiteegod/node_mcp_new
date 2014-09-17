@@ -24,15 +24,31 @@ if(target == 'dev' || target == 'home')
     var mysql = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'node'};
     exports.mysql = mysql;
 
+    var mcpdb = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'mcp'};
+    exports.mcpdb = mcpdb;
+
     //mongodb的地址
-    var mongo = {'url':'mongodb://127.0.0.1:27017/test'};
+    var mongo = {'url':'mongodb://127.0.0.1:27017/print'};
     exports.mongo = mongo;
 
     //平台地址
     var platform = {};
     platform.site = {
         hostname: '127.0.0.1',
-        port: 8081,
+        port: 8080,
+        path: '/mcp-filter/main/interface.htm',
+        method: 'POST'
+    };
+    platform.ver = "s.1.01";
+    exports.platform = platform;
+}
+if(target == 'test')
+{
+    //平台地址
+    var platform = {};
+    platform.site = {
+        hostname: '182.254.139.133',
+        port: 8080,
         path: '/mcp-filter/main/interface.htm',
         method: 'POST'
     };

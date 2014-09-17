@@ -1,10 +1,18 @@
 var dbPool = require('./DbPool.js');
 
-var DbCurser = function(baseSql){
+var DbCurser = function(table, baseSql){
     var self = this;
+    self.table = table;
     self.baseSql = baseSql;
 };
 
+DbCurser.prototype.limit = function(start, size)
+{
+    var self = this;
+    var sql = " limit " + start + "," + size;
+    self.baseSql += sql;
+    return self;
+};
 
 DbCurser.prototype.sort = function(data)
 {
@@ -37,7 +45,7 @@ DbCurser.prototype.toArray = function(cb)
 {
     var self = this;
     console.log(self.baseSql);
-    dbPool.conn.query(self.baseSql, function(err, rows, fields) {
+    self.table.getDb().getConn().query(self.baseSql, function(err, rows, fields) {
         if (err) throw err;
         if(cb != undefined)
         {

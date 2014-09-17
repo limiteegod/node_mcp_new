@@ -1,8 +1,9 @@
 var dbPool = require('./DbPool.js');
 var DbCursor = require('./DbCursor.js');
 
-var Table = function(name, engine, colList){
+var Table = function(db, name, engine, colList){
     var self = this;
+    self.db = db;
     self.name = name;
     self.engine = engine;
     self.colList = new Array();
@@ -11,6 +12,13 @@ var Table = function(name, engine, colList){
         var col = colList[key];
         self.colList[col.getName()] = col;
     }
+};
+
+
+Table.prototype.getDb = function()
+{
+    var self = this;
+    return self.db;
 };
 
 /**
@@ -83,7 +91,7 @@ Table.prototype.save = function(data, cb)
     }
     sql += keyStr + ") values(" + valueStr + ");";
     console.log(sql);
-    dbPool.conn.query(sql, function(err, rows, fields) {
+    self.db.getConn().query(sql, function(err, rows, fields) {
         if(cb != undefined)
         {
             cb(err, rows, data);
@@ -146,7 +154,7 @@ Table.prototype.update = function(condition, data, option, cb)
         sql += " where " + conditionStr;
     }
     console.log(sql);
-    dbPool.conn.query(sql, function(err, rows, fields) {
+    self.db.getConn().query(sql, function(err, rows, fields) {
         if(cb != undefined)
         {
             cb(err, rows, data);
@@ -191,7 +199,6 @@ Table.prototype.condition = function(data, parentKey)
         }
         else
         {
-            console.log(conditionArray);
             var expression = "";
             if(conditionArray[1] == 'or')
             {
@@ -300,6 +307,10 @@ Table.prototype.find = function(data, columns)
     {
         columns._id = 1;
     }
+    if(columns.id == undefined)
+    {
+        columns.id = 1;
+    }
     for(var key in columns)
     {
         //如果没有相关的列，则直接忽略
@@ -329,40 +340,26 @@ Table.prototype.find = function(data, columns)
     {
         sql += " where " + conditionStr;
     }
-    return new DbCursor(sql);
-    /*for(var key in data)
+    return new DbCursor(self, sql);
+};
+
+/**
+ * remove documents from table
+ * @param condtion
+ * @param option
+ * @param cb
+ */
+Table.prototype.remove = function(condtion, option, cb)
+{
+    var self = this;
+    var sql = "delete from " + self.name;
+    var conditionStr = self.condition(condtion);
+    if(conditionStr.length > 0)
     {
-        //如果没有相关的列，则直接忽略
-        if(self.colList[key] == undefined)
-        {
-            continue;
-        }
-        if(i > 0)
-        {
-            keyStr += ",";
-            valueStr += ",";
-        }
-        keyStr += key;
-        var value = data[key];
-        if(typeof value == "string")
-        {
-            valueStr += "'" + value + "'";
-        }
-        else
-        {
-            valueStr += value;
-        }
-        i++;
+        sql += " where " + conditionStr;
     }
-    sql += keyStr + " from " + self.name + ") values(" + valueStr + ");";
     console.log(sql);
-    dbPool.conn.query(sql, function(err, rows, fields) {
-        if (err) throw err;
-        if(cb != undefined)
-        {
-            cb(rows, data);
-        }
-    });*/
-}
+    self.db.getConn().query(sql, cb);
+};
 
 module.exports = Table;
