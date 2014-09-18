@@ -18,6 +18,7 @@ if(kvs.target)
 //runtime target
 exports.target = target;
 
+var zzc = {};
 if(target == 'dev' || target == 'home')
 {
     //mysql连接
@@ -41,6 +42,19 @@ if(target == 'dev' || target == 'home')
     };
     platform.ver = "s.1.01";
     exports.platform = platform;
+
+
+    zzc.site = {
+        hostname: '122.0.68.5',
+        port: 8046,
+        path: '/greatwallweb/main',
+        method: 'POST'
+    };
+    zzc.key = 'hy123456';
+    zzc.pratnerid = '008611';
+    zzc.version = '1.0';
+    zzc.dateFmt = 'YYYYMMDDHHmmss';
+
 }
 if(target == 'test')
 {
@@ -77,11 +91,19 @@ else if(target == 'run')
     exports.platform = platform;
 }
 
+exports.zzc = zzc;
+
 //if user hasn't operation in half a hour, the key will be expired.
 exports.loginExpiredSeconds = 30*60;
 
 //machine status
 exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
+
+//ticket status
+exports.ticketStatus = {"received":1000, "send":2000, "success":3000, "failure":4000};
+
+
+module.exports = exports;
 
 
 

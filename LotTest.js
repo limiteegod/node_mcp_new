@@ -39,5 +39,26 @@ LotTest.prototype.lotT01 = function()
     });
 };
 
+LotTest.prototype.lotF01 = function()
+{
+    var self = this;
+    var bodyNode = {};
+    var orderNode = {gameCode:'F01', termCode:'2014001', amount:200, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
+    var ticketsNode = [{betTypeCode:'00', amount:200, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25|15'}];
+    orderNode.tickets = ticketsNode;
+    bodyNode.order = orderNode;
+    self.lot(bodyNode, function(backMsgNode){
+        var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
+        var backBodyNode = JSON.parse(backBodyStr);
+        console.log("back-body:");
+        console.log(backBodyNode);
+    });
+};
+
 var lotTest = new LotTest();
-lotTest.lotT01();
+var count = 0;
+while(count < 2)
+{
+    lotTest.lotF01();
+    count++;
+}

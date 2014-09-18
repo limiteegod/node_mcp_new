@@ -1,6 +1,6 @@
 var async = require('async');
 
-var openFiles = ["a", "b"];
+/*var openFiles = ["a", "b"];
 async.each(openFiles, function(file, callback) {
     console.log(file);
     callback();
@@ -10,10 +10,10 @@ async.each(openFiles, function(file, callback) {
     } else {
         console.log('All files have been processed successfully');
     }
-});
+});*/
 
 
-/*var count1 = 0;
+var count1 = 0;
 async.whilst(
     function() { return count1 < 3 },
     function(cb) {
@@ -25,7 +25,7 @@ async.whilst(
         // 3s have passed
         console.log('1.1 err: ', err); // -> undefined
     }
-);*/
+);
 
 /*async.parallel([
     function(cb) {

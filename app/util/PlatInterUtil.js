@@ -3,6 +3,7 @@ var querystring = require('querystring');
 var crypto = require('crypto');
 var prop = require('../config/Prop.js');
 var digestUtil = require('./DigestUtil.js');
+var printMgDb = require('../config/PrintMgDb.js');
 var options = prop.platform.site;
 var PlatInterUtil = function(){};
 
@@ -10,8 +11,6 @@ PlatInterUtil.prototype.get= function(userId, userType, channelCode, userKey, cm
 {
     body.uniqueId = digestUtil.createUUID();
     var bodyStr = JSON.stringify(body);
-    console.log("send-body:");
-    console.log(bodyStr);
     var head = {userId:userId, userType:userType, channelCode:channelCode, digest:"", digestType:"3des", cmd:cmd, ver:prop.platform.ver};
     if(cmd == "AD01")
     {
