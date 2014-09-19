@@ -196,7 +196,20 @@ Printer.prototype.sendF01_00_00 = function(tickets, cb)
         });
     }, function(err){
         if(err) throw err;
-        zzcInterUtil.sendTickets(tickets, function(){
+        zzcInterUtil.sendTickets(tickets, function(err, data){
+            if(err)
+            {
+                var ticketIds = [];
+                for(var key in tickets)
+                {
+                    ticketIds[ticketIds.length] = ticketIds[key]._id;
+                }
+                col.update({_id:{$in:ticketIds}}, {$set:{status:prop.ticketStatus.send_failure}}, {multi:true}, function(err, data){});
+            }
+            else
+            {
+                //see the xml, if failure, change the db
+            }
             cb();
         });
     });

@@ -36,11 +36,11 @@ ZzcInterUtil.prototype.get= function(transcode, msg, cb)
         });
 
         res.on('end', function(){
-            cb(data);
+            cb(null, data);
         });
     });
     req.on('error', function(e) {
-        console.log('problem with request: ' + e.message);
+        cb(err, null);
     });
     req.write(post_data, "utf8");
     req.end();
@@ -95,10 +95,8 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
     bodyEle.appendChild(ticketOrderEle);
     var serializer = new XMLSerializer;
     var str = serializer.serializeToString(doc);
-    self.get("104", str, function(backMsg){
-        console.log('backmsg--------------------------------------');
-        console.log(backMsg);
-        cb();
+    self.get("104", str, function(err, backMsg){
+        cb(err, backMsg);
     });
 };
 

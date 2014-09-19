@@ -104,7 +104,7 @@ exports.loginExpiredSeconds = 30*60;
 exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
 
 //ticket status
-exports.ticketStatus = {"received":1000, "send":2000, "success":3000, "failure":4000};
+exports.ticketStatus = {"received":1000, "send":2000, "send_failure":2500, "success":3000, "failure":4000};
 
 
 module.exports = exports;
