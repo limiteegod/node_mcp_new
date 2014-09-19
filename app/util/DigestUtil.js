@@ -54,7 +54,7 @@ DigestUtil.prototype.generate = function(headNode, key, bodyStr)
 DigestUtil.prototype.md5 = function(text)
 {
     var hasher=crypto.createHash("md5");
-    hasher.update(text);
+    hasher.update(new Buffer(text, 'utf8'));
     return hasher.digest('hex'); //hashmsg为加密之后的数据
 };
 

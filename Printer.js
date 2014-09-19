@@ -196,46 +196,10 @@ Printer.prototype.sendF01_00_00 = function(tickets, cb)
         });
     }, function(err){
         if(err) throw err;
-
-        //send to center
-        console.log(tickets);
-        var doc = new DOMParser().parseFromString(
-            '<?xml version=“1.0” encoding=“UTF-8”?><msg></msg>'
-            ,'text/xml');
-        var headEle = doc.createElement("head");
-        headEle.setAttribute("transcode", '104');
-        headEle.setAttribute("pratnerid", zzc.pratnerid);
-        headEle.setAttribute("version", zzc.version);
-        headEle.setAttribute("time", time);
-        var bodyEle = doc.createElement("body");
-        doc.documentElement.appendChild(headEle);
-        doc.documentElement.appendChild(bodyEle);
-        var serializer = new XMLSerializer;
-        var str = serializer.serializeToString(doc);
-        console.log("ticket---------------------------");
-        console.log(str);
-
-        cb();
-    });
-
-    /*
-    var col = printMgDb.get("ticket");
-    for(var key in tickets)
-    {
-        var ticket = tickets[key];
-        printMgDb.getZzcId(function(err, data){
-            col.update({_id:ticket._id}, {$set:{status:prop.ticketStatus.send, zzcId:ticket.zzcId}}, {}, function(err, data){
-            });
+        zzcInterUtil.sendTickets(tickets, function(){
+            cb();
         });
-    }*/
-
-
-
-    /*var col = printMgDb.get("ticket");
-    col.update({_id:{$in:ticketIds}}, {$set:{status:prop.ticketStatus.send}}, {multi:true}, function(err, data){
-        console.log("update length----------------:" + data);
-        cb();
-    });*/
+    });
 };
 
 /**

@@ -27,13 +27,19 @@ PlatInterUtil.prototype.get= function(userId, userType, channelCode, userKey, cm
         message:msgToSend
     });
     var headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length':post_data.length
     };
     options.headers = headers;
     var req = http.request(options, function(res) {
         res.setEncoding('utf8');
+        var data = '';
         res.on('data', function (chunk) {
-            cb(JSON.parse(chunk));
+            data += chunk;
+        });
+
+        res.on('end', function(){
+            cb(JSON.parse(data));
         });
     });
     req.on('error', function(e) {

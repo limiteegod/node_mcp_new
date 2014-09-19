@@ -51,10 +51,14 @@ if(target == 'dev' || target == 'home')
         method: 'POST'
     };
     zzc.key = 'hy123456';
-    zzc.pratnerid = '008611';
+    zzc.partnerid = '008611';
     zzc.version = '1.0';
     zzc.dateFmt = 'YYYYMMDDHHmmss';
-
+    zzc.user = {};
+    zzc.user.idCard = '130123198907250098';
+    zzc.user.userId = '008611';
+    zzc.user.phone = '';
+    zzc.user.realname = '';
 }
 if(target == 'test')
 {
