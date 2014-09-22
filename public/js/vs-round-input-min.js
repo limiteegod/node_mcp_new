@@ -23,7 +23,7 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             value:190
         },
         height:{
-            value:34
+            value:32
         }
     };
 
@@ -69,7 +69,7 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             var cHeight = self.get("height") - 14;
             var cTable = Node.one('<div class="clearfix"></div>');
             var cTableContent = Node.one('<div style="overflow-x: hidden;padding:1px;position:absolute;left:8px;top:6px;width:' + cWidth + 'px;height:' + cHeight + 'px;"></div>');
-            self.cInput = Node.one('<input type="text" value="" style="width:' + (cWidth-2) + 'px;height:' + (cHeight-2) + 'px;border:none;outline:none;"/>');
+            self.cInput = Node.one('<input type="text" value="" style="font-size:16px;width:' + (cWidth-2) + 'px;height:' + (cHeight-2) + 'px;border:none;outline:none;"/>');
             cTableContent.append(self.cInput);
             cTable.append(cTableContent);
             self.container.append(cTable);

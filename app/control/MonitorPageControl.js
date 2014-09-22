@@ -32,6 +32,7 @@ MonitorPageControl.prototype.detailTicket = function(headNode, bodyNode, cb)
     var ticketCol = printMgDb.get("ticket");
     ticketCol.findOne({_id:bodyNode.id}, {}, function(err, data){
         data.status = prop.getEnumById("ticketStatusArray", data.status);
+        data.game = prop.getGameInfo(data.gameCode);
         console.log(data);
         backBodyNode.rst = data;
         cb(null, backBodyNode);
@@ -76,6 +77,7 @@ MonitorPageControl.prototype.viewTicket = function(headNode, bodyNode, cb)
     var backBodyNode = {title:"view tickets", skip:skip, limit:limit};
     backBodyNode.ticketStatusArray = prop.ticketStatusArray;
     backBodyNode.cond = cond;
+    backBodyNode.games = prop.games;
     var ticketCol = printMgDb.get("ticket");
     var cursor = ticketCol.find(cond, {}).sort(sort).skip(skip).limit(limit);
     cursor.toArray(function(err, data){
@@ -83,6 +85,7 @@ MonitorPageControl.prototype.viewTicket = function(headNode, bodyNode, cb)
         {
             var ticket = data[key];
             ticket.status = prop.getEnumById("ticketStatusArray", ticket.status);
+            ticket.game = prop.getGameInfo(ticket.gameCode);
         }
         backBodyNode.rst = data;
 

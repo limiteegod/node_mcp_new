@@ -19,12 +19,6 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
     S.extend(VsGridTable, Base);
 
     VsGridTable.ATTRS = {
-        row:{
-            value:3
-        },
-        col:{
-            value:3
-        },
         head:{
             value:[]
         },
@@ -39,6 +33,9 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
         },
         selectEvent:{
             value:undefined
+        },
+        rowHeight:{
+            value:32
         }
     };
 
@@ -65,11 +62,13 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
             self.set("col", colCount);
 
             table.remove();
+            var widthArray = [];    //save the width of each col
             //self.divNode = Node.one('<div class="container"></div>');
             var data = new Array();
             var i = 0, j = 0;
             data[i] = new Array();
             theadTrNode.all("td").each(function(col){
+                widthArray[widthArray.length] = col.width();
                 data[i][j] = col.html();
                 j++;
             });
@@ -94,10 +93,10 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
                     j++;
                 });
             }
-
+            console.log(widthArray);
             self.set("data", data);
 
-            var autoHeight = rowCount*25 + 10;
+            var autoHeight = rowCount*self.get("rowHeight") + 10;
             self.set("height", autoHeight);
 
             self.container.addClass("vs_div_talbe_border");
@@ -118,8 +117,9 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
             var col = self.get("col");
             var row = self.get("row");
             var colWidth = cWidth/col - 1;
-            var rowHeight = cHeight/row - 1;
+            var rowHeight = cHeight/row - 1 - 2;
 
+            //the table head
             var head = data[0];
             var rowStr = '<div class="clearfix">';
             for(var i = 0; i < col - 1; i++)
@@ -129,6 +129,7 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
             rowStr += '<div row="0" col="' + (col - 1) + '" class="vs_div_table_content_right" style="text-align:center;font-weight:bolder;width:' + (colWidth + 1) + 'px;height:' + rowHeight + 'px;">' + head[col - 1] + '</div></div>';
             cTable.append(rowStr);
 
+            //the table content, except the bottom
             for(var j = 1; j < row - 1; j++)
             {
                 var rowStr = '<div class="clearfix">';
@@ -140,6 +141,7 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
                 cTable.append(rowStr);
             }
 
+            //have records, init the bottom
             if(row > 1)
             {
                 var rowStr = '<div class="clearfix">';
@@ -156,6 +158,8 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
 
             //绑定事件
             cTable.all(".vs_div_table_content").each(function(item){
+                var colIndex = parseInt(item.attr("col"));
+                item.width(widthArray[colIndex] - 2);
                 item.on("click", function(){
                     var clickRow = Node.one(this).attr("row");
                     self.setSelected(clickRow);
@@ -164,6 +168,8 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
 
             //绑定事件
             cTable.all(".vs_div_table_content_right").each(function(item){
+                var colIndex = parseInt(item.attr("col"));
+                item.width(widthArray[colIndex] - 2);
                 item.on("click", function(){
                     var clickRow = Node.one(this).attr("row");
                     self.setSelected(clickRow);
@@ -172,6 +178,8 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
 
             //绑定事件
             cTable.all(".vs_div_table_content_bottom").each(function(item){
+                var colIndex = parseInt(item.attr("col"));
+                item.width(widthArray[colIndex] - 2);
                 item.on("click", function(){
                     var clickRow = Node.one(this).attr("row");
                     self.setSelected(clickRow);
@@ -180,6 +188,8 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
 
             //绑定事件
             cTable.all(".vs_div_table_content_bottom_right").each(function(item){
+                var colIndex = parseInt(item.attr("col"));
+                item.width(widthArray[colIndex] - 2);
                 item.on("click", function(){
                     var clickRow = Node.one(this).attr("row");
                     self.setSelected(clickRow);

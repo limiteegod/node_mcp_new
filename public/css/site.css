@@ -1,5 +1,14 @@
 @CHARSET "UTF-8";
 
+body {
+    text-align:center;
+    font-size:14px;
+}
+
+.bodyDiv {
+    margin:0 auto;width:960px;
+}
+
 .leftItem {
     cursor: pointer;
 }
@@ -111,6 +120,8 @@
     overflow: hidden;
     float:left;
     cursor:pointer;
+    padding-left: 2px;
+    padding-top: 2px;
 }
 
 .vs_div_table_content_right {
@@ -118,6 +129,8 @@
     overflow: hidden;
     float:left;
     cursor:pointer;
+    padding-left: 2px;
+    padding-top: 2px;
 }
 
 .vs_div_table_content_bottom {
@@ -126,6 +139,8 @@
     overflow: hidden;
     float:left;
     cursor:pointer;
+    padding-left: 2px;
+    padding-top: 2px;
 }
 
 .vs_div_table_content_bottom_right {
@@ -133,6 +148,8 @@
     overflow: hidden;
     float:left;
     cursor:pointer;
+    padding-left: 2px;
+    padding-top: 2px;
 }
 
 .container {
@@ -140,6 +157,7 @@
     left: 0px;
     top: 0px;
     padding: 0px;
+    text-align: left;
 }
 
 .clearfix:after {
