@@ -209,6 +209,7 @@ Printer.prototype.sendF01_00_00 = function(tickets, cb)
             else
             {
                 //see the xml, if failure, change the db
+                console.log(data);
             }
             cb();
         });

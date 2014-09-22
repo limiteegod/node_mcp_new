@@ -5,13 +5,18 @@ MongoClient.connect('mongodb://127.0.0.1:27017/print', function(err, db) {
     if(err) throw err;
 
     var collection = db.collection('test_insert');
-    collection.insert({_id:1, a:2}, function(err, docs) {
-        collection.find().toArray(function(err, results) {
-            console.dir(results);
-            // Let's close the db
-            db.close();
+    for(var i = 0; i < 200000; i++)
+    {
+        collection.insert({_id:i, a:2}, function(err, docs) {
+            console.log(docs);
+            /*collection.find().toArray(function(err, results) {
+             console.dir(results);
+             // Let's close the db
+             db.close();
+             });*/
         });
-    });
+    }
+
 
     /*collection.insert({a:2}, function(err, docs) {
 

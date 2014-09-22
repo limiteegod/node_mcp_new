@@ -57,8 +57,8 @@ if(target == 'dev' || target == 'home')
     zzc.user = {};
     zzc.user.idCard = '130123198907250098';
     zzc.user.userId = '008611';
-    zzc.user.phone = '';
-    zzc.user.realname = '';
+    zzc.user.phone = '18612100000';
+    zzc.user.realname = 'jiuge';
 }
 if(target == 'test')
 {
@@ -106,6 +106,17 @@ exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
 //ticket status
 exports.ticketStatus = {"received":1000, "send":2000, "send_failure":2500, "success":3000, "failure":4000};
 
+//game type
+exports.gameType = {'normal':1, 'gaopin':2, 'jingcai':3};
+
+//station type
+exports.stationType = {'channel':2, 'center':1};
+
+//station status
+exports.stationStatus = {'open':0, 'close':1};
+
+//station game status
+exports.stationGameStatus = {'open':0, 'close':1};
 
 module.exports = exports;
 

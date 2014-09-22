@@ -1,5 +1,6 @@
 var async = require('async');
 var moment = require('moment');
+var prop = require('./app/config/Prop.js');
 var mcpdb = require('./app/config/McpDataBase.js');
 var digestUtil = require('./app/util/DigestUtil.js');
 
@@ -14,6 +15,19 @@ ResetMcpDatabase.prototype.resetF01 = function()
     var termTable = mcpdb.get("term");
     var gameCode = 'F01';
     async.waterfall([
+        //check the game
+        function(cb)
+        {
+            var gameTable = mcpdb.get("game");
+            gameTable.find({code:"F01"}, {}).toArray(function(err, data){
+                if(err) throw err;
+                if(data.length == 0)
+                {
+                    gameTable.save({id:digestUtil.createUUID(), code:'F01', name:'双色球', type:prop.gameType.normal});
+                    cb(null);
+                }
+            });
+        },
         //start socket
         function(cb)
         {
@@ -22,7 +36,7 @@ ResetMcpDatabase.prototype.resetF01 = function()
                 cb(null);
             });
         },
-        //start web
+        //save the term
         function(cb)
         {
             console.log(moment().format());
@@ -30,7 +44,7 @@ ResetMcpDatabase.prototype.resetF01 = function()
             var gap = 60*60*1000;
             var endTime = moment(openTime).add(gap, 'milliseconds');
             termTable.save({id:digestUtil.createUUID(), gameCode:gameCode, code:'2014001',
-                nextCode:'2014002', openTime:openTime.format(self.dateFmt),
+                nextCode:'2014002', openTime:openTime.format(self.dateFmt), createTime:openTime.format(self.dateFmt),
                 endTime:endTime.format(self.dateFmt), name:'2014001',
                 prizeDesc:self.getPrizeDesc(gameCode), status:1100,
                 winningNumber:"09,14,17,18,21,25|15"});
@@ -88,6 +102,66 @@ ResetMcpDatabase.prototype.resetT01 = function()
     });
 };
 
+ResetMcpDatabase.prototype.resetStation = function()
+{
+    var self = this;
+    var stationTable = mcpdb.get("station");
+    async.waterfall([
+        //delete
+        function(cb)
+        {
+            stationTable.remove({code:"Q0003"}, {}, function(err, data){
+                console.log(data);
+                cb(null);
+            });
+        },
+        //print station
+        function(cb)
+        {
+            stationTable.save({id:digestUtil.createUUID(), code:"C0001", balance:0, stationType:prop.stationType.center,
+                status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e'}, function(err, rows, data){
+                cb(null, data);
+            });
+        },
+        //save print station game
+        function(pstation, cb)
+        {
+            var stationGame = mcpdb.get("stationgame");
+            stationGame.save({id:digestUtil.createUUID(), stationId:pstation.id, gameCode:'F01',
+                relayToId:pstation.id, rFactor:100, pFactor:9000}, function(err, rows, data){
+                cb(null, pstation);
+            });
+        },
+        //save
+        function(pstation, cb)
+        {
+            stationTable.save({id:digestUtil.createUUID(), code:"Q0003", balance:1000000, stationType:prop.stationType.channel,
+            status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e'}, function(err, rows, data){
+                cb(null, pstation, data);
+            });
+
+        },
+        //save the game
+        function(pstation, station, cb)
+        {
+            var stationGame = mcpdb.get("stationgame");
+            stationGame.save({id:digestUtil.createUUID(), stationId:station.id, gameCode:'F01',
+                relayToId:pstation.id, rFactor:100, pFactor:9000}, function(err, rows, data){
+                cb(null);
+            });
+        }
+    ], function (err, result) {
+        if(err)
+        {
+            console.log('err: ', err); // -> null
+        }
+        else
+        {
+            console.log('result: ', result); // -> 16
+        }
+    });
+};
+
 ResetMcpDatabase.prototype.getPrizeDesc = function(gameCode)
 {
     var pd;
@@ -102,5 +176,10 @@ ResetMcpDatabase.prototype.getPrizeDesc = function(gameCode)
     return JSON.stringify(pd);
 };
 
-var reset = new ResetMcpDatabase();
-reset.resetF01();
+
+mcpdb.create(function(){
+    var reset = new ResetMcpDatabase();
+    reset.resetF01();
+    reset.resetStation();
+});
+

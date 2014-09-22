@@ -75,28 +75,36 @@ Column.prototype.isAuto_increment = function()
 Column.prototype.toString = function()
 {
     var self = this;
-    var sql = self.name + " " + self.type;
-    if(self.type != 'date' && self.type != 'bigint' && self.type != 'datetime')
+    if(self.type == 'UNIQUE')
     {
-        sql += "(" + self.length + ")";
+        var sql = 'CONSTRAINT ' + self.name + " " + self.type + "(" + self.default_value + ")";
+        return sql;
     }
-    if(!self.nullable)
+    else
     {
-        sql += " not null";
+        var sql = self.name + " " + self.type;
+        if(self.type != 'date' && self.type != 'bigint' && self.type != 'datetime')
+        {
+            sql += "(" + self.length + ")";
+        }
+        if(!self.nullable)
+        {
+            sql += " not null";
+        }
+        if(self.default_value != undefined)
+        {
+            sql += " default '" + self.default_value + "'";
+        }
+        if(self.primary)
+        {
+            sql += " primary key";
+        }
+        if(self.auto_increment)
+        {
+            sql += " auto_increment";
+        }
+        return sql;
     }
-    if(self.default_value != undefined)
-    {
-        sql += " default '" + self.default_value + "'";
-    }
-    if(self.primary)
-    {
-        sql += " primary key";
-    }
-    if(self.auto_increment)
-    {
-        sql += " auto_increment";
-    }
-    return sql;
 };
 
 module.exports = Column;

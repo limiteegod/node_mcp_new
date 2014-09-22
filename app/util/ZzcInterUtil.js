@@ -13,7 +13,6 @@ var ZzcInterUtil = function(){};
 ZzcInterUtil.prototype.get= function(transcode, msg, cb)
 {
     var key = digestUtil.md5(transcode + msg + zzc.key).substring(0, 16).toUpperCase();
-    console.log(transcode + msg + zzc.key);
     var post_data  = querystring.stringify({
         transcode:transcode,
         key:key,
@@ -21,13 +20,13 @@ ZzcInterUtil.prototype.get= function(transcode, msg, cb)
         version:zzc.version,
         msg:msg
     });
-    console.log(post_data);
     var headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length':post_data.length
     };
     options.headers = headers;
     console.log(options.headers);
+    console.log(msg);
     var req = http.request(options, function(res) {
         res.setEncoding('utf8');
         var data = '';
@@ -39,7 +38,7 @@ ZzcInterUtil.prototype.get= function(transcode, msg, cb)
             cb(null, data);
         });
     });
-    req.on('error', function(e) {
+    req.on('error', function(err) {
         cb(err, null);
     });
     req.write(post_data, "utf8");
