@@ -47,7 +47,7 @@ KISSY.add("vs-window", ["./node", "./base"], function(S, require) {
             var wId = CurSite.createUUID();
             var body = Node.one("body");
             var bodyWidth = document.body.clientWidth;
-            var bodyHeight = document.body.clientHeight;
+            var bodyHeight = window.innerHeight;
             var left = (bodyWidth - self.get("width"))/2;
             var top = (bodyHeight - self.get("height"))/2;
             var html = self.container.html();
@@ -69,12 +69,12 @@ KISSY.add("vs-window", ["./node", "./base"], function(S, require) {
             var cTable = Node.one('<div style="overflow-x: hidden;position:absolute;left:5px;top:30px;width:' + cWidth + 'px;height:' + (cHeight - 25) + 'px;"></div>');
             var title = Node.one('<div style="overflow-x: hidden;border-bottom:1px solid #28afae;left:5px;top:7px;position:absolute;width:' + cWidth + 'px;height:18px;">&nbsp;' + self.get("title") + '</div>');
             var frame = Node.one('<iframe id="' + wId + '" frameborder="no" border="0" style="width:' + cWidth + 'px;height:' + (cHeight - 25) + 'px;"></iframe>');
-            var bottomField = Node.one('<div style="overflow-x: hidden;border-top:1px solid #28afae;left:5px;top:' + (cHeight - 28) + 'px;position:absolute;width:' + cWidth + 'px;height:26px;"></div>');
-            var sureButton = Node.one('<input type="button" value="确定" style="margin-left:' + (cWidth - 100) + 'px"/>');
-            var cancelButton = Node.one('<input type="button" value="取消"/>');
+            var bottomField = Node.one('<div style="overflow-x: hidden;border-top:1px solid #28afae;left:5px;top:' + (cHeight - 30) + 'px;position:absolute;width:' + cWidth + 'px;height:28px;"></div>');
+            var sureButton = Node.one('<input type="button" value="确定" style="width:50px;margin-left:' + (cWidth - 120) + 'px"/>');
+            var cancelButton = Node.one('<input type="button" value="取消" style="width:50px;margin-left:5px;"/>');
             bottomField.append(sureButton);
             bottomField.append(cancelButton);
-            frame.attr("src", CurSite.getAbsolutePath(self.get("url")) + "?frameId=" + wId);
+            frame.attr("src", CurSite.getAbsolutePath(self.get("url")) + "&frameId=" + wId);
             cTable.append(frame);
             self.widowDiv.append(title);
             self.widowDiv.append(cTable);

@@ -1,0 +1,42 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-pagebar,vs-round-input",
+                function(S, Io, Node, Json, VsGridTable, VsPagebar, VsRoundInput){
+
+            });
+    body
+        .container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") id:
+                .vs_grid_plain(style="margin-left:8px;")=rst._id
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") zzcId:
+                .vs_grid_plain(style="margin-left:8px;")=rst.zzcId
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") gameCode:
+                .vs_grid_plain(style="margin-left:8px;")=rst.gameCode
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") termCode:
+                .vs_grid_plain(style="margin-left:8px;")=rst.termCode
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") amount:
+                .vs_grid_plain(style="margin-left:8px;")=rst.amount
+                |(分)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") playTypeCode:
+                .vs_grid_plain(style="margin-left:8px;")=rst.playTypeCode
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") betTypeCode:
+                .vs_grid_plain(style="margin-left:8px;")=rst.betTypeCode
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") numbers:
+                .vs_grid_plain(style="margin-left:8px;")=rst.numbers
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") status:
+                .vs_grid_plain(style="margin-left:8px;")=rst.status.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") zzcMsg:
+                .vs_grid_plain(style="margin-left:8px;")=rst.zzcMsg

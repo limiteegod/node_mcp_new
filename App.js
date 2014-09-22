@@ -12,6 +12,7 @@ var osUtil = require('./app/util/OsUtil.js');
 var monitorFactory = require('./app/common/MonitorFactory.js');
 var db = require('./app/config/Database.js');
 var prop = require('./app/config/Prop.js');
+var printMgDb = require('./app/config/PrintMgDb.js');
 
 //app.use(express.logger());
 
@@ -24,11 +25,18 @@ App.prototype.start = function()
 {
     var self = this;
     async.waterfall([
-        //start socket
+        //connect mdb
         function(cb)
         {
-            self.startSocket(function(err){
+            printMgDb.connect(function(err, db){
                 cb(err);
+            });
+        },
+        //check mdb data
+        function(cb)
+        {
+            printMgDb.check(function(){
+                cb(null);
             });
         },
         //start web
@@ -48,116 +56,6 @@ App.prototype.start = function()
         }
     });
 };
-
-App.prototype.startSocket = function(mainCb)
-{
-    var self = this;
-    async.waterfall([
-        //set server status
-        function(cb)
-        {
-            var machineTable = db.get("machine");
-            machineTable.update({_id:"server"}, {$set:{status:prop.machineStatus.running}}, {}, function(err, data){
-                if(err) throw err;
-                cb(null);
-            });
-        },
-        //set client status
-        function(cb)
-        {
-            var machineTable = db.get("machine");
-            machineTable.update({_id:{$ne:"server"}}, {$set:{status:prop.machineStatus.stopped}}, {}, function(err, data){
-                if(err) throw err;
-                cb(null);
-            });
-        },
-        //start socket
-        function(cb)
-        {
-            //listen data from other machine
-            net.createServer(function(sock) {
-                var buf = new Buffer(10*1024);
-                //current length of buf
-                var curBufLen = 0;
-                //data length of the data that will be received from terminal.
-                var tBufLen = 0;
-
-                var remoteIp = sock.remoteAddress, remotePort = sock.remotePort;
-
-                // 我们获得一个连接 - 该连接自动关联一个socket对象
-                console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
-
-                //update machine status in db
-                var machineTable = db.get("machine");
-                machineTable.update({ip:remoteIp, _id:{$ne:"server"}}, {$set:{status:prop.machineStatus.running}}, {});
-
-                // 为这个socket实例添加一个"data"事件处理函数
-                sock.on('data', function(data) {
-                    //append data to buffer
-                    data.copy(buf, curBufLen, 0, data.length);
-                    curBufLen += data.length;
-
-                    //console.log("data append length:" + data.length);
-                    if(tBufLen == 0 && curBufLen >= 4)    //command start point.
-                    {
-                        tBufLen = buf.readInt32BE(0);
-                        //console.log("cmd data length:" + tBufLen);
-                    }
-                    //console.log("curBufLen:" + curBufLen + ",tBufLen:" + tBufLen);
-
-                    //cmd data all received
-                    while(curBufLen >= tBufLen + 4 && tBufLen > 0)
-                    {
-                        var cmdDataBuf = new Buffer(tBufLen);
-                        buf.copy(cmdDataBuf, 0, 4, tBufLen + 4);
-                        if(curBufLen > tBufLen + 4)
-                        {
-                            curBufLen = curBufLen - tBufLen - 4;
-                            var exchangeBuf = new Buffer(curBufLen);
-                            buf.copy(exchangeBuf, 0, tBufLen + 4, tBufLen + curBufLen + 4);
-                            exchangeBuf.copy(buf, 0, 0, curBufLen);
-                        }
-                        else
-                        {
-                            curBufLen = 0;
-                        }
-                        tBufLen = 0;
-                        if(curBufLen >= 4)    //command start point.
-                        {
-                            tBufLen = buf.readInt32BE(0);
-                        }
-                        monitorFactory.handle(cmdDataBuf, function(err, headNode, bodyNode){
-                            //var msgNode = {head:headNode, body:JSON.stringify(bodyNode)};
-                            //self.io.emit("message", JSON.stringify(msgNode));
-                        });
-                    }
-                    //console.log("curBufLen:" + curBufLen + ",tBufLen:" + tBufLen);
-                });
-
-                // 为这个socket实例添加一个"close"事件处理函数
-                sock.on('close', function(data) {
-                    //update machine status in db
-                    var machineTable = db.get("machine");
-                    machineTable.update({ip:remoteIp, _id:{$ne:"server"}}, {$set:{status:prop.machineStatus.stopped}}, {});
-                });
-
-            }).listen(9081, function(){
-                cb(null, "start socket successful!");
-            });
-        }
-    ], function (err, result) {
-        if(err)
-        {
-            mainCb(err)
-        }
-        else
-        {
-            console.log(result); // -> 16
-            mainCb(null);
-        }
-    });
-};
-
 
 App.prototype.startWeb = function()
 {
@@ -199,7 +97,7 @@ App.prototype.startWeb = function()
             var headNode = {cmd:jadePathArray};
             pageControl.handle(headNode, req.query, function(err, data){
                 if(err) throw err;
-                console.log(data);
+                //console.log(data);
                 res.render(jadePath, data);
             });
         }

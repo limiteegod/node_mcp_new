@@ -173,6 +173,31 @@
     cursor:pointer;
 }
 
+.vs_grid_plain {
+    position: relative;
+    left: 0px;
+    top: 0px;
+    padding: 0px;
+    overflow: hidden;
+    float:left;
+}
+
+.vs_page_index_unselected {
+    overflow: hidden;
+    float:left;
+    cursor:pointer;
+    text-decoration: underline;
+    width: 12px;
+}
+
+.vs_page_index_selected {
+    overflow: hidden;
+    float:left;
+    cursor:pointer;
+    color: red;
+    text-decoration: underline;
+    width: 12px;
+}
 
 .clearfix { display: inline-table; }
 /* Hides from IE-mac \*/

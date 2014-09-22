@@ -1,6 +1,7 @@
 var http = require('http');
 var querystring = require('querystring');
 var moment = require('moment');
+var select = require('xpath.js');
 var DOMParser = require('xmldom').DOMParser;
 var XMLSerializer = require('xmldom').XMLSerializer;
 var prop = require('../config/Prop.js');
@@ -35,6 +36,7 @@ ZzcInterUtil.prototype.get= function(transcode, msg, cb)
         });
 
         res.on('end', function(){
+            console.log(data);
             cb(null, data);
         });
     });
@@ -62,11 +64,22 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
         ticketEle.setAttribute("id", ticket.zzcId);
         ticketEle.setAttribute("multiple", ticket.multiple);
         ticketEle.setAttribute("issue", ticket.termCode);
-        ticketEle.setAttribute("playtype", '0');
+        if(ticket.betTypeCode == '00')
+        {
+            ticketEle.setAttribute("playtype", '0');
+        }
+        else if(ticket.betTypeCode == '01')
+        {
+            ticketEle.setAttribute("playtype", '1');
+        }
+        else if(ticket.betTypeCode == '02')
+        {
+            ticketEle.setAttribute("playtype", '2');
+        }
         ticketEle.setAttribute("money", ticket.amount/100);
 
         var ballEle = doc.createElement("ball");
-        var ballText = doc.createTextNode(ticket.numbers.replace("|", ":").replace("#", ":").replace(";", "#"));
+        var ballText = doc.createTextNode(ticket.numbers.replace("|", ":").replace("$", ":").replace("#", ":").replace(";", "#"));
         ballEle.appendChild(ballText);
         ticketEle.appendChild(ballEle);
         ticketsEle.appendChild(ticketEle);
@@ -97,6 +110,28 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
     self.get("104", str, function(err, backMsg){
         cb(err, backMsg);
     });
+};
+
+/**
+ * get ticket json objects from xml string
+ * @param msg
+ */
+ZzcInterUtil.prototype.getJsonFromXml = function(msg)
+{
+    var self = this;
+    var tickets = [];
+    var doc = new DOMParser().parseFromString(msg, 'text/xml');
+    var ticketNodes = select(doc, '/msg/body/ticketorder/tickets/ticket');
+    for(var key in ticketNodes)
+    {
+        var ticketNode = ticketNodes[key];
+        var ticket = {};
+        ticket.id = ticketNode.getAttribute("id");
+        ticket.statusCode = ticketNode.getAttribute("statuscode");
+        ticket.msg = ticketNode.getAttribute("msg");
+        tickets[tickets.length] = ticket;
+    }
+    return tickets;
 };
 
 var zzcInterUtil = new ZzcInterUtil();

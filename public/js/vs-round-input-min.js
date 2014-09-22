@@ -23,7 +23,7 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             value:190
         },
         height:{
-            value:30
+            value:34
         }
     };
 
@@ -35,6 +35,7 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             self.container.append('<div class="clearfix"><div class="vs_div_table_border_head_left"></div><div class="vs_div_table_border_head"></div><div class="vs_div_table_border_head_right"></div></div>');
             self.container.append('<div class="clearfix"><div class="vs_div_table_border_content_left"></div><div class="vs_div_table_border_content"></div><div class="vs_div_table_border_content_right"></div></div>');
             self.container.append('<div class="clearfix"><div class="vs_div_table_border_bottom_left"></div><div class="vs_div_table_border_bottom"></div><div class="vs_div_table_border_bottom_right"></div></div>');
+            var initValue = self.container.attr("initValue");
             //设置中间行的宽度
             var divList = self.container.children();
             S.each(divList, function(row){
@@ -44,9 +45,9 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             });
             var setHDiv = divList[1];
             S.each(setHDiv.childNodes, function(item){
-                var trueHeight = self.get("height") - 40;
                 var middleDiv = Node.one(item);
-                middleDiv.css("height", 0);
+                var trueHeight = self.get("height") - 30;
+                middleDiv.css("height", trueHeight);
                 middleDiv.css("font-size", "0px");
             });
             var headDiv = divList[0];
@@ -65,13 +66,15 @@ KISSY.add("vs-round-input", ["./node", "./base"], function(S, require) {
             });
 
             var cWidth = self.get("width") - 16;
-            var cHeight = self.get("height") - 10;
+            var cHeight = self.get("height") - 14;
             var cTable = Node.one('<div class="clearfix"></div>');
             var cTableContent = Node.one('<div style="overflow-x: hidden;padding:1px;position:absolute;left:8px;top:6px;width:' + cWidth + 'px;height:' + cHeight + 'px;"></div>');
             self.cInput = Node.one('<input type="text" value="" style="width:' + (cWidth-2) + 'px;height:' + (cHeight-2) + 'px;border:none;outline:none;"/>');
             cTableContent.append(self.cInput);
             cTable.append(cTableContent);
             self.container.append(cTable);
+
+            self.cInput.val(initValue);
         },
         setData:function(data)
         {

@@ -54,7 +54,7 @@ Printer.prototype.start = function()
         //start print
         function(cb)
         {
-            self.print();
+            self.startPrintJob();
             cb(null);
         }
     ], function (err, result) {
@@ -118,6 +118,7 @@ Printer.prototype.getTicketFromPlat = function()
                             self.plat("P06", bodyNode, function(backMsgNode){
                                 var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
                                 var backBodyNode = JSON.parse(backBodyStr);
+                                //console.log(backBodyNode);
                                 self.saveTickets(backBodyNode.tickets);
                             });
                         }
@@ -147,12 +148,14 @@ Printer.prototype.getTicketFromPlat = function()
 /**
  * print the ticket
  */
-Printer.prototype.print = function()
+Printer.prototype.startPrintJob = function()
 {
     var self = this;
     self.printJob = new CronJob('*/5 * * * * *', function () {
         //self.printT01_00_00();
-        self.printF01_00_00();
+        self.print("F01_00_00");
+        self.print("F01_00_01");
+        self.print("F01_00_02");
     });
     self.printJob.start();
 };
@@ -183,7 +186,7 @@ Printer.prototype.sendT01_00_00 = function(tickets, cb)
 /**
  *  send the tickets to center
  */
-Printer.prototype.sendF01_00_00 = function(tickets, cb)
+Printer.prototype.send = function(tickets, cb)
 {
     var col = printMgDb.get("ticket");
     var time = moment().format(zzc.dateFmt);
@@ -209,7 +212,21 @@ Printer.prototype.sendF01_00_00 = function(tickets, cb)
             else
             {
                 //see the xml, if failure, change the db
-                console.log(data);
+                var backTickets = zzcInterUtil.getJsonFromXml(data);
+                console.log(backTickets);
+                for(var key in backTickets)
+                {
+                    var backTicket = backTickets[key];
+                    var zzcStatus = backTicket.status;
+                    var zzcMsg = backTicket.msg;
+                    var backStatus = prop.ticketStatus.send_success;
+                    if(backTicket.status != '0000')
+                    {
+                        backStatus = prop.ticketStatus.send_failure;
+                    }
+                    col.update({zzcId:backTicket.id}, {$set:{status:backStatus, zzcStatus:zzcStatus, zzcMsg:zzcMsg}}, {}, function(err, data){
+                    });
+                }
             }
             cb();
         });
@@ -272,10 +289,9 @@ Printer.prototype.printT01_00_00 = function()
 /**
  * print the ticket
  */
-Printer.prototype.printF01_00_00 = function()
+Printer.prototype.print = function(name)
 {
     var self = this;
-    var name = 'F01_00_00';
     var col = printMgDb.get(name);
     var continuable = true;
     var ticketArray = [];
@@ -288,7 +304,7 @@ Printer.prototype.printF01_00_00 = function()
                     ticketArray[ticketArray.length] = data;
                     if(ticketArray.length == 50)
                     {
-                        self.sendF01_00_00(ticketArray, function(){
+                        self.send(ticketArray, function(){
                             whiCb();
                             ticketArray = [];
                         });
@@ -302,7 +318,7 @@ Printer.prototype.printF01_00_00 = function()
                 {
                     if(ticketArray.length > 0)
                     {
-                        self.sendF01_00_00(ticketArray, function(){
+                        self.send(ticketArray, function(){
                             whiCb();
                             ticketArray = [];
                         });

@@ -19,12 +19,6 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
     S.extend(VsGridTable, Base);
 
     VsGridTable.ATTRS = {
-        width:{
-            value:310
-        },
-        height:{
-            value:310
-        },
         row:{
             value:3
         },
@@ -53,6 +47,7 @@ KISSY.add("vs-grid-table", ["./node", "./base"], function(S, require) {
         {
             var self = this;
             var table = self.container.one("table");
+            self.set("width", self.container.width());
             var theadNode = table.one("thead");
             var theadTrNode = theadNode.one("tr");
             var tbodyNode = table.one("tbody");

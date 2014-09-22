@@ -104,7 +104,27 @@ exports.loginExpiredSeconds = 30*60;
 exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
 
 //ticket status
-exports.ticketStatus = {"received":1000, "send":2000, "send_failure":2500, "success":3000, "failure":4000};
+exports.ticketStatus = {"received":1000, "send":2000, "send_failure":2500, "send_success":2800, "success":3000, "failure":4000};
+
+//ticket status
+exports.ticketStatusArray = [{id:1000, code:'received', des:"received"}, {id:2000, code:'send', des:"send"},
+    {id:2500, code:'send_failure', des:"send_failure"},
+    {id:2800, code:'send_success', des:"send_success"},
+    {id:3000, code:'success', des:"success"},
+    {id:4000, code:'failure', des:"failure"}];
+
+exports.getEnumById = function(name, id)
+{
+    var self = this;
+    var array = self[name];
+    for(var key in array)
+    {
+        if(array[key].id == id)
+        {
+            return array[key];
+        }
+    }
+};
 
 //game type
 exports.gameType = {'normal':1, 'gaopin':2, 'jingcai':3};
