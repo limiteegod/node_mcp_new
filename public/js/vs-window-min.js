@@ -35,8 +35,8 @@ KISSY.add("vs-window", ["./node", "./base"], function(S, require) {
         model: {
             value:true
         },
-        sureEvent:{
-            value:undefined
+        controlBt:{
+            value:[{name:'确定', cb:null}, {name:'取消', cb:null}, {name:'关闭', cb:null}]
         }
     };
 
@@ -70,10 +70,6 @@ KISSY.add("vs-window", ["./node", "./base"], function(S, require) {
             var title = Node.one('<div style="overflow-x: hidden;border-bottom:1px solid #28afae;left:5px;top:7px;position:absolute;width:' + cWidth + 'px;height:18px;">&nbsp;' + self.get("title") + '</div>');
             var frame = Node.one('<iframe id="' + wId + '" frameborder="no" border="0" style="width:' + cWidth + 'px;height:' + (cHeight - 25) + 'px;"></iframe>');
             var bottomField = Node.one('<div style="overflow-x: hidden;border-top:1px solid #28afae;left:5px;top:' + (cHeight - 30) + 'px;position:absolute;width:' + cWidth + 'px;height:28px;"></div>');
-            var sureButton = Node.one('<input type="button" value="确定" style="width:50px;margin-left:' + (cWidth - 120) + 'px"/>');
-            var cancelButton = Node.one('<input type="button" value="取消" style="width:50px;margin-left:5px;"/>');
-            bottomField.append(sureButton);
-            bottomField.append(cancelButton);
             frame.attr("src", CurSite.getAbsolutePath(self.get("url")) + "&frameId=" + wId);
             cTable.append(frame);
             self.widowDiv.append(title);
@@ -82,29 +78,40 @@ KISSY.add("vs-window", ["./node", "./base"], function(S, require) {
 
             self.cTable = cTable;
 
-            sureButton.on("click", function(){  //点击了确定按钮
-                var sureEvent = self.get("sureEvent");
-                if(sureEvent != undefined)
+            var bts = self.get("controlBt");
+            var btsWidth = 68*bts.length;
+            for(var key in bts)
+            {
+                var bt = bts[key];
+                var btMarginLeft
+                if(key == 0)
                 {
-                    var cDoc = window.frames[wId].contentDocument;
-                    if(cDoc == undefined)
-                    {
-                        cDoc = window.frames[wId].document;
-                    }
-                    var backValueElement = cDoc.getElementById("backValue");
-                    var backValueKissyNode = Node.one(backValueElement);
-                    sureEvent(Json.parse(backValueKissyNode.val()));
+                    btMarginLeft = cWidth - btsWidth + 60*key;
                 }
-                self.close();
-            });
-
-            cancelButton.on("click", function(){
-                self.close();
-            });
-
+                else
+                {
+                    btMarginLeft = 10;
+                }
+                var btNode = Node.one('<input index="' + key + '" type="button" value="' + bt.name + '" style="width:50px;margin-left:' + btMarginLeft + 'px"/>');
+                bottomField.append(btNode);
+                self._bindBtEvent(btNode);
+            }
             self.backDiv = Node.one('<div class="div_window_back" style="position: absolute;;left:0px;top:0px;width:' + bodyWidth + 'px;height:' + bodyHeight + 'px"></div>');
             body.append(self.backDiv);
             body.append(self.widowDiv);
+        },
+        _bindBtEvent:function(btNode)
+        {
+            var self = this;
+            btNode.on("click", function(){
+                var index = parseInt(Node.one(this).attr("index"));
+                var cb = self.get("controlBt")[index].cb;
+                if(cb)
+                {
+                    cb();
+                }
+                self.close();
+            });
         },
         setHtml:function(html)
         {

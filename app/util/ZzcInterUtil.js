@@ -40,6 +40,9 @@ ZzcInterUtil.prototype.get= function(transcode, msg, cb)
             cb(null, data);
         });
     });
+    req.setTimeout(20000, function(){
+        cb(new Error("time out"), null);
+    });
     req.on('error', function(err) {
         cb(err, null);
     });
@@ -64,22 +67,11 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
         ticketEle.setAttribute("id", ticket.zzcId);
         ticketEle.setAttribute("multiple", ticket.multiple);
         ticketEle.setAttribute("issue", ticket.termCode);
-        if(ticket.betTypeCode == '00')
-        {
-            ticketEle.setAttribute("playtype", '0');
-        }
-        else if(ticket.betTypeCode == '01')
-        {
-            ticketEle.setAttribute("playtype", '1');
-        }
-        else if(ticket.betTypeCode == '02')
-        {
-            ticketEle.setAttribute("playtype", '2');
-        }
+        ticketEle.setAttribute("playtype", self.getPlaytype(ticket));
         ticketEle.setAttribute("money", ticket.amount/100);
 
         var ballEle = doc.createElement("ball");
-        var ballText = doc.createTextNode(ticket.numbers.replace("|", ":").replace("$", ":").replace("#", ":").replace(";", "#"));
+        var ballText = doc.createTextNode(ticket.ball);
         ballEle.appendChild(ballText);
         ticketEle.appendChild(ballEle);
         ticketsEle.appendChild(ticketEle);
@@ -100,7 +92,7 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
     userEle.setAttribute("phone", zzc.user.phone);
     userEle.setAttribute("realname", zzc.user.realname);
     ticketOrderEle.appendChild(userEle);
-    ticketOrderEle.setAttribute("gameid", "SSQ");
+    ticketOrderEle.setAttribute("gameid", self.getGameId(ticket));
     ticketOrderEle.setAttribute("ticketsnum", tickets.length);
     ticketOrderEle.setAttribute("totalmoney", totalMoney);
     ticketOrderEle.appendChild(ticketsEle);
@@ -110,6 +102,43 @@ ZzcInterUtil.prototype.sendTickets = function(tickets, cb)
     self.get("104", str, function(err, backMsg){
         cb(err, backMsg);
     });
+};
+
+ZzcInterUtil.prototype.getPlaytype = function(ticket)
+{
+    var self = this;
+    if(ticket.gameCode == 'F01')
+    {
+        if(ticket.betTypeCode == '00')
+        {
+            return '0';
+        }
+        else if(ticket.betTypeCode == '01')
+        {
+            return '1';
+        }
+        else if(ticket.betTypeCode == '02')
+        {
+            return '2';
+        }
+    }
+};
+
+ZzcInterUtil.prototype.getGameId = function(ticket)
+{
+    if(ticket.gameCode == 'F01')
+    {
+        return 'SSQ';
+    }
+};
+
+ZzcInterUtil.prototype.getBall = function(ticket)
+{
+    var self = this;
+    if(ticket.gameCode == 'F01')
+    {
+        return ticket.numbers.replace("|", ":").replace("$", ":").replace("#", ":").replace(";", "#");
+    }
 };
 
 /**

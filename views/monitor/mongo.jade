@@ -1,0 +1,41 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-window",
+                function(S, Io, Node, Json, VsGridTable, VsWindow){
+                var table = new VsGridTable('#cols', {});
+
+                //绑定事件
+                Node.all(".delete").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var url = "monitor_detailTicket.html?id=" + tId;
+                        var win = new VsWindow("#tWin", {title:"票据详情", width:500, height:400, url:url,
+                            controlBt:[{name:'确定', cb:function(){
+                                console.log(tId);
+                                CurSite.sendUnDigest(Io, Json, "MG01", {id:tId}, function(err, backBodyNode){
+
+                                });
+                            }}, {name:'取消'}]
+                        });
+                    });
+                });
+
+            });
+    body
+        #tWin.container
+        #cols.container(style="width:422px;")
+            table
+                thead
+                    tr
+                        td(style="width:276px;") name
+                        td(style="width:134px;") 操作
+                tbody
+                    - each val in rst
+                        tr
+                            td=val.name
+                            td
+                                input(type="button", value="详情", class="detail", tId=val.name)
+                                input(type="button", value="删除", class="delete", tId=val.name)

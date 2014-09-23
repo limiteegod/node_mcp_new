@@ -193,7 +193,9 @@ Printer.prototype.send = function(tickets, cb)
     async.each(tickets, function(row, callback) {
         printMgDb.getZzcId(function(err, data){
             row.zzcId = time + (10000000 + data.value%10000000);
-            col.update({_id:row._id}, {$set:{status:prop.ticketStatus.send, zzcId:row.zzcId}}, {}, function(err, data){
+            row.ball = zzcInterUtil.getBall(row);
+            col.update({_id:row._id}, {$set:{status:prop.ticketStatus.send, zzcId:row.zzcId, ball:row.ball}},
+                {}, function(err, data){
                 callback();
             });
         });
@@ -220,7 +222,7 @@ Printer.prototype.send = function(tickets, cb)
                     var zzcStatus = backTicket.status;
                     var zzcMsg = backTicket.msg;
                     var backStatus = prop.ticketStatus.send_success;
-                    if(backTicket.status != '0000')
+                    if(backTicket.statusCode != '0000')
                     {
                         backStatus = prop.ticketStatus.send_failure;
                     }

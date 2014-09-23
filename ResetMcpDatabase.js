@@ -43,9 +43,9 @@ ResetMcpDatabase.prototype.resetF01 = function()
             var openTime = moment();
             var gap = 60*60*1000;
             var endTime = moment(openTime).add(gap, 'milliseconds');
-            termTable.save({id:digestUtil.createUUID(), gameCode:gameCode, code:'2014001',
-                nextCode:'2014002', openTime:openTime.format(self.dateFmt), createTime:openTime.format(self.dateFmt),
-                endTime:endTime.format(self.dateFmt), name:'2014001',
+            termTable.save({id:digestUtil.createUUID(), gameCode:gameCode, code:'20140923002',
+                nextCode:'20140923003', openTime:openTime.format(self.dateFmt), createTime:openTime.format(self.dateFmt),
+                endTime:endTime.format(self.dateFmt), name:'20140923002',
                 prizeDesc:self.getPrizeDesc(gameCode), status:1100,
                 winningNumber:"09,14,17,18,21,25|15"});
             cb(null);

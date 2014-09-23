@@ -35,9 +35,16 @@ PrintMgDb.prototype.check = function(cb){
  * get col by name
  * @param name
  */
-PrintMgDb.prototype.get = function(name){
+PrintMgDb.prototype.get = function(name, cb){
     var self = this;
-    return self.db.collection(name);
+    if(name)
+    {
+        return self.db.collection(name);
+    }
+    else
+    {
+        return self.db.collections(cb);
+    }
 };
 
 

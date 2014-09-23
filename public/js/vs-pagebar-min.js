@@ -48,10 +48,11 @@ KISSY.add("vs-pagebar", ["./node", "./base"], function(S, require) {
             }
 
             var pStr = self._getDetailPage(cur, pageCount);
-            var html = '<div class="vs_grid_plain">共' + pageCount + '页';
+            var html = '<div class="vs_grid_plain">共' + count + '条记录,</div>';
+            html += '<div class="vs_grid_plain">共' + pageCount + '页</div>';
             if(count > 0)
             {
-                html += ',第</div>';
+                html += '<div class="vs_grid_plain">,第</div>';
                 html += pStr;
                 html += '<div class="vs_grid_plain">页</div>';
             }
@@ -72,16 +73,47 @@ KISSY.add("vs-pagebar", ["./node", "./base"], function(S, require) {
         _getDetailPage:function(cur, pageCount)
         {
             var self = this;
-            var str = '';
-            for(var i = 0; i < pageCount; i++)
+            var pArray;
+            if(pageCount <= 9)
             {
-                var pIndex = i + 1;
-                var cls = 'vs_page_index_unselected';
-                if(pIndex == cur)
+                pArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            }
+            else
+            {
+                if(cur <= 3)
                 {
-                    cls = 'vs_page_index_selected';
+                    pArray = [1, 2, 3, 4, -1, pageCount - 1, pageCount];
                 }
-                str += '<div class="' + cls + '">' + pIndex + '</div>';
+                else if(pageCount - cur <= 2)
+                {
+                    pArray = [1, 2, -1, pageCount - 3, pageCount - 2, pageCount - 1, pageCount];
+                }
+                else
+                {
+                    pArray = [1, 2, -1, cur -1, cur, cur + 1, -1, pageCount - 1, pageCount];
+                }
+            }
+            return self._getIndexHtml(cur, pArray, pageCount);
+        },
+        _getIndexHtml:function(cur, pArray, pageCount)
+        {
+            var str = '';
+            for(var key in pArray)
+            {
+                var pIndex = pArray[key];
+                if(pIndex < 0)
+                {
+                    str += '<div class="vs_grid_plain">...&nbsp;</div>';
+                }
+                else if(pIndex <= pageCount)
+                {
+                    var cls = 'vs_page_index_unselected';
+                    if(pIndex == cur)
+                    {
+                        cls = 'vs_page_index_selected';
+                    }
+                    str += '<div class="' + cls + '">' + pIndex + '</div>';
+                }
             }
             return str;
         }

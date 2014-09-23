@@ -31,10 +31,17 @@ MonitorPageControl.prototype.detailTicket = function(headNode, bodyNode, cb)
     var backBodyNode = {title:"client"};
     var ticketCol = printMgDb.get("ticket");
     ticketCol.findOne({_id:bodyNode.id}, {}, function(err, data){
-        data.status = prop.getEnumById("ticketStatusArray", data.status);
-        data.game = prop.getGameInfo(data.gameCode);
-        console.log(data);
-        backBodyNode.rst = data;
+        if(data)
+        {
+            data.status = prop.getEnumById("ticketStatusArray", data.status);
+            data.game = prop.getGameInfo(data.gameCode);
+            console.log(data);
+            backBodyNode.rst = data;
+        }
+        else
+        {
+            backBodyNode.rst = {};
+        }
         cb(null, backBodyNode);
     });
 };
@@ -94,6 +101,22 @@ MonitorPageControl.prototype.viewTicket = function(headNode, bodyNode, cb)
             backBodyNode.count = count;
             cb(null, backBodyNode);
         });
+    });
+};
+
+MonitorPageControl.prototype.mongo = function(headNode, bodyNode, cb) {
+    var self = this;
+    var backBodyNode = {title:"monitor the mongodb"};
+    var rst = [];
+    printMgDb.get(null, function(err, data){
+        for(var key in data)
+        {
+            var obj = {name:data[key].collectionName};
+            rst[rst.length] = obj;
+        }
+        backBodyNode.rst = rst;
+        console.log(backBodyNode);
+        cb(null, backBodyNode);
     });
 };
 

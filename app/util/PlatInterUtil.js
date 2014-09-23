@@ -42,6 +42,9 @@ PlatInterUtil.prototype.get= function(userId, userType, channelCode, userKey, cm
             cb(JSON.parse(data));
         });
     });
+    req.setTimeout(20000, function(){
+        cb(new Error("time out"), null);
+    });
     req.on('error', function(e) {
         console.log('problem with request: ' + e.message);
     });

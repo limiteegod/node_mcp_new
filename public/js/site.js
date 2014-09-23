@@ -172,3 +172,16 @@ CurSite.decrypt = function(headNode, key, encodedBodyStr)
     var decrypted = CryptoJS.TripleDES.decrypt(encodedBodyStr, arrayKey, {iv:iv, mode:CryptoJS.mode.CFB, padding: CryptoJS.pad.NoPadding});
     return decrypted.toString(CryptoJS.enc.Utf8);
 };
+
+//send undigest msg to server
+CurSite.sendUnDigest = function(Io, Json, cmd, bodyNode, cb)
+{
+    var headNode = {cmd:cmd, digestType:"3des-empty"};
+    var msgNode = CurSite.encrypt(headNode, null, Json.stringify(bodyNode));
+    Io({type:"post", url:CurSite.interPath, data:{message:Json.stringify(msgNode)}, success:function(data){
+        var backBodyStr = data.body;
+        var decodedBodyStr = CurSite.decrypt(data.head, null, backBodyStr);
+        var backBodyNode = Json.parse(decodedBodyStr);
+        cb(null, backBodyNode);
+    }});
+};

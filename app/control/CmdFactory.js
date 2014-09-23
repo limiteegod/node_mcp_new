@@ -1,6 +1,7 @@
 var userControl = require("./UserControl.js");
 var adminControl = require("./AdminControl.js");
 var monitorControl = require("./MonitorControl.js");
+var mongoControl = require("./MongoControl.js");
 var prop = require('../config/Prop.js');
 
 var CmdFactory = function(){};
@@ -20,6 +21,10 @@ CmdFactory.prototype.handle = function(headNode, bodyStr, cb)
     else if(cmdGroup[1] == "MT")
     {
         monitorControl.handle(headNode, bodyStr, cb);
+    }
+    else if(cmdGroup[1] == "MG")
+    {
+        mongoControl.handle(headNode, bodyStr, cb);
     }
 };
 

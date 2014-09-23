@@ -107,6 +107,11 @@ App.prototype.startWeb = function()
         }
     });
 
+    //zzc print notify
+    app.post("/main/zzc_notify.htm", function(req, res){
+
+    });
+
     app.post("/main/interface.htm", function(req, res){
         var message = req.body.message;
         console.log(message);
@@ -133,7 +138,6 @@ App.prototype.startWeb = function()
                 bodyNode.description = errCode.E0000.description;
 
                 key = headNode.key;
-                headNode.digestType = "3des";
                 headNode.key = undefined;
             }
             var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
