@@ -43,7 +43,7 @@ LotTest.prototype.lotF01 = function()
 {
     var self = this;
     var bodyNode = {};
-    var orderNode = {gameCode:'F01', termCode:'20140923002', amount:2000, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
+    var orderNode = {gameCode:'F01', termCode:'2014001', amount:2000, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
     var ticketsNode = [{betTypeCode:'00', amount:200, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25|15'},
         {betTypeCode:'01', amount:1400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25,26|15'},
         {betTypeCode:'02', amount:400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21$25,26|10'}];

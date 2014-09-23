@@ -19,6 +19,8 @@ if(kvs.target)
 exports.target = target;
 
 var zzc = {};
+//platform
+var platform = {};
 if(target == 'dev' || target == 'home')
 {
     //mysql连接
@@ -33,37 +35,20 @@ if(target == 'dev' || target == 'home')
     exports.mongo = mongo;
 
     //平台地址
-    var platform = {};
     platform.site = {
         hostname: '127.0.0.1',
-        port: 8080,
+        port: 9080,
         path: '/mcp-filter/main/interface.htm',
         method: 'POST'
     };
     platform.ver = "s.1.01";
+    platform.gateway = {ip:'127.0.0.1', port:8080, method:'POST'};
+
     exports.platform = platform;
-
-
-    zzc.site = {
-        hostname: '122.0.68.5',
-        port: 8046,
-        path: '/greatwallweb/main',
-        method: 'POST'
-    };
-    zzc.key = 'hy123456';
-    zzc.partnerid = '008611';
-    zzc.version = '1.0';
-    zzc.dateFmt = 'YYYYMMDDHHmmss';
-    zzc.user = {};
-    zzc.user.idCard = '130123198907250098';
-    zzc.user.userId = '008611';
-    zzc.user.phone = '18612100000';
-    zzc.user.realname = 'jiuge';
 }
 if(target == 'test')
 {
     //平台地址
-    var platform = {};
     platform.site = {
         hostname: '182.254.139.133',
         port: 8080,
@@ -71,6 +56,7 @@ if(target == 'test')
         method: 'POST'
     };
     platform.ver = "s.1.01";
+    platform.gateway = {ip:'127.0.0.1', port:8080, method:'POST'};
     exports.platform = platform;
 }
 else if(target == 'run')
@@ -84,7 +70,6 @@ else if(target == 'run')
     exports.mongo = mongo;
 
     //平台地址
-    var platform = {};
     platform.site = {
         hostname: '127.0.0.1',
         port: 8081,
@@ -92,8 +77,10 @@ else if(target == 'run')
         method: 'POST'
     };
     platform.ver = "s.1.01";
+    platform.gateway = {ip:'192.168.222.232', port:8080, method:'POST'};
     exports.platform = platform;
 }
+
 
 exports.zzc = zzc;
 
