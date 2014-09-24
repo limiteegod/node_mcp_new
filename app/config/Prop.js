@@ -77,7 +77,7 @@ else if(target == 'run')
         method: 'POST'
     };
     platform.ver = "s.1.01";
-    platform.gateway = {ip:'192.168.222.232', port:8080, method:'POST'};
+    platform.gateway = {ip:'192.168.222.233', port:8301, method:'POST'};
     exports.platform = platform;
 }
 
