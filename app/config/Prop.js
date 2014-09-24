@@ -81,6 +81,7 @@ else if(target == 'run')
     exports.platform = platform;
 }
 
+console.log(exports.platform);
 
 exports.zzc = zzc;
 
