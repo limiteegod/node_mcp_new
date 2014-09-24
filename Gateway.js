@@ -5,13 +5,14 @@ var httpServer = http.createServer(app);
 var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
-var gatewayInterUtil = require('./app/util/GatewayInterUtil.js');
+var digestUtil = require("./app/util/DigestUtil.js");
+var cmdFactory = require("./app/control/CmdFactory.js");
 
-var Filter = function(){
+var Gateway = function(){
     var self = this;
 };
 
-Filter.prototype.start = function(){
+Gateway.prototype.start = function(){
     var self = this;
     async.waterfall([
         //start web
@@ -33,7 +34,7 @@ Filter.prototype.start = function(){
 };
 
 
-Filter.prototype.startWeb = function()
+Gateway.prototype.startWeb = function()
 {
     var self = this;
 
@@ -80,32 +81,46 @@ Filter.prototype.startWeb = function()
         });
     });
 
-    httpServer.listen(9080);
+    httpServer.listen(9081);
 };
 
-Filter.prototype.handle = function(message, cb)
+Gateway.prototype.handle = function(message, cb)
 {
     var self = this;
     console.log(message);
     try {
         var msgNode = JSON.parse(message);
         var headNode = msgNode.head;
-        var ser = service.getByCode(headNode.cmd);
-        gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
-            if(err)
-            {
-                console.log('problem with request: ', err);
-                backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
+        var bodyStr = msgNode.body;
+        console.log(bodyStr);
+        cmdFactory.handle(headNode, bodyStr, function(err, bodyNode) {
+            var key;
+            if (err) {
+                key = digestUtil.getEmptyKey();
+                headNode.digestType = "3des-empty";
+                if (bodyNode == undefined) {
+                    bodyNode = {};
+                }
+                bodyNode.repCode = err.repCode;
+                bodyNode.description = err.description;
             }
-            cb(backMsg);
+            else {
+                bodyNode.code = errCode.E0000.repCode;
+                bodyNode.description = errCode.E0000.description;
+
+                key = headNode.key;
+                headNode.key = undefined;
+            }
+            var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
+            cb({head: headNode, body: decodedBodyStr});
         });
     }
     catch (err)
     {
-        cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
+        cb({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)});
         return;
     }
 };
 
-var f = new Filter();
-f.start();
+var gateway = new Gateway();
+gateway.start();
