@@ -17,6 +17,7 @@ GatewayInterUtil.prototype.get= function(service, headStr, bodyStr, cb)
     };
     var options = {ip:gt.ip, port:gt.port, method:gt.method, path:service.path};
     options.headers = headers;
+    console.log(options);
     var req = http.request(options, function(res) {
         res.setEncoding('utf8');
         var data = '';
