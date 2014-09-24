@@ -15,9 +15,8 @@ GatewayInterUtil.prototype.get= function(service, headStr, bodyStr, cb)
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length':post_data.length
     };
-    var options = {ip:gt.ip, port:gt.port, method:gt.method, path:service.path};
+    var options = {host:gt.host, port:gt.port, method:gt.method, path:service.path};
     options.headers = headers;
-    console.log(options);
     var req = http.request(options, function(res) {
         res.setEncoding('utf8');
         var data = '';

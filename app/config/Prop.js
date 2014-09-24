@@ -42,7 +42,7 @@ if(target == 'dev' || target == 'home')
         method: 'POST'
     };
     platform.ver = "s.1.01";
-    platform.gateway = {ip:'127.0.0.1', port:8080, method:'POST'};
+    platform.gateway = {host:'127.0.0.1', port:8080, method:'POST'};
 
     exports.platform = platform;
 }
@@ -56,7 +56,7 @@ if(target == 'test')
         method: 'POST'
     };
     platform.ver = "s.1.01";
-    platform.gateway = {ip:'127.0.0.1', port:8080, method:'POST'};
+    platform.gateway = {host:'127.0.0.1', port:8080, method:'POST'};
     exports.platform = platform;
 }
 else if(target == 'run')
@@ -77,7 +77,7 @@ else if(target == 'run')
         method: 'POST'
     };
     platform.ver = "s.1.01";
-    platform.gateway = {ip:'192.168.222.233', port:8301, method:'POST'};
+    platform.gateway = {host:'192.168.222.233', port:8301, method:'POST'};
     exports.platform = platform;
 }
 
