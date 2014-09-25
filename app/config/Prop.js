@@ -18,9 +18,13 @@ if(kvs.target)
 //runtime target
 exports.target = target;
 
+exports.kvs = kvs;
+
 var zzc = {};
 //platform
 var platform = {};
+//oracle
+var oracle;
 if(target == 'dev' || target == 'home')
 {
     //mysql连接
@@ -29,6 +33,14 @@ if(target == 'dev' || target == 'home')
 
     var mcpdb = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'mcp'};
     exports.mcpdb = mcpdb;
+
+    oracle = {
+        hostname: "192.168.11.118",
+        port: 1521,
+        database: "lottery", // System ID (SID)
+        user: "liming",
+        password: "0okmnhy6"
+    };
 
     //mongodb的地址
     var mongo = {'url':'mongodb://127.0.0.1:27017/print'};
@@ -81,9 +93,12 @@ else if(target == 'run')
     exports.platform = platform;
 }
 
+
+
 console.log(exports.platform);
 
 exports.zzc = zzc;
+exports.oracle = oracle;
 
 //if user hasn't operation in half a hour, the key will be expired.
 exports.loginExpiredSeconds = 30*60;

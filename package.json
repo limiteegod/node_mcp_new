@@ -10,6 +10,7 @@
     "moment": "^2.8.3",
     "mongodb": "1.4.8",
     "mysql": "2.4.2",
+    "oracle": "^0.3.7",
     "procstreams": "^0.3.0",
     "socket.io": "^1.1.0",
     "time": "0.11.0",

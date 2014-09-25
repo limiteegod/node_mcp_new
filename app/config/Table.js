@@ -1,5 +1,6 @@
 var dbPool = require('./DbPool.js');
 var DbCursor = require('./DbCursor.js');
+var dateUtil = require('../util/DateUtil.js');
 
 var Table = function(db, name, engine, colList){
     var self = this;
@@ -68,7 +69,8 @@ Table.prototype.save = function(data, cb)
     for(var key in data)
     {
         //如果没有相关的列，则直接忽略
-        if(self.colList[key] == undefined)
+        var col = self.colList[key];
+        if(col == undefined)
         {
             continue;
         }
@@ -81,7 +83,14 @@ Table.prototype.save = function(data, cb)
         var value = data[key];
         if(typeof value == "string")
         {
-            valueStr += "'" + value + "'";
+            if(col.type == 'date')
+            {
+                valueStr += "to_date('" + value + "', 'yyyy-MM-dd HH24:mi:ss')";
+            }
+            else
+            {
+                valueStr += "'" + value + "'";
+            }
         }
         else
         {
@@ -89,14 +98,37 @@ Table.prototype.save = function(data, cb)
         }
         i++;
     }
-    sql += keyStr + ") values(" + valueStr + ");";
+    sql += keyStr + ") values(" + valueStr + ")";
     console.log(sql);
-    self.db.getConn().query(sql, function(err, rows, fields) {
-        if(cb != undefined)
-        {
-            cb(err, rows, data);
-        }
-    });
+
+    var conn = self.db.getConn();
+    if(self.engine == 'mysql')
+    {
+        conn.query(sql, function(err, rows, fields) {
+            cb(err, rows);
+        });
+    }
+    else if(self.engine == 'oracle')
+    {
+        conn.execute(sql, [], function(err, results) {
+            if(err)
+            {
+                cb(err, results);
+            }
+            else
+            {
+                for(var key in results)
+                {
+                    dateUtil.oracleObj(results[key]);
+                }
+                cb(err, results);
+            }
+        });
+    }
+    else
+    {
+        cb(new Error("unsurpoted engine."), undefined);
+    }
 };
 
 /**
@@ -130,7 +162,7 @@ Table.prototype.getUpdateStr = function(data)
                         {
                             pStr += ",";
                         }
-                        pStr += self.getKvPair(col, "=", setData[setKey]);
+                        pStr += self.getKvPair(setKey, "=", setData[setKey]);
                         kCount++;
                     }
                 }
@@ -154,12 +186,27 @@ Table.prototype.update = function(condition, data, option, cb)
         sql += " where " + conditionStr;
     }
     console.log(sql);
-    self.db.getConn().query(sql, function(err, rows, fields) {
-        if(cb != undefined)
-        {
-            cb(err, rows, data);
-        }
-    });
+    var conn = self.db.getConn();
+    if(self.engine == 'mysql')
+    {
+        conn.query(sql, function(err, rows, fields) {
+            if (err) throw err;
+            if(cb != undefined)
+            {
+                cb(err, rows);
+            }
+        });
+    }
+    else if(self.engine == 'oracle')
+    {
+        conn.execute(sql, [], function(err, results) {
+            cb(err, results);
+        });
+    }
+    else
+    {
+        throw new Error("unsurpoted engine.");
+    }
 };
 
 /**
@@ -179,12 +226,6 @@ Table.prototype.condition = function(data, parentKey)
         var conditionArray = key.match(/\$([a-z]+)/);
         if(!conditionArray)
         {
-            var col = self.colList[key];
-            if(col == undefined)
-            {
-                //如果没有相关的列，则直接忽略
-                continue;
-            }
             var kv = "(";
             if(typeof data[key] == 'object')
             {
@@ -192,7 +233,7 @@ Table.prototype.condition = function(data, parentKey)
             }
             else
             {
-                kv += self.getKvPair(col, "=", data[key]);
+                kv += self.getKvPair(key, "=", data[key]);
             }
             kv += ")";
             conditionStr += kv;
@@ -218,32 +259,26 @@ Table.prototype.condition = function(data, parentKey)
             }
             else if(conditionArray[1] == 'gt')
             {
-                var col = self.colList[parentKey];
-                expression += self.getKvPair(col, ">", data[key]);
+                expression += self.getKvPair(parentKey, ">", data[key]);
             }
             else if(conditionArray[1] == 'gte')
             {
-                var col = self.colList[parentKey];
-                expression += self.getKvPair(col, ">=", data[key]);
+                expression += self.getKvPair(parentKey, ">=", data[key]);
             }
             else if(conditionArray[1] == 'lt')
             {
-                var col = self.colList[parentKey];
-                expression += self.getKvPair(col, "<", data[key]);
+                expression += self.getKvPair(parentKey, "<", data[key]);
             }
             else if(conditionArray[1] == 'lte')
             {
-                var col = self.colList[parentKey];
-                expression += self.getKvPair(col, "<=", data[key]);
+                expression += self.getKvPair(parentKey, "<=", data[key]);
             }
             else if(conditionArray[1] == 'ne')
             {
-                var col = self.colList[parentKey];
-                expression += self.getKvPair(col, "!=", data[key]);
+                expression += self.getKvPair(parentKey, "!=", data[key]);
             }
             else if(conditionArray[1] == 'in')
             {
-                var col = self.colList[parentKey];
                 var inList = data[key];
                 var inListCount = 0;
                 var inStr = "(";
@@ -257,7 +292,7 @@ Table.prototype.condition = function(data, parentKey)
                     inListCount++;
                 }
                 inStr += ")";
-                expression += self.getKvPair(col, "in", inStr);
+                expression += self.getKvPair(parentKey, "in", inStr);
             }
             conditionStr += expression;
         }
@@ -271,11 +306,20 @@ Table.prototype.condition = function(data, parentKey)
  * @param col
  * @param value
  */
-Table.prototype.getKvPair = function(col, op, value)
+Table.prototype.getKvPair = function(colName, op, value)
 {
+    var self = this;
+    var col = self.colList[colName];
     if(col == undefined)
     {
-        return "";
+        if(colName == 'rownum')
+        {
+            return "rownum " + op + " " + value;
+        }
+        else
+        {
+            return "";
+        }
     }
     else
     {
@@ -283,6 +327,10 @@ Table.prototype.getKvPair = function(col, op, value)
         if(col.getType() == 'int' || col.getType() == "bigint")
         {
             exp += value;
+        }
+        else if(col.getType() == 'date' && self.engine == 'oracle')
+        {
+            exp += "to_date('" + value + "', 'yyyy-MM-dd HH24:mi:ss')";
         }
         else
         {
@@ -311,10 +359,15 @@ Table.prototype.find = function(data, columns)
     {
         columns.id = 1;
     }
+    if(columns.ID == undefined)
+    {
+        columns.ID = 1;
+    }
     for(var key in columns)
     {
         //如果没有相关的列，则直接忽略
-        if(self.colList[key] == undefined)
+        var tCol = self.colList[key];
+        if(tCol == undefined)
         {
             continue;
         }
@@ -359,7 +412,28 @@ Table.prototype.remove = function(condtion, option, cb)
         sql += " where " + conditionStr;
     }
     console.log(sql);
-    self.db.getConn().query(sql, cb);
+
+    var conn = self.db.getConn();
+    if(self.engine == 'mysql')
+    {
+        conn.query(sql, function(err, rows, fields) {
+            if (err) throw err;
+            if(cb != undefined)
+            {
+                cb(err, rows);
+            }
+        });
+    }
+    else if(self.engine == 'oracle')
+    {
+        conn.execute(sql, [], function(err, results) {
+            cb(err, results);
+        });
+    }
+    else
+    {
+        throw new Error("unsurpoted engine.");
+    }
 };
 
 module.exports = Table;

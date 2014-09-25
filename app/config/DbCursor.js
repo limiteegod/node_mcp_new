@@ -1,4 +1,5 @@
 var dbPool = require('./DbPool.js');
+var dateUtil = require('../util/DateUtil.js');
 
 var DbCurser = function(table, baseSql){
     var self = this;
@@ -45,13 +46,38 @@ DbCurser.prototype.toArray = function(cb)
 {
     var self = this;
     console.log(self.baseSql);
-    self.table.getDb().getConn().query(self.baseSql, function(err, rows, fields) {
-        if (err) throw err;
-        if(cb != undefined)
-        {
-            cb(err, rows);
-        }
-    });
+    var conn = self.table.getDb().getConn();
+    if(self.table.engine == 'mysql')
+    {
+        conn.query(self.baseSql, function(err, rows, fields) {
+            if (err) throw err;
+            if(cb != undefined)
+            {
+                cb(err, rows);
+            }
+        });
+    }
+    else if(self.table.engine == 'oracle')
+    {
+        conn.execute(self.baseSql, [], function(err, results) {
+            if(err)
+            {
+                cb(err, results);
+            }
+            else
+            {
+                for(var key in results)
+                {
+                    dateUtil.oracleObj(results[key]);
+                }
+                cb(err, results);
+            }
+        });
+    }
+    else
+    {
+        throw new Error("unsurpoted engine.");
+    }
 };
 
 module.exports = DbCurser;

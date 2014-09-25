@@ -19,11 +19,17 @@ ResetMcpDatabase.prototype.resetF01 = function()
         function(cb)
         {
             var gameTable = mcpdb.get("game");
-            gameTable.find({code:"F01"}, {}).toArray(function(err, data){
+            gameTable.find({CODE:"F01"}, {}).toArray(function(err, data){
                 if(err) throw err;
                 if(data.length == 0)
                 {
-                    gameTable.save({id:digestUtil.createUUID(), code:'F01', name:'双色球', type:prop.gameType.normal});
+                    gameTable.save({ID:digestUtil.createUUID(), CODE:'F01', NAME:'双色球', TYPE:prop.gameType.normal},
+                        function(err, data){
+                    });
+                    cb(null);
+                }
+                else
+                {
                     cb(null);
                 }
             });
@@ -43,11 +49,13 @@ ResetMcpDatabase.prototype.resetF01 = function()
             var openTime = moment();
             var gap = 60*60*1000;
             var endTime = moment(openTime).add(gap, 'milliseconds');
-            termTable.save({id:digestUtil.createUUID(), gameCode:gameCode, code:'2014001',
-                nextCode:'2014002', openTime:openTime.format(self.dateFmt), createTime:openTime.format(self.dateFmt),
-                endTime:endTime.format(self.dateFmt), name:'2014001',
-                prizeDesc:self.getPrizeDesc(gameCode), status:1100,
-                winningNumber:"09,14,17,18,21,25|15"});
+            termTable.save({ID:digestUtil.createUUID(), GAMECODE:gameCode, CODE:'2014001',
+                NEXTCODE:'2014002', OPENTIME:openTime.format(self.dateFmt), CREATETIME:openTime.format(self.dateFmt),
+                ENDTIME:endTime.format(self.dateFmt), NAME:'2014001',
+                PRIZEDESC:self.getPrizeDesc(gameCode), STATUS:1100,
+                WINNINGNUMBER:"09,14,17,18,21,25|15"}, function(err, data){
+                console.log(err);
+            });
             cb(null);
         }
     ], function (err, result) {
@@ -176,10 +184,11 @@ ResetMcpDatabase.prototype.getPrizeDesc = function(gameCode)
     return JSON.stringify(pd);
 };
 
-
-mcpdb.create(function(){
+mcpdb.connect(function(err, conn) {
+    if(err) throw err;
     var reset = new ResetMcpDatabase();
     reset.resetF01();
-    reset.resetStation();
+    //reset.resetStation();
 });
+
 

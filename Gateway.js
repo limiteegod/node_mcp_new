@@ -5,6 +5,7 @@ var httpServer = http.createServer(app);
 var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
+var db = require('./app/config/McpDataBase.js');
 var digestUtil = require("./app/util/DigestUtil.js");
 var cmdFactory = require("./app/control/CmdFactory.js");
 
@@ -15,6 +16,12 @@ var Gateway = function(){
 Gateway.prototype.start = function(){
     var self = this;
     async.waterfall([
+        function(cb)
+        {
+            db.connect(function(err, conn){
+                cb(err);
+            });
+        },
         //start web
         function(cb)
         {
