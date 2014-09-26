@@ -1,5 +1,6 @@
 var platInterUtil = require('./app/util/PlatInterUtil.js');
 var digestUtil = require('./app/util/DigestUtil.js');
+var log = require('./app/util/McpLog.js');
 
 var LotTest = function(){
     var self = this;
@@ -49,7 +50,7 @@ LotTest.prototype.lotF01 = function()
         {betTypeCode:'02', amount:400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21$25,26|10'}];
     orderNode.tickets = ticketsNode;
     bodyNode.order = orderNode;
-    self.lot(bodyNode, function(backMsgNode){
+    self.lot(bodyNode, function(err, backMsgNode){
         var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
         var backBodyNode = JSON.parse(backBodyStr);
         console.log("back-body:");

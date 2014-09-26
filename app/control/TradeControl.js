@@ -103,6 +103,7 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
             });
         }
     ], function (err) {
+        headNode.key = user.secretKey;
         var backBodyNode = {};
         cb(null, backBodyNode);
     });

@@ -92,6 +92,7 @@ Gateway.prototype.startWeb = function()
         var message = req.body.message;
         self.handle(message, function(backMsgNode){
             res.json(backMsgNode);
+            log.info(backMsgNode);
         });
     });
 
@@ -99,6 +100,7 @@ Gateway.prototype.startWeb = function()
         var message = req.query.message;
         self.handle(message, function(backMsgNode){
             res.json(backMsgNode);
+            log.info(backMsgNode);
         });
     });
 
@@ -108,12 +110,11 @@ Gateway.prototype.startWeb = function()
 Gateway.prototype.handle = function(message, cb)
 {
     var self = this;
-    console.log(message);
+    log.info(message);
     try {
         var msgNode = JSON.parse(message);
         var headNode = msgNode.head;
         var bodyStr = msgNode.body;
-        console.log(bodyStr);
         cmdFactory.handle(headNode, bodyStr, function(err, bodyNode) {
             var key;
             if (err) {
