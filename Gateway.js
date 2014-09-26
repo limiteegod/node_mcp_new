@@ -118,7 +118,10 @@ Gateway.prototype.handle = function(message, cb)
             var key;
             if (err) {
                 key = digestUtil.getEmptyKey();
-                headNode.digestType = "3des-empty";
+                if(headNode.digestType == '3des')
+                {
+                    headNode.digestType = "3des-empty";
+                }
                 if (bodyNode == undefined) {
                     bodyNode = {};
                 }
