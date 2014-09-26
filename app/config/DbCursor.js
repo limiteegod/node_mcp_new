@@ -1,5 +1,6 @@
 var dbPool = require('./DbPool.js');
 var dateUtil = require('../util/DateUtil.js');
+var log = require('../util/McpLog.js');
 
 var DbCurser = function(table, baseSql){
     var self = this;
@@ -45,7 +46,7 @@ DbCurser.prototype.sort = function(data)
 DbCurser.prototype.toArray = function(cb)
 {
     var self = this;
-    console.log(self.baseSql);
+    log.info(self.baseSql);
     var conn = self.table.getDb().getConn();
     if(self.table.engine == 'mysql')
     {
@@ -66,11 +67,12 @@ DbCurser.prototype.toArray = function(cb)
             }
             else
             {
+                var objs = [];
                 for(var key in results)
                 {
-                    dateUtil.oracleObj(results[key]);
+                    objs[objs.length] = dateUtil.oracleObj(self.table, results[key]);
                 }
-                cb(err, results);
+                cb(err, objs);
             }
         });
     }

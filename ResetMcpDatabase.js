@@ -15,15 +15,22 @@ ResetMcpDatabase.prototype.resetF01 = function()
     var termTable = mcpdb.get("term");
     var gameCode = 'F01';
     async.waterfall([
+        function(cb)
+        {
+            var gameTable = mcpdb.get("game");
+            gameTable.remove({code:'F01'}, {}, function(err, data){
+                cb(err);
+            });
+        },
         //check the game
         function(cb)
         {
             var gameTable = mcpdb.get("game");
-            gameTable.find({CODE:"F01"}, {}).toArray(function(err, data){
+            gameTable.find({code:"F01"}, {}).toArray(function(err, data){
                 if(err) throw err;
                 if(data.length == 0)
                 {
-                    gameTable.save({ID:digestUtil.createUUID(), CODE:'F01', NAME:'双色球', TYPE:prop.gameType.normal},
+                    gameTable.save({id:digestUtil.createUUID(), code:'F01', name:'双色球', type:prop.gameType.normal},
                         function(err, data){
                     });
                     cb(null);
@@ -53,7 +60,7 @@ ResetMcpDatabase.prototype.resetF01 = function()
                 NEXTCODE:'2014002', OPENTIME:openTime.format(self.dateFmt), CREATETIME:openTime.format(self.dateFmt),
                 ENDTIME:endTime.format(self.dateFmt), NAME:'2014001',
                 PRIZEDESC:self.getPrizeDesc(gameCode), STATUS:1100,
-                WINNINGNUMBER:"09,14,17,18,21,25|15"}, function(err, data){
+                WINNINGNUMBER:"09,14,17,18,21,25|15", version:0}, function(err, data){
                 console.log(err);
             });
             cb(null);

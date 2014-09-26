@@ -93,70 +93,70 @@ McpDatabase.prototype.create = function(cb)
 var db = new McpDatabase();
 //game
 var game = new Table(db, "game", "oracle", [
-    new Column("ID", "varchar", 32, false, undefined, true, false),
-    new Column("CODE", "varchar", 40, false, undefined),
-    new Column("NAME", "varchar", 40, false, undefined),
-    new Column("PUBLISHDESC", "varchar", 40, false, undefined),
-    new Column("PERIOD", "varchar", 40, false, undefined),
-    new Column("DESCRIPTION", "varchar", 40, false, undefined),
-    new Column("STATUS", "int", 11, false, undefined),
-    new Column("ISSYNCHRO", "int", 11, false, undefined),
-    new Column("OFFSET", "int", 11, false, undefined),
-    new Column("TYPE", "int", 11, false, undefined)
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("code", "varchar", 40, false, undefined),
+    new Column("name", "varchar", 40, false, undefined),
+    new Column("publishDesc", "varchar", 40, false, undefined),
+    new Column("period", "varchar", 40, false, undefined),
+    new Column("description", "varchar", 40, false, undefined),
+    new Column("status", "int", 11, false, undefined),
+    new Column("isSynchro", "int", 11, false, undefined),
+    new Column("offset", "int", 11, false, undefined),
+    new Column("type", "int", 11, false, undefined)
 ]);
 db.put(game);
 //term
 var term = new Table(db, "term", "oracle", [
-    new Column("ID", "varchar", 32, false, undefined, true, false),
-    new Column("CODE", "varchar", 40, false, undefined),
-    new Column("NEXTCODE", "varchar", 40, false, undefined),
-    new Column("NAME", "varchar", 40, false, undefined),
-    new Column("GAMECODE", "varchar", 10, false, undefined),
-    new Column("PRIZEPOOL", "int", 11, false, undefined),
-    new Column("CREATETIME", "date", -1, false, undefined),
-    new Column("OPENTIME", "date", -1, false, undefined),
-    new Column("ENDTIME", "date", -1, false, undefined),
-    new Column("WINNINGNUMBER", "varchar", 40, true, undefined),
-    new Column("PRIZEDESC", "varchar", 2048, true, undefined),
-    new Column("STATUS", "int", 11, false, undefined),
-    new Column("VERSION", "int", 11, false, undefined),
-    new Column("DETAILINFO", "varchar", 560, true, undefined),
-    new Column("CONCEDEPOINTS", "int", 11, false, undefined),
-    new Column("MATCHTIME", "date", -1, true, undefined)
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("code", "varchar", 40, false, undefined),
+    new Column("nextCode", "varchar", 40, false, undefined),
+    new Column("name", "varchar", 40, false, undefined),
+    new Column("gameCode", "varchar", 10, false, undefined),
+    new Column("prizePool", "int", 11, false, undefined),
+    new Column("createTime", "date", -1, false, undefined),
+    new Column("openTime", "date", -1, false, undefined),
+    new Column("endTime", "date", -1, false, undefined),
+    new Column("winningNumber", "varchar", 40, true, undefined),
+    new Column("prizeDesc", "varchar", 2048, true, undefined),
+    new Column("status", "int", 11, false, undefined),
+    new Column("version", "int", 11, false, undefined),
+    new Column("detailInfo", "varchar", 560, true, undefined),
+    new Column("concedePoints", "int", 11, false, undefined),
+    new Column("matchTime", "date", -1, true, undefined)
 ]);
 db.put(term);
 //the station
 var station = new Table(db, "station", "oracle", [
-    new Column("ID", "varchar", 32, false, undefined, true, false),
-    new Column("CODE", "varchar", 40, false, undefined),
-    new Column("RELAYABLE", "int", 11, false, undefined),
-    new Column("NAME", "varchar", 40, false, undefined),
-    new Column("PASSWORD", "varchar", 40, false, undefined),
-    new Column("DESCRIPTION", "varchar", 40, false, undefined),
-    new Column("BALANCE", "bigint", -1, false, 0),
-    new Column("PHOTO", "varchar", 40, false, undefined),
-    new Column("BUILDTIME", "date", -1, true, undefined),
-    new Column("EXPIREDTIME", "date", -1, true, undefined),
-    new Column("LASTLOGINTIME", "date", -1, true, undefined),
-    new Column("STATIONTYPE", "int", 11, false, undefined),
-    new Column("STATUS", "int", 11, false, undefined),
-    new Column("VERSION", "int", 11, false, undefined),
-    new Column("QUEUEINDEX", "int", 11, false, undefined),
-    new Column("SECRETKEY", "varchar", 32, false, undefined),
-    new Column("UQ_CODE", "UNIQUE", -1, false, 'code')
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("code", "varchar", 40, false, undefined),
+    new Column("relayable", "int", 11, false, undefined),
+    new Column("name", "varchar", 40, false, undefined),
+    new Column("password", "varchar", 40, false, undefined),
+    new Column("description", "varchar", 40, false, undefined),
+    new Column("balance", "bigint", -1, false, 0),
+    new Column("photo", "varchar", 40, false, undefined),
+    new Column("buildTime", "date", -1, true, undefined),
+    new Column("expiredTime", "date", -1, true, undefined),
+    new Column("lastLoginTime", "date", -1, true, undefined),
+    new Column("stationType", "int", 11, false, undefined),
+    new Column("status", "int", 11, false, undefined),
+    new Column("version", "int", 11, false, undefined),
+    new Column("queueIndex", "int", 11, false, undefined),
+    new Column("secretKey", "varchar", 32, false, undefined),
+    new Column("uc_code", "UNIQUE", -1, false, 'code')
 ]);
 db.put(station);
 var stationGame = new Table(db, "stationgame", "oracle", [
-    new Column("ID", "varchar", 32, false, undefined, true, false),
-    new Column("STATIONID", "varchar", 32, false, undefined),
-    new Column("RELAYTOID", "varchar", 32, false, undefined),
-    new Column("RELAYTOEXPIRED", "date", -1, true, undefined),
-    new Column("GAMECODE", "varchar", 20, false, undefined),
-    new Column("EARLYSTOPBUFFERSIMPLEX", "int", 11, false, 0),
-    new Column("EARLYSTOPBUFFERDUPLEX", "int", 11, false, 0),
-    new Column("STATUS", "int", 11, false, prop.stationGameStatus.open),
-    new Column("RFACTOR", "int", 11, false, undefined),
-    new Column("PFACTOR", "int", 11, false, undefined)
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("stationId", "varchar", 32, false, undefined),
+    new Column("relayToId", "varchar", 32, false, undefined),
+    new Column("relayToExpired", "date", -1, true, undefined),
+    new Column("gameCode", "varchar", 20, false, undefined),
+    new Column("earlyStopBufferSimplex", "int", 11, false, 0),
+    new Column("earlyStopBufferDuplex", "int", 11, false, 0),
+    new Column("status", "int", 11, false, prop.stationGameStatus.open),
+    new Column("rFactor", "int", 11, false, undefined),
+    new Column("pFactor", "int", 11, false, undefined)
 ]);
 db.put(stationGame);
 module.exports = db;

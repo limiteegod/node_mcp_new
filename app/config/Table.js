@@ -1,6 +1,7 @@
 var dbPool = require('./DbPool.js');
 var DbCursor = require('./DbCursor.js');
 var dateUtil = require('../util/DateUtil.js');
+var log = require('../util/McpLog.js');
 
 var Table = function(db, name, engine, colList){
     var self = this;
@@ -12,6 +13,7 @@ var Table = function(db, name, engine, colList){
     {
         var col = colList[key];
         self.colList[col.getName()] = col;
+        self.colList[col.getName().toUpperCase()] = col;
     }
 };
 
@@ -99,7 +101,7 @@ Table.prototype.save = function(data, cb)
         i++;
     }
     sql += keyStr + ") values(" + valueStr + ")";
-    console.log(sql);
+    log.info(sql);
 
     var conn = self.db.getConn();
     if(self.engine == 'mysql')
@@ -185,7 +187,7 @@ Table.prototype.update = function(condition, data, option, cb)
     {
         sql += " where " + conditionStr;
     }
-    console.log(sql);
+    log.info(sql);
     var conn = self.db.getConn();
     if(self.engine == 'mysql')
     {
@@ -359,10 +361,6 @@ Table.prototype.find = function(data, columns)
     {
         columns.id = 1;
     }
-    if(columns.ID == undefined)
-    {
-        columns.ID = 1;
-    }
     for(var key in columns)
     {
         //如果没有相关的列，则直接忽略
@@ -411,7 +409,7 @@ Table.prototype.remove = function(condtion, option, cb)
     {
         sql += " where " + conditionStr;
     }
-    console.log(sql);
+    log.info(sql);
 
     var conn = self.db.getConn();
     if(self.engine == 'mysql')

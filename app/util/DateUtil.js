@@ -16,13 +16,20 @@ DateUtil.prototype.oracleToString = function(date)
 DateUtil.prototype.oracleObj = function(table, obj)
 {
     var self = this;
+    var newObj = {};
     for(var key in obj)
     {
-        if(table.columns[key].type == 'date')
+        var col = table.colList[key];
+        if(col.type == 'date')
         {
-            obj[key] = moment(date).format("YYYY-MM-DD HH:mm:ss");
+            newObj[col.name] = moment(obj[key]).format("YYYY-MM-DD HH:mm:ss");
+        }
+        else
+        {
+            newObj[col.name] = obj[key];
         }
     }
+    return newObj;
 };
 
 DateUtil.prototype.getLogTime = function()

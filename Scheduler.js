@@ -4,15 +4,7 @@ var moment = require("moment");
 var db = require('./app/config/McpDataBase.js');
 var prop = require('./app/config/Prop.js');
 var dateUtil = require('./app/util/DateUtil.js');
-
-function sleep(milliSecond) {
-    var startTime = new Date().getTime();
-    console.log(moment(startTime).format("YYYY-MM-DD HH:mm:ss"));
-    while(new Date().getTime() <= milliSecond + startTime) {
-
-    }
-    console.log(moment(new Date()).format("YYYY-MM-DD HH:mm:ss"));
-};
+var log = require('./app/util/McpLog.js');
 
 var Scheduler = function(){};
 
@@ -35,11 +27,11 @@ Scheduler.prototype.start = function()
     ], function (err, result) {
         if(err)
         {
-            console.error(err); // -> null
+            log.info(err); // -> null
         }
         else
         {
-            console.log(result); // -> 16
+            log.info(result); // -> 16
         }
     });
 };
@@ -49,16 +41,16 @@ Scheduler.prototype.checkOpen = function()
     var self = this;
     var self = this;
     self.openJob = new CronJob('*/5 * * * * *', function () {
-        console.log("open job..................");
-        var conn = db.getConn();
+        log.info("open job..................");
         var termTable = db.get("term");
         async.waterfall([
             //find term to open
             function(cb)
             {
-                conn.setAutoCommit(false);
-                termTable.find({STATUS:1100}, {GAMECODE:1, CODE:1, NEXTCODE:1, VERSION:1}).toArray(function(err, data){
-                    console.log(data);
+                termTable.find({status:1100, openTime:{$lt:dateUtil.oracleToString(new Date())}},
+                    {gameCode:1, code:1, nextCode:1, version:1}).toArray(function(err, data){
+                    log.info(data);
+                    if(err) cb(err);
                     if(data.length == 0)
                     {
                         cb(new Error("no term to open."));
@@ -69,19 +61,12 @@ Scheduler.prototype.checkOpen = function()
                     }
                 });
             },
-            function(term, cb)
-            {
-                var gameTable = db.get("game");
-                gameTable.update({CODE:'F01'}, {$set:{NAME:prop.kvs.name}}, {}, function(err, data){
-                    cb(null, term);
-                });
-            },
             //update term status
             function(term, cb)
             {
-                sleep(20000);
-                termTable.update({ID:term.ID, VERSION:term.VERSION}, {$set:{STATUS:1200, VERSION:term.VERSION + 1}}, {}, function(err, data){
-                    console.log(dateUtil.getLogTime(), data);
+                termTable.update({id:term.id, version:term.version}, {$set:{status:1200, version:term.version + 1}}, {}, function(err, data){
+                    if(err) cb(err);
+                    log.info(dateUtil.getLogTime(), data);
                     if(data.length < 1)
                     {
                         cb("transaction failed");
@@ -92,21 +77,16 @@ Scheduler.prototype.checkOpen = function()
             //commit the update
             function(term, cb)
             {
-                sleep(20000);
-                console.log(dateUtil.getLogTime() + "commit the update");
-                conn.commit(function(){
-                    cb(null, dateUtil.getLogTime() + term.CODE + " open success");
-                });
+                cb(null, dateUtil.getLogTime() + term.code + " open success");
             }
         ], function (err, result) {
             if(err)
             {
-                console.error(err);
-                conn.rollback(function(){});
+                log.info(err);
             }
             else
             {
-                console.log(result); // -> 16
+                log.info(result); // -> 16
             }
         });
     });
