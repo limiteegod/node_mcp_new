@@ -6,7 +6,9 @@ var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
 var db = require('./app/config/McpDataBase.js');
+var mcpMgDb = require('./app/config/McpMgDb.js');
 var digestUtil = require("./app/util/DigestUtil.js");
+var log = require("./app/util/McpLog.js");
 var cmdFactory = require("./app/control/CmdFactory.js");
 
 var Gateway = function(){
@@ -16,6 +18,20 @@ var Gateway = function(){
 Gateway.prototype.start = function(){
     var self = this;
     async.waterfall([
+        //connect mdb
+        function(cb)
+        {
+            mcpMgDb.connect(function(err, db){
+                cb(err);
+            });
+        },
+        //check mdb data
+        function(cb)
+        {
+            mcpMgDb.check(function(){
+                cb(null);
+            });
+        },
         function(cb)
         {
             db.connect(function(err, conn){
@@ -74,17 +90,15 @@ Gateway.prototype.startWeb = function()
 
     app.post("/mcp-filter/main/interface.htm", function(req, res){
         var message = req.body.message;
-        self.handle(message, function(backMsg){
-            res.type('application/json');
-            res.send(backMsg);
+        self.handle(message, function(backMsgNode){
+            res.json(backMsgNode);
         });
     });
 
     app.get("/mcp-filter/main/interface.htm", function(req, res){
         var message = req.query.message;
-        self.handle(message, function(backMsg){
-            res.type('application/json');
-            res.send(backMsg);
+        self.handle(message, function(backMsgNode){
+            res.json(backMsgNode);
         });
     });
 

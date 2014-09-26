@@ -14,13 +14,13 @@ var LotTest = function(){
 LotTest.prototype.lot = function(bodyNode, cb)
 {
     var self = this;
-    platInterUtil.get(self.userId, self.userType, self.channelCode, self.key, self.cmd, bodyNode, cb);
+    platInterUtil.get(self.userId, self.userType, self.channelCode, "md5", self.key, self.cmd, bodyNode, cb);
 };
 
 LotTest.prototype.lotJc = function(bodyNode, cb)
 {
     var self = this;
-    platInterUtil.get(self.userId, self.userType, self.channelCode, self.key, self.jcCmd, bodyNode, cb);
+    platInterUtil.get(self.userId, self.userType, self.channelCode, "md5", self.key, self.jcCmd, bodyNode, cb);
 };
 
 LotTest.prototype.lotT01 = function()
@@ -59,8 +59,8 @@ LotTest.prototype.lotF01 = function()
 
 var lotTest = new LotTest();
 var count = 0;
-while(count < 20)
+while(count < 1)
 {
     lotTest.lotF01();
-    count++;
+    count++;13774242857
 }

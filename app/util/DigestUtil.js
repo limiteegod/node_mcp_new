@@ -1,4 +1,5 @@
 var crypto = require('crypto');
+var log = require('./McpLog.js');
 
 var DigestUtil = function(){
 };
@@ -29,6 +30,22 @@ DigestUtil.prototype.check = function(headNode, key, bodyStr)
         dec += decipher.final('utf8');
         return dec;
     }
+    else if(headNode.digestType == "md5")
+    {
+        var text = bodyStr + headNode.timestamp + key;
+        //log.info(text);
+        var md5 = self.md5(text);
+        //log.info("client md5:" + md5);
+        //log.info("system md5:" + headNode.digest);
+        if(md5 == headNode.digest)
+        {
+            return bodyStr;
+        }
+        else
+        {
+            return null;
+        }
+    }
     return bodyStr;
 };
 
@@ -36,18 +53,25 @@ DigestUtil.prototype.check = function(headNode, key, bodyStr)
 DigestUtil.prototype.generate = function(headNode, key, bodyStr)
 {
     var self = this;
-    console.log(headNode);
     if(headNode.digestType == "3des" || headNode.digestType == "3des-empty")
     {
         if(headNode.digestType == "3des-empty")
         {
             key = self.getEmptyKey();
         }
-        console.log(key);
         var cipher = crypto.createCipheriv('des-ede3-cfb', new Buffer(key, "base64"), self.getIv());
         var crypted = cipher.update(bodyStr, 'utf8', 'base64');
         crypted += cipher.final('base64');
         return crypted;
+    }
+    else if(headNode.digestType == "md5")
+    {
+        var text = bodyStr + headNode.timestamp + key;
+        //log.info(text);
+        var md5 = self.md5(text);
+        //log.info(md5);
+        headNode.digest = md5;
+        return bodyStr;
     }
     return;
 };

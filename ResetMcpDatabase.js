@@ -3,6 +3,8 @@ var moment = require('moment');
 var prop = require('./app/config/Prop.js');
 var mcpdb = require('./app/config/McpDataBase.js');
 var digestUtil = require('./app/util/DigestUtil.js');
+var dateUtil = require('./app/util/DateUtil.js');
+var log = require('./app/util/McpLog.js');
 
 var ResetMcpDatabase = function(){
     var self = this;
@@ -125,17 +127,19 @@ ResetMcpDatabase.prototype.resetStation = function()
         //delete
         function(cb)
         {
-            stationTable.remove({code:"Q0003"}, {}, function(err, data){
-                console.log(data);
+            stationTable.remove({$or:[{code:"Q0003"}, {code:"C0001"}]}, {}, function(err, data){
                 cb(null);
             });
         },
         //print station
         function(cb)
         {
-            stationTable.save({id:digestUtil.createUUID(), code:"C0001", balance:0, stationType:prop.stationType.center,
-                status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e'}, function(err, rows, data){
-                cb(null, data);
+            var curDate = dateUtil.oracleToString(new Date());
+            var station = {id:digestUtil.createUUID(), code:"C0001", balance:0, stationType:prop.stationType.center,
+                status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e', buildTime:curDate,
+                expiredTime:curDate, lastLoginTime:curDate, version:0};
+            stationTable.save(station, function(err, data){
+                cb(err, station);
             });
         },
         //save print station game
@@ -147,16 +151,19 @@ ResetMcpDatabase.prototype.resetStation = function()
                 cb(null, pstation);
             });
         },
-        //save
+        //save Q0003
         function(pstation, cb)
         {
-            stationTable.save({id:digestUtil.createUUID(), code:"Q0003", balance:1000000, stationType:prop.stationType.channel,
-            status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e'}, function(err, rows, data){
-                cb(null, pstation, data);
+            var curDate = dateUtil.oracleToString(new Date());
+            var station = {id:digestUtil.createUUID(), code:"Q0003", balance:1000000, stationType:prop.stationType.channel,
+                status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e', buildTime:curDate,
+                expiredTime:curDate, lastLoginTime:curDate, version:0};
+            stationTable.save(station, function(err, data){
+                cb(null, pstation, station);
             });
 
         },
-        //save the game
+        //save the Q0003's game
         function(pstation, station, cb)
         {
             var stationGame = mcpdb.get("stationgame");
@@ -195,7 +202,7 @@ mcpdb.connect(function(err, conn) {
     if(err) throw err;
     var reset = new ResetMcpDatabase();
     reset.resetF01();
-    //reset.resetStation();
+    reset.resetStation();
 });
 
 

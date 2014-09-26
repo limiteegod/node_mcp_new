@@ -25,6 +25,7 @@ var zzc = {};
 var platform = {};
 //oracle
 var oracle;
+var mcpmg;
 if(target == 'dev' || target == 'home')
 {
     //mysql连接
@@ -46,10 +47,12 @@ if(target == 'dev' || target == 'home')
     var mongo = {'url':'mongodb://127.0.0.1:27017/print'};
     exports.mongo = mongo;
 
+    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
+
     //平台地址
     platform.site = {
         hostname: '127.0.0.1',
-        port: 9080,
+        port: 9081,
         path: '/mcp-filter/main/interface.htm',
         method: 'POST'
     };
@@ -70,6 +73,8 @@ if(target == 'test')
     platform.ver = "s.1.01";
     platform.gateway = {host:'127.0.0.1', port:8080, method:'POST'};
     exports.platform = platform;
+
+    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
 }
 else if(target == 'run')
 {
@@ -91,6 +96,8 @@ else if(target == 'run')
     platform.ver = "s.1.01";
     platform.gateway = {host:'192.168.222.233', port:8301, method:'POST'};
     exports.platform = platform;
+
+    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
 }
 
 
@@ -99,6 +106,7 @@ console.log(exports.platform);
 
 exports.zzc = zzc;
 exports.oracle = oracle;
+exports.mcpmg = mcpmg;
 
 //if user hasn't operation in half a hour, the key will be expired.
 exports.loginExpiredSeconds = 30*60;

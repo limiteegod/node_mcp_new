@@ -32,6 +32,12 @@ DateUtil.prototype.oracleObj = function(table, obj)
     return newObj;
 };
 
+DateUtil.prototype.getCurTime = function()
+{
+    var self = this;
+    return moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+};
+
 DateUtil.prototype.getLogTime = function()
 {
     var self = this;
