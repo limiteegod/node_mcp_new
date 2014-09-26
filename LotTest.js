@@ -63,5 +63,5 @@ var count = 0;
 while(count < 1)
 {
     lotTest.lotF01();
-    count++;13774242857
+    count++;
 }
