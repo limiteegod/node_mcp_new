@@ -21,7 +21,7 @@ PrintTest.prototype.plat = function(cmd, bodyNode, cb)
 PrintTest.prototype.P12 = function()
 {
     var self = this;
-    var bodyNode = {size:10};
+    var bodyNode = {size:3};
     self.plat("P12", bodyNode, function(err, backMsgNode){
         if(err)
         {

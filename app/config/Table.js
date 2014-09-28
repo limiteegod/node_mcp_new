@@ -169,6 +169,33 @@ Table.prototype.getUpdateStr = function(data)
                     }
                 }
             }
+            else if(keyArray[1] == 'inc')
+            {
+                var setData = data[key];
+                for(var setKey in setData)
+                {
+                    var col = self.colList[setKey];
+                    if(col == undefined)
+                    {
+                        //如果没有相关的列，则直接忽略
+                        continue;
+                    }
+                    else
+                    {
+                        if(kCount > 0)
+                        {
+                            pStr += ",";
+                        }
+                        pStr += setKey + "=" + setKey;
+                        if(setData[setKey] > 0)
+                        {
+                            pStr += "+";
+                        }
+                        pStr += setData[setKey];
+                        kCount++;
+                    }
+                }
+            }
         }
     }
     return pStr;

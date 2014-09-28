@@ -7,6 +7,7 @@ var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
 var db = require('./app/config/McpDataBase.js');
 var mcpMgDb = require('./app/config/McpMgDb.js');
+var dateUtil = require("./app/util/DateUtil.js");
 var digestUtil = require("./app/util/DigestUtil.js");
 var log = require("./app/util/McpLog.js");
 var cmdFactory = require("./app/control/CmdFactory.js");
@@ -116,9 +117,13 @@ Gateway.prototype.handle = function(message, cb)
         var headNode = msgNode.head;
         var bodyStr = msgNode.body;
         cmdFactory.handle(headNode, bodyStr, function(err, bodyNode) {
-            var key;
-            if (err) {
+            var key = headNode.key;
+            headNode.key = undefined;
+            if(key == undefined)
+            {
                 key = digestUtil.getEmptyKey();
+            }
+            if (err) {
                 if(headNode.digestType == '3des')
                 {
                     headNode.digestType = "3des-empty";
@@ -133,8 +138,6 @@ Gateway.prototype.handle = function(message, cb)
                 bodyNode.code = errCode.E0000.repCode;
                 bodyNode.description = errCode.E0000.description;
 
-                key = headNode.key;
-                headNode.key = undefined;
             }
             var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
             cb({head: headNode, body: decodedBodyStr});

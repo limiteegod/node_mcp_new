@@ -54,26 +54,47 @@ PrintControl.prototype.handle = function(headNode, bodyStr, userCb)
 };
 
 /**
- * find one's all operations
- * @param user
+ * find print center's print queen.
+ * bodyNode.size should bet set, if not set, it will be 10.
+ * @param user the print center.
  * @param headNode
- * @param bodyNode
+ * @param bodyNode bodyNode.rst is the result, bodyNode.pi is the page info.
  * @param cb
  */
 PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
+    headNode.key = user.secretKey;
+    var skip = 0;
+    var limit = bodyNode.size;
+    if(!limit)
+    {
+        limit = 10;
+    }
     log.info("print_queen_" + user.code);
     var printQueen = mcpMgDb.get("print_queen_" + user.code);
-    printQueen.find({}, {}).toArray(function(err, data){
-        for(var key in data)
+    printQueen.find({}, {}).sort({_id:1}).skip(0).limit(limit).toArray(function(err, data){
+        if(err)
         {
-            data[key].id = data[key]._id;
-            data[key]._id = undefined;
+            cb(null, backBodyNode);
         }
-        backBodyNode.rst = data;
-        headNode.key = user.secretKey;
-        cb(null, backBodyNode);
+        else
+        {
+            var maxId = -1;
+            for(var key in data)
+            {
+                data[key].id = data[key]._id;
+                data[key]._id = undefined;
+                if(data[key].id > maxId)
+                {
+                    maxId = data[key].id;
+                }
+            }
+            backBodyNode.rst = data;
+            printQueen.remove({_id:{$lte:maxId}}, {}, function(err, data){
+                cb(null, backBodyNode);
+            });
+        }
     });
 };
 

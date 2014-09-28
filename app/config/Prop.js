@@ -124,11 +124,38 @@ exports.ticketStatusArray = [{id:1000, code:'received', des:"已经接收"}, {id
     {id:3000, code:'success', des:"出票成功"},
     {id:4000, code:'failure', des:"出票失败"}];
 
+//scheme type
+exports.schemeType = {"none":1, "follow":2};
+//scheme type
+exports.schemeTypeArray = [{id:1, code:'none', des:"无方案"},
+    {id:2, code:'follow', des:"追号"}];
+
+//pay type
+exports.payType = {"company":0, "cash":1};
+//pay type
+exports.payTypeArray = [{id:0, code:'company', des:"第三方支付"},
+    {id:1, code:'cash', des:"现金支付"}];
+
+//order type
+exports.orderType = {"customer":0, "channel":1};
+//order type
+exports.orderTypeArray = [{id:0, code:'customer', des:"普通用户"},
+    {id:1, code:'channel', des:"渠道"}];
+
+//order status
+exports.orderStatus = {"init":1000, "presale":1001, "waiting_print":1100,
+    "success":1200};
+//order status
+exports.orderStatusArray = [{id:1000, code:'init', des:"初始状态"},
+    {id:1001, code:'presale', des:"预售"},
+    {id:1100, code:'waiting_print', des:"等待出票"},
+    {id:1200, code:'success', des:"出票成功"}];
+
 exports.games =
 [
     {id:'F01', name:'双色球', playTypes:
         [
-            {id:'00', name:'普通', betTypes:
+            {id:'00', name:'普通', price:200, betTypes:
                 [
                     {id:'00', name:'单式'},
                     {id:'01', name:'复式'},

@@ -91,6 +91,83 @@ McpDatabase.prototype.create = function(cb)
 };
 
 var db = new McpDatabase();
+//order
+var torder = new Table(db, "torder", "oracle", [
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("termCode", "varchar", 40, false, undefined),
+    new Column("schemeId", "varchar", 32, false, undefined),
+    new Column("stationId", "varchar", 32, false, undefined),
+    new Column("gameCode", "varchar", 10, false, undefined),
+    new Column("outerId", "varchar", 40, false, undefined),
+    new Column("customerId", "varchar", 32, false, undefined),
+    new Column("schemeType", "int", 11, false, undefined),
+    new Column("channelCode", "varchar", 20, false, undefined),
+    new Column("amount", "bigint", -1, false, undefined),
+    new Column("ticketCount", "int", 11, false, undefined),
+    new Column("bonus", "bigint", -1, false, undefined),
+    new Column("bonusBeforeTax", "bigint", -1, false, undefined),
+    new Column("takeAwayTime", "date", -1, false, undefined),
+    new Column("takeAway", "int", 11, false, undefined),
+    new Column("createTime", "date", -1, false, undefined),
+    new Column("acceptTime", "date", -1, false, undefined),
+    new Column("printTime", "date", -1, false, undefined),
+    new Column("platform", "varchar", 20, false, undefined),
+    new Column("payType", "int", 11, false, undefined),
+    new Column("notes", "varchar", 40, false, undefined),
+    new Column("encrypt", "varchar", 80, false, undefined),
+    new Column("status", "int", 11, false, undefined),
+    new Column("finishedTicketCount", "int", 11, false, undefined),
+    new Column("printCount", "int", 11, false, undefined),
+    new Column("printFailCount", "int", 11, false, undefined),
+    new Column("multiple", "int", 11, false, undefined),
+    new Column("numbers", "varchar", 400, false, undefined),
+    new Column("dNumber", "varchar", 80, false, undefined),
+    new Column("printStationId", "varchar", 32, false, undefined),
+    new Column("type", "int", 11, false, undefined)
+]);
+db.put(torder);
+//tticket
+var tticket = new Table(db, "tticket", "oracle", [
+    new Column("id", "varchar", 32, false, undefined, true, false),
+    new Column("orderId", "varchar", 32, false, undefined),
+    new Column("seq", "int", 11, false, undefined),
+    new Column("finishedCount", "int", 11, false, undefined),
+    new Column("terminalId", "varchar", 32, false, undefined),
+    new Column("stationId", "varchar", 32, false, undefined),
+    new Column("customerId", "varchar", 32, false, undefined),
+    new Column("channelCode", "varchar", 10, false, undefined),
+    new Column("termCode", "varchar", 240, false, undefined),
+    new Column("gameCode", "varchar", 10, false, undefined),
+    new Column("betTypeCode", "varchar", 10, false, undefined),
+    new Column("playTypeCode", "varchar", 10, false, undefined),
+    new Column("amount", "bigint", -1, false, undefined),
+    new Column("multiple", "int", 11, false, undefined),
+    new Column("price", "int", 11, false, undefined),
+    new Column("numbers", "varchar", 360, false, undefined),
+    new Column("rNumber", "varchar", 360, false, undefined),
+    new Column("dNumber", "varchar", 80, false, undefined),
+    new Column("termIndex", "int", 11, false, undefined),
+    new Column("termIndexDeadline", "date", -1, false, undefined),
+    new Column("createTime", "date", -1, false, undefined),
+    new Column("acceptTime", "date", -1, false, undefined),
+    new Column("printTime", "date", -1, false, undefined),
+    new Column("serialNumber", "varchar", 80, false, undefined),
+    new Column("stubInfo", "varchar", 2048, false, undefined),
+    new Column("encrypt", "varchar", 80, false, undefined),
+    new Column("type", "int", 11, false, undefined),
+    new Column("bigBonus", "int", 11, false, undefined),
+    new Column("winDesc", "varchar", 200, false, undefined),
+    new Column("bonus", "bigint", -1, false, undefined),
+    new Column("bonusBeforeTax", "bigint", -1, false, undefined),
+    new Column("possiblePrize", "bigint", -1, false, undefined),
+    new Column("receiptStatus", "int", 11, false, undefined),
+    new Column("status", "int", 11, false, undefined),
+    new Column("paper", "int", 11, false, undefined),
+    new Column("printerStationId", "varchar", 32, false, undefined),
+    new Column("sysTakeTime", "date", -1, false, undefined),
+    new Column("version", "int", 11, false, undefined)
+]);
+db.put(tticket);
 //game
 var game = new Table(db, "game", "oracle", [
     new Column("id", "varchar", 32, false, undefined, true, false),

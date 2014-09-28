@@ -7,6 +7,7 @@ var ErrCode = function()
     self.E0003 = {repCode:"0003", description:"wrong name or wrong password."};
     self.E0004 = {repCode:"0004", description:"message has expired"};
     self.E0005 = {repCode:"0005", description:"user not login"};
+    self.E2003 = {repCode:'2003', description:'期次不存在'};
     self.E2035 = {repCode:"2035", description:"投注站不存在"};
     self.E0999 = {repCode:"0999", description:"系统内部错误"};
     self.E9999 = {repCode:"9999", description:"unhandled exception"};

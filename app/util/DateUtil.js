@@ -22,7 +22,7 @@ DateUtil.prototype.oracleObj = function(table, obj)
         var col = table.colList[key];
         if(col.type == 'date')
         {
-            newObj[col.name] = moment(obj[key]).format("YYYY-MM-DD HH:mm:ss");
+            newObj[col.name] = moment(obj[key]).subtract("8", "h").format("YYYY-MM-DD HH:mm:ss");
         }
         else
         {

@@ -53,6 +53,8 @@ LotTest.prototype.lotF01 = function()
     self.lot(bodyNode, function(err, backMsgNode){
         var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
         var backBodyNode = JSON.parse(backBodyStr);
+        console.log("back-head:");
+        console.log(backMsgNode.head);
         console.log("back-body:");
         console.log(backBodyNode);
     });
