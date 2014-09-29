@@ -107,6 +107,7 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         ticket.bonusBeforeTax = 0;
         ticket.bigBonus = 0;
         ticket.version = 0;
+        ticket.status = prop.ticketStatus.waiting_print;
     }
     var stationGameTable = db.get("stationgame");
     var stationTable = db.get("station");
@@ -200,6 +201,7 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         function(pstation, cb)
         {
             async.each(tickets, function(ticket, callback) {
+                ticket.printerStationId = pstation.id;
                 ticketTable.save(ticket, function(err, data){
                     callback();
                 });
@@ -221,6 +223,8 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         }
     ], function (err) {
         var backBodyNode = {};
+        var repOrder = {id:torder.id, status:torder.status, schemeType:torder.schemeType};
+        backBodyNode.order = repOrder;
         cb(err, backBodyNode);
     });
 };

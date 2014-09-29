@@ -85,7 +85,7 @@ Printer.prototype.saveTickets = function(tickets)
         ticketCol.insert(ticket, function(err, data){
         });
     }
-}
+};
 
 Printer.prototype.getTicketFromPlat = function()
 {

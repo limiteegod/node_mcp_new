@@ -134,10 +134,10 @@ Gateway.prototype.handle = function(message, cb)
                 bodyNode.repCode = err.repCode;
                 bodyNode.description = err.description;
             }
-            else {
-                bodyNode.code = errCode.E0000.repCode;
+            else
+            {
+                bodyNode.repCode = errCode.E0000.repCode;
                 bodyNode.description = errCode.E0000.description;
-
             }
             var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
             cb({head: headNode, body: decodedBodyStr});

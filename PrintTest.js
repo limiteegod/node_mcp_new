@@ -37,5 +37,25 @@ PrintTest.prototype.P12 = function()
     });
 };
 
+PrintTest.prototype.P06 = function(orderId)
+{
+    var self = this;
+    var bodyNode = {orderId:orderId};
+    self.plat("P06", bodyNode, function(err, backMsgNode){
+        if(err)
+        {
+            log.info(err);
+        }
+        else
+        {
+            log.info(backMsgNode);
+            var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
+            var backBodyNode = JSON.parse(backBodyStr);
+            console.log(backBodyNode);
+        }
+    });
+};
+
 var pt = new PrintTest();
-pt.P12();
+pt.P06('1ce78e0c07274e9a86f88d2203d5f824');
+//pt.P12();

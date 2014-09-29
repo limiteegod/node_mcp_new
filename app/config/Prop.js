@@ -115,14 +115,16 @@ exports.loginExpiredSeconds = 30*60;
 exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
 
 //ticket status
-exports.ticketStatus = {"received":1000, "send":2000, "send_failure":2500, "send_success":2800, "success":3000, "failure":4000};
+exports.ticketStatus = {"init":1000, "waiting_pay":1080, "presale":1090,
+    "waiting_print":1100, "take_away":1200, "print_success":1300};
 
 //ticket status
-exports.ticketStatusArray = [{id:1000, code:'received', des:"已经接收"}, {id:2000, code:'send', des:"正在发送"},
-    {id:2500, code:'send_failure', des:"发送失败"},
-    {id:2800, code:'send_success', des:"发送成功"},
-    {id:3000, code:'success', des:"出票成功"},
-    {id:4000, code:'failure', des:"出票失败"}];
+exports.ticketStatusArray = [{id:1000, code:'init', des:"初始状态"},
+    {id:1080, code:'waiting_pay', des:"等待支付"},
+    {id:1090, code:'presale', des:"预售"},
+    {id:1100, code:'waiting_print', des:"等待打印"},
+    {id:1200, code:'take_away', des:"程序取走"},
+    {id:1300, code:'print_success', des:"打印成功"}];
 
 //scheme type
 exports.schemeType = {"none":1, "follow":2};

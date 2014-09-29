@@ -1,10 +1,12 @@
 var async = require('async');
 var digestUtil = require("../util/DigestUtil.js");
+var dateUtil = require("../util/DateUtil.js");
 var db = require('../config/McpDataBase.js');
 var errCode = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
 var loginControl = require('./LoginControl.js');
 var log = require('../util/McpLog.js');
+var pageUtil = require('../util/PageUtil.js');
 var mcpMgDb = require('../config/McpMgDb.js');
 
 var PrintControl = function(){};
@@ -73,7 +75,8 @@ PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
     }
     log.info("print_queen_" + user.code);
     var printQueen = mcpMgDb.get("print_queen_" + user.code);
-    printQueen.find({}, {}).sort({_id:1}).skip(0).limit(limit).toArray(function(err, data){
+    var cursor = printQueen.find({}, {}).sort({_id:1}).skip(0).limit(limit);
+    cursor.toArray(function(err, data){
         if(err)
         {
             cb(null, backBodyNode);
@@ -91,10 +94,54 @@ PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
                 }
             }
             backBodyNode.rst = data;
-            printQueen.remove({_id:{$lte:maxId}}, {}, function(err, data){
-                cb(null, backBodyNode);
+            cursor.count(function(err, count){
+                printQueen.remove({_id:{$lte:maxId}}, {}, function(err, data){
+                    backBodyNode.pi = pageUtil.get(skip, limit, count);
+                    cb(null, backBodyNode);
+                });
             });
         }
+    });
+};
+
+/**
+ * print center get tickets to print by orderId.
+ * @param user
+ * @param headNode
+ * @param bodyNode
+ * @param cb
+ */
+PrintControl.prototype.handleP06 = function(user, headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {};
+    var orderId = bodyNode.orderId;
+    var ticketTable = db.get("tticket");
+    ticketTable.find({orderId:orderId, status:prop.ticketStatus.waiting_print},
+        {orderId:1, seq:1, termCode:1, gameCode:1, betTypeCode:1,
+            playTypeCode:1, amount:1, multiple:1, price:1, numbers:1,
+            termIndexDeadline:1, version:1})
+        .toArray(function(err, data){
+        var rst = [];
+        async.each(data, function(ticket, callback) {
+            ticketTable.update({id:ticket.id, version:ticket.version},
+                {$set:{sysTakeTime:dateUtil.getCurTime(), status:prop.ticketStatus.take_away,
+                    version:ticket.version+1}},
+                {}, function(err, data){
+                    if(!err)
+                    {
+                        if(data.updateCount == 1)
+                        {
+                            ticket.version = undefined;
+                            rst[rst.length] = ticket;
+                        }
+                    }
+                    callback();
+                });
+        }, function(err){
+            backBodyNode.tickets = rst;
+            cb(null, backBodyNode);
+        });
     });
 };
 
