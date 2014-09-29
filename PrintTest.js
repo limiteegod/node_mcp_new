@@ -56,6 +56,26 @@ PrintTest.prototype.P06 = function(orderId)
     });
 };
 
+PrintTest.prototype.P02 = function(ticketId, code, rNumber)
+{
+    var self = this;
+    var bodyNode = {ticketId:ticketId, code:code, rNumber:rNumber};
+    self.plat("P02", bodyNode, function(err, backMsgNode){
+        if(err)
+        {
+            log.info(err);
+        }
+        else
+        {
+            log.info(backMsgNode);
+            var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
+            var backBodyNode = JSON.parse(backBodyStr);
+            console.log(backBodyNode);
+        }
+    });
+};
+
 var pt = new PrintTest();
-pt.P06('1ce78e0c07274e9a86f88d2203d5f824');
+pt.P02('3c43faffff8f4d298e9068958cd8da02', prop.printStatus.success, '');
+//pt.P06('9c4c9c2c3ad348ad8b73bdf4eb40c333');
 //pt.P12();

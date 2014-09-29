@@ -116,7 +116,7 @@ exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
 
 //ticket status
 exports.ticketStatus = {"init":1000, "waiting_pay":1080, "presale":1090,
-    "waiting_print":1100, "take_away":1200, "print_success":1300};
+    "waiting_print":1100, "take_away":1200, "print_success":1300, "print_failure":1500};
 
 //ticket status
 exports.ticketStatusArray = [{id:1000, code:'init', des:"初始状态"},
@@ -124,7 +124,15 @@ exports.ticketStatusArray = [{id:1000, code:'init', des:"初始状态"},
     {id:1090, code:'presale', des:"预售"},
     {id:1100, code:'waiting_print', des:"等待打印"},
     {id:1200, code:'take_away', des:"程序取走"},
-    {id:1300, code:'print_success', des:"打印成功"}];
+    {id:1300, code:'print_success', des:"打印成功"},
+    {id:1500, code:'print_failure', des:"打印失败"}];
+
+//print status
+exports.printStatus = {"success":0, "failure":1};
+
+//print status
+exports.printStatusArray = [{id:0, code:'success', des:"打印成功"},
+    {id:1, code:'failure', des:"打印失败"}];
 
 //scheme type
 exports.schemeType = {"none":1, "follow":2};
@@ -146,12 +154,13 @@ exports.orderTypeArray = [{id:0, code:'customer', des:"普通用户"},
 
 //order status
 exports.orderStatus = {"init":1000, "presale":1001, "waiting_print":1100,
-    "success":1200};
+    "success":1200, "partial_success":1300};
 //order status
 exports.orderStatusArray = [{id:1000, code:'init', des:"初始状态"},
     {id:1001, code:'presale', des:"预售"},
     {id:1100, code:'waiting_print', des:"等待出票"},
-    {id:1200, code:'success', des:"出票成功"}];
+    {id:1200, code:'success', des:"出票成功"},
+    {id:1300, code:'partial_success', des:"部分出票成功"}];
 
 exports.games =
 [
