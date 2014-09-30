@@ -17,18 +17,15 @@ Transaction.prototype.run = function(mainCb, resultCb)
                 wdata = data;
                 if(err == errCode.E0000)
                 {
-                    log.info("back call 0000 from outer............");
                     success = true;
                     whileCb();
                 }
                 else if(err != errCode.E9999)
                 {
-                    log.info("back call **** from outer............");
                     whileCb(err);
                 }
                 else
                 {
-                    log.info("back call 9999 from outer............");
                     whileCb();
                 }
             });

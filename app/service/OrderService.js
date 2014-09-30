@@ -53,7 +53,7 @@ OrderService.prototype.incSuccessTicketCount = function(orderId, cb)
                     }
                 }
                 orderTable.update({id:torder.id, version:torder.version},
-                    {$inc:{printCount:torder.printCount}, $set:{status:torder.status}}, {}, function(err, data){
+                    {$inc:{printCount:1}, $set:{status:torder.status}}, {}, function(err, data){
                         if(err) throw errCode.E9999;
                         if(data.updateCount == 1)
                         {

@@ -8,6 +8,7 @@ var loginControl = require('./LoginControl.js');
 var log = require('../util/McpLog.js');
 var pageUtil = require('../util/PageUtil.js');
 var mcpMgDb = require('../config/McpMgDb.js');
+var orderService = require('../service/OrderService.js');
 
 var PrintControl = function(){};
 
@@ -265,7 +266,9 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
         {
             if(success)
             {
-
+                orderService.incSuccessTicketCount(ticket.orderId, function(err, order){
+                    cb(null, ticket, success);
+                });
             }
             else
             {
@@ -277,7 +280,51 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
         {
             if(success)
             {
-
+                var stationGameTable = db.get("stationgame");
+                var stationTable = db.get("station");
+                async.waterfall([
+                    //get station game
+                    function(cb)
+                    {
+                        stationGameTable.find({stationId:user.id, gameCode:ticket.gameCode},
+                            {pFactor:1}).toArray(function(err, data){
+                                cb(null, data[0]);
+                            });
+                    },
+                    //print station get the money
+                    function(sg, cb)
+                    {
+                        log.info(sg);
+                        var amount = (sg.pFactor/10000)*ticket.amount;
+                        var success = false;
+                        async.whilst(
+                            function() { return !success},
+                            function(whileCb) {
+                                stationTable.find({id:user.id}, {version:1, balance:1}).toArray(function(err, data){
+                                    var user = data[0];
+                                    stationTable.update({id:user.id, version:user.version},
+                                        {$inc:{balance:amount}, $set:{version:user.version + 1}}, {}, function(err, data){
+                                            if(data.updateCount == 1)
+                                            {
+                                                success = true;
+                                            }
+                                            whileCb();
+                                        });
+                                });
+                            },
+                            function(err) {
+                                cb(null);
+                            }
+                        );
+                    },
+                    //sale station get the money.
+                    function(cb)
+                    {
+                        cb(null);
+                    }
+                ], function(err) {
+                    cb(null, ticket, success);
+                });
             }
             else
             {
