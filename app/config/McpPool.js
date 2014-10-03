@@ -1,4 +1,4 @@
-var oracle = require('oracle');
+var mysql = require('mysql');
 var prop = require('./Prop.js');
 
 var McpPool = function(){
@@ -8,9 +8,10 @@ var McpPool = function(){
 McpPool.prototype.connect = function(cb)
 {
     var self = this;
-    oracle.connect(prop.oracle, function(err, connection) {
-        self.conn = connection;
-        cb(err, connection);
+    var conn = mysql.createConnection(prop.mcpdb);
+    conn.connect(function(err){
+        self.conn = conn;
+        cb(null);
     });
 };
 

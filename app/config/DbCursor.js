@@ -2,10 +2,11 @@ var dbPool = require('./DbPool.js');
 var dateUtil = require('../util/DateUtil.js');
 var log = require('../util/McpLog.js');
 
-var DbCurser = function(table, baseSql){
+var DbCurser = function(table, options, baseSql){
     var self = this;
     self.table = table;
     self.baseSql = baseSql;
+    self.options = options;
 };
 
 DbCurser.prototype.limit = function(start, size)
@@ -47,39 +48,10 @@ DbCurser.prototype.toArray = function(cb)
 {
     var self = this;
     log.info(self.baseSql);
-    var conn = self.table.getDb().getConn();
-    if(self.table.engine == 'mysql')
-    {
-        conn.query(self.baseSql, function(err, rows, fields) {
-            if (err) throw err;
-            if(cb != undefined)
-            {
-                cb(err, rows);
-            }
-        });
-    }
-    else if(self.table.engine == 'oracle')
-    {
-        conn.execute(self.baseSql, [], function(err, results) {
-            if(err)
-            {
-                cb(err, results);
-            }
-            else
-            {
-                var objs = [];
-                for(var key in results)
-                {
-                    objs[objs.length] = dateUtil.oracleObj(self.table, results[key]);
-                }
-                cb(err, objs);
-            }
-        });
-    }
-    else
-    {
-        throw new Error("unsurpoted engine.");
-    }
+    var conn = self.table.db.pool.getConn();
+    conn.execute(self.baseSql, self.options, function(err, data){
+        cb(err, data);
+    });
 };
 
 module.exports = DbCurser;

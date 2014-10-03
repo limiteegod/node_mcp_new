@@ -5,12 +5,11 @@ var httpServer = http.createServer(app);
 var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
-var db = require('./app/config/McpDataBase.js');
-var mcpMgDb = require('./app/config/McpMgDb.js');
 var dateUtil = require("./app/util/DateUtil.js");
 var digestUtil = require("./app/util/DigestUtil.js");
 var log = require("./app/util/McpLog.js");
 var cmdFactory = require("./app/control/CmdFactory.js");
+var dc = require('./app/config/DbCenter.js');
 
 var Gateway = function(){
     var self = this;
@@ -19,23 +18,10 @@ var Gateway = function(){
 Gateway.prototype.start = function(){
     var self = this;
     async.waterfall([
-        //connect mdb
+        //connect db
         function(cb)
         {
-            mcpMgDb.connect(function(err, db){
-                cb(err);
-            });
-        },
-        //check mdb data
-        function(cb)
-        {
-            mcpMgDb.check(function(){
-                cb(null);
-            });
-        },
-        function(cb)
-        {
-            db.connect(function(err, conn){
+            dc.init(function(err){
                 cb(err);
             });
         },
@@ -56,7 +42,6 @@ Gateway.prototype.start = function(){
         }
     });
 };
-
 
 Gateway.prototype.startWeb = function()
 {

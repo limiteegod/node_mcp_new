@@ -49,7 +49,7 @@ McpDatabase.prototype.createByIndex = function(table, cb)
     var tableName = table.getName();
     var dropSql = "drop table " + tableName + ";";
     var createSql = table.getDdl();
-    dbPool.getConn().execute(dropSql, [], function(err, rst) {
+    dbPool.getConn().query(dropSql, [], function(err, rst) {
         if (err)
         {
             console.log("table " + tableName + " not exists.");

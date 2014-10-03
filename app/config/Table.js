@@ -1,22 +1,38 @@
 var dbPool = require('./DbPool.js');
 var DbCursor = require('./DbCursor.js');
+var prop = require('./Prop.js');
 var dateUtil = require('../util/DateUtil.js');
 var log = require('../util/McpLog.js');
 
-var Table = function(db, name, engine, colList){
+var Table = function(db, name, colList){
     var self = this;
     self.db = db;
     self.name = name;
-    self.engine = engine;
     self.colList = new Array();
     for(var key in colList)
     {
         var col = colList[key];
-        self.colList[col.getName()] = col;
-        self.colList[col.getName().toUpperCase()] = col;
+        if(self.db.type == prop.dbType.oracle)
+        {
+            self.colList[col.getName().toUpperCase()] = col;
+        }
+        else
+        {
+            self.colList[col.getName()] = col;
+        }
     }
 };
 
+Table.prototype.traverse = function()
+{
+    var self = this;
+    log.info("----------------table:" + self.name + "----------------");
+    for(var key in self.colList)
+    {
+        var col = self.colList[key];
+        col.traverse();
+    }
+};
 
 Table.prototype.getDb = function()
 {
@@ -58,10 +74,40 @@ Table.prototype.getName = function()
 };
 
 /**
+ * 删除表
+ */
+Table.prototype.drop = function(cb)
+{
+    var self = this;
+    if(self.db.type == prop.dbType.mysql || self.db.type == prop.dbType.oracle)
+    {
+        var dropSql = "drop table " + self.name;
+        log.info(dropSql);
+        var conn = self.db.pool.getConn();
+        conn.execute(dropSql, [], cb);
+    }
+};
+
+/**
+ * 创建表
+ * @param cb
+ */
+Table.prototype.create = function(cb)
+{
+    var self = this;
+    if(self.db.type == prop.dbType.mysql || self.db.type == prop.dbType.oracle)
+    {
+        var sql = self.getDdl();
+        var conn = self.db.pool.getConn();
+        conn.execute(sql, [], cb);
+    }
+};
+
+/**
  * 保存对象
  * @param cb
  */
-Table.prototype.save = function(data, cb)
+Table.prototype.save = function(data, options, cb)
 {
     var self = this;
     var sql = "insert into " + self.name + "(";
@@ -85,9 +131,24 @@ Table.prototype.save = function(data, cb)
         var value = data[key];
         if(typeof value == "string")
         {
+            valueStr += "'" + value + "'";
+        }
+        else if(typeof value == 'object')
+        {
             if(col.type == 'date')
             {
-                valueStr += "to_date('" + value + "', 'yyyy-MM-dd HH24:mi:ss')";
+                if(self.db.type == prop.dbType.oracle)
+                {
+                    valueStr += "to_date('" + dateUtil.toString(value) + "', 'yyyy-MM-dd HH24:mi:ss')";
+                }
+                else if(self.db.type == prop.dbType.mysql)
+                {
+                    valueStr += "'" + dateUtil.toString(value) + "'";
+                }
+                else
+                {
+                    valueStr += "'" + value + "'";
+                }
             }
             else
             {
@@ -102,35 +163,10 @@ Table.prototype.save = function(data, cb)
     }
     sql += keyStr + ") values(" + valueStr + ")";
     log.info(sql);
-
-    var conn = self.db.getConn();
-    if(self.engine == 'mysql')
-    {
-        conn.query(sql, function(err, rows, fields) {
-            cb(err, rows);
-        });
-    }
-    else if(self.engine == 'oracle')
-    {
-        conn.execute(sql, [], function(err, results) {
-            if(err)
-            {
-                cb(err, results);
-            }
-            else
-            {
-                for(var key in results)
-                {
-                    dateUtil.oracleObj(results[key]);
-                }
-                cb(err, results);
-            }
-        });
-    }
-    else
-    {
-        cb(new Error("unsurpoted engine."), undefined);
-    }
+    var conn = self.db.pool.getConn();
+    conn.execute(sql, options, function(err, data){
+        cb(err, data);
+    });
 };
 
 /**
@@ -215,27 +251,10 @@ Table.prototype.update = function(condition, data, option, cb)
         sql += " where " + conditionStr;
     }
     log.info(sql);
-    var conn = self.db.getConn();
-    if(self.engine == 'mysql')
-    {
-        conn.query(sql, function(err, rows, fields) {
-            if (err) throw err;
-            if(cb != undefined)
-            {
-                cb(err, rows);
-            }
-        });
-    }
-    else if(self.engine == 'oracle')
-    {
-        conn.execute(sql, [], function(err, results) {
-            cb(err, results);
-        });
-    }
-    else
-    {
-        throw new Error("unsurpoted engine.");
-    }
+    var conn = self.db.pool.getConn();
+    conn.execute(sql, option, function(err, data){
+        cb(err, data);
+    });
 };
 
 /**
@@ -357,9 +376,18 @@ Table.prototype.getKvPair = function(colName, op, value)
         {
             exp += value;
         }
-        else if(col.getType() == 'date' && self.engine == 'oracle')
+        else if(col.getType() == 'date')
         {
-            exp += "to_date('" + value + "', 'yyyy-MM-dd HH24:mi:ss')";
+            var str = '';
+            if(self.db.type == prop.dbType.mysql)
+            {
+                str += "'" + dateUtil.toString(value) + "'";
+            }
+            else if(self.db.type == prop.dbType.oracle)
+            {
+                str += "to_date('" + value + "', 'yyyy-MM-dd HH24:mi:ss')";
+            }
+            exp += str;
         }
         else
         {
@@ -374,7 +402,7 @@ Table.prototype.getKvPair = function(colName, op, value)
  * @param data
  * @param cb
  */
-Table.prototype.find = function(data, columns)
+Table.prototype.find = function(data, columns, options)
 {
     var self = this;
     var sql = "select ";
@@ -418,7 +446,11 @@ Table.prototype.find = function(data, columns)
     {
         sql += " where " + conditionStr;
     }
-    return new DbCursor(self, sql);
+    if(options == undefined)
+    {
+        options = [];
+    }
+    return new DbCursor(self, options, sql);
 };
 
 /**
@@ -437,28 +469,10 @@ Table.prototype.remove = function(condtion, option, cb)
         sql += " where " + conditionStr;
     }
     log.info(sql);
-
-    var conn = self.db.getConn();
-    if(self.engine == 'mysql')
-    {
-        conn.query(sql, function(err, rows, fields) {
-            if (err) throw err;
-            if(cb != undefined)
-            {
-                cb(err, rows);
-            }
-        });
-    }
-    else if(self.engine == 'oracle')
-    {
-        conn.execute(sql, [], function(err, results) {
-            cb(err, results);
-        });
-    }
-    else
-    {
-        throw new Error("unsurpoted engine.");
-    }
+    var conn = self.db.pool.getConn();
+    conn.execute(sql, option, function(err, data){
+        cb(err, data);
+    });
 };
 
 module.exports = Table;

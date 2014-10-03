@@ -1,5 +1,8 @@
-var Column = function(name, type, length, nullable, default_value, primary, auto_increment){
+var log = require('../util/McpLog.js');
+
+var Column = function(db, name, type, length, nullable, default_value, primary, auto_increment){
     var self = this;
+    self.db = db;
     self.name = name;
     self.type = type;
     self.length = length;
@@ -69,6 +72,13 @@ Column.prototype.isAuto_increment = function()
     return self.auto_increment;
 };
 
+Column.prototype.traverse = function()
+{
+    var self = this;
+    var sql = self.toString();
+    log.info(sql);
+};
+
 /**
  * 转换成创建列时的字符串
  */
@@ -83,7 +93,7 @@ Column.prototype.toString = function()
     else
     {
         var sql = self.name + " " + self.type;
-        if(self.type != 'date' && self.type != 'bigint' && self.type != 'datetime')
+        if(self.type != 'date' && self.type != 'bigint' && self.type != 'datetime' && self.type != 'date')
         {
             sql += "(" + self.length + ")";
         }

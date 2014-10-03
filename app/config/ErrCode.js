@@ -12,6 +12,7 @@ var ErrCode = function()
     self.E2035 = {repCode:"2035", description:"投注站不存在"};
     self.E2057 = {repCode:"2057", description:"处于不允许的状态"};
     self.E0999 = {repCode:"0999", description:"系统内部错误"};
+    self.E9000 = {repCode:"9000", description:"不支持的数据库类型"};
     self.E9999 = {repCode:"9999", description:"unhandled exception"};
 
     self.E2058 = {repCode:'2058', description:'JSON格式转换出错'};

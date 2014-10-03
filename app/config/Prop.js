@@ -99,11 +99,6 @@ else if(target == 'run')
 
     mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
 }
-
-
-
-console.log(exports.platform);
-
 exports.zzc = zzc;
 exports.oracle = oracle;
 exports.mcpmg = mcpmg;
@@ -236,6 +231,12 @@ exports.getEnumById = function(name, id)
     }
 };
 
+exports.dbType = {"mysql":0, "oracle":1, "mongodb":2};
+exports.dbTypeArray = [{id:0, code:'mysql', des:"mysql"},
+    {id:1, code:'oracle', des:"oracle"},
+    {id:2, code:'mongodb', des:"mongodb"}];
+
+
 //game type
 exports.gameType = {'normal':1, 'gaopin':2, 'jingcai':3};
 
@@ -247,6 +248,31 @@ exports.stationStatus = {'open':0, 'close':1};
 
 //station game status
 exports.stationGameStatus = {'open':0, 'close':1};
+
+//config db basic type
+var dbs = [{
+    config:{
+        'host':'localhost',
+        'user':'root',
+        'password':'123456',
+        'port':3306,
+        'database':'mcp'
+    },
+    type:exports.dbType.mysql
+}, {
+    config:{
+        hostname: "192.168.11.118",
+        port: 1521,
+        database: "lottery", // System ID (SID)
+        user: "liming",
+        password: "0okmnhy6"
+    },
+    type:exports.dbType.oracle
+}, {
+    config:{'url':'mongodb://127.0.0.1:27017/mcp'},
+    type:exports.dbType.mongodb
+}];
+exports.dbs = dbs;
 
 module.exports = exports;
 
