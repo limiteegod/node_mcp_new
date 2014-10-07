@@ -28,27 +28,6 @@ var oracle;
 var mcpmg;
 if(target == 'dev' || target == 'home')
 {
-    //mysql连接
-    var mysql = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'node'};
-    exports.mysql = mysql;
-
-    var mcpdb = {'host':'localhost', 'user':'root', 'password':'123456', 'port':3306, 'database':'mcp'};
-    exports.mcpdb = mcpdb;
-
-    oracle = {
-        hostname: "192.168.11.118",
-        port: 1521,
-        database: "lottery", // System ID (SID)
-        user: "liming",
-        password: "0okmnhy6"
-    };
-
-    //mongodb的地址
-    var mongo = {'url':'mongodb://127.0.0.1:27017/print'};
-    exports.mongo = mongo;
-
-    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
-
     //平台地址
     platform.site = {
         hostname: '127.0.0.1',
@@ -73,19 +52,9 @@ if(target == 'test')
     platform.ver = "s.1.01";
     platform.gateway = {host:'127.0.0.1', port:8080, method:'POST'};
     exports.platform = platform;
-
-    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
 }
 else if(target == 'run')
 {
-    //mysql连接
-    var mysql = {'host':'192.168.222.234', 'user':'root', 'password':'0okmnhy6', 'port':3306, 'database':'node'};
-    exports.mysql = mysql;
-
-    //mongodb的地址
-    var mongo = {'url':'mongodb://192.168.222.233:27017/test'};
-    exports.mongo = mongo;
-
     //平台地址
     platform.site = {
         hostname: '127.0.0.1',
@@ -96,8 +65,6 @@ else if(target == 'run')
     platform.ver = "s.1.01";
     platform.gateway = {host:'192.168.222.233', port:8301, method:'POST'};
     exports.platform = platform;
-
-    mcpmg = {'url':'mongodb://127.0.0.1:27017/mcp'};
 }
 exports.zzc = zzc;
 exports.oracle = oracle;
