@@ -1,7 +1,7 @@
 var http = require('http');
 var querystring = require('querystring');
 var prop = require('../config/Prop.js');
-var gt = prop.platform.gateway;
+var gts = prop.platform.gateways;
 
 var GatewayInterUtil = function(){};
 
@@ -15,6 +15,9 @@ GatewayInterUtil.prototype.get= function(service, headStr, bodyStr, cb)
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length':post_data.length
     };
+    var ran = Math.round(Math.random()*10);
+    var gtIndex = ran%gts.length;
+    var gt = gts[gtIndex];
     var options = {host:gt.host, port:gt.port, method:gt.method, path:service.path};
     options.headers = headers;
     var req = http.request(options, function(res) {
