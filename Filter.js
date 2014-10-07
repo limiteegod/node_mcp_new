@@ -6,6 +6,7 @@ var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
 var gatewayInterUtil = require('./app/util/GatewayInterUtil.js');
+var log = require("./app/util/McpLog.js");
 
 var Filter = function(){
     var self = this;
@@ -86,7 +87,7 @@ Filter.prototype.startWeb = function()
 Filter.prototype.handle = function(message, cb)
 {
     var self = this;
-    console.log(message);
+    //console.log(message);
     try {
         var msgNode = JSON.parse(message);
         var headNode = msgNode.head;
@@ -97,6 +98,7 @@ Filter.prototype.handle = function(message, cb)
                 console.log('problem with request: ', err);
                 backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
             }
+            log.info(backMsg);
             cb(backMsg);
         });
     }
