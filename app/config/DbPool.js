@@ -3,6 +3,7 @@ var oracle = require('oracle');
 var MongoClient = require('mongodb').MongoClient;
 var prop = require('./Prop.js');
 var DbConnection = require('./DbConnection.js');
+var log = require('../util/McpLog.js');
 
 var DbPool = function(db){
     var self = this;
@@ -30,7 +31,7 @@ DbPool.prototype.connect = function(cb)
     }
     else if(self.db.type == prop.dbType.mongodb)
     {
-        MongoClient.connect(self.db.config, function(err, db) {
+        MongoClient.connect(self.db.config.url, function(err, db) {
             if (err) throw err;
             self.conns[self.conns.length] = new DbConnection(self.db, self, db);
             cb(err);

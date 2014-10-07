@@ -24,6 +24,12 @@ DbCenter.prototype.init = function(cb)
             self._initMg(function(err){
                 cb(err);
             });
+        },
+        //check the mongodb
+        function(cb){
+            self._checkMg(function(err){
+                cb(err);
+            });
         }
     ], function (err, result) {
         cb(err);
@@ -35,6 +41,16 @@ DbCenter.prototype._initMg = function(cb)
     var self = this;
     var db = new Database(2);
 
+    //add tables
+    var test = new Table(db, "test", [
+        new Column(db, "_id", "varchar", 32, false, undefined, true, false),
+    ]);
+    db.put(test);
+    var mcp_id = new Table(db, "mcp_id", [
+        new Column(db, "_id", "varchar", 80, false, undefined, true, false),
+        new Column(db, "value", "bigint", -1, false, undefined)
+    ]);
+    db.put(mcp_id);
     self.mg = db;
     self.mg.init(cb);
 };
@@ -42,7 +58,20 @@ DbCenter.prototype._initMg = function(cb)
 DbCenter.prototype._checkMg = function(cb)
 {
     var self = this;
-
+    var kvTable = self.mg.get("mcp_id");
+    kvTable.findOne({_id:"print_seq"}, {}, function(err, data){
+        console.log(data);
+        if(data)
+        {
+            cb(err, data);
+        }
+        else
+        {
+            kvTable.save({_id:"print_seq", value:1}, [], function(err, data){
+                cb(err, data);
+            });
+        }
+    });
 };
 
 DbCenter.prototype._initMain = function(cb)

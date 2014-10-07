@@ -1,4 +1,6 @@
 var async = require('async');
+var dc = require('../config/DbCenter.js');
+var ec = require('../config/ErrCode.js');
 var transaction = require('./Transaction.js');
 
 var StationService = function(){};
@@ -8,7 +10,6 @@ StationService.prototype.printSuccess = function(ticket, cb)
     var self = this;
 
 };
-
 
 StationService.prototype.saleSuccess = function(ticket, cb)
 {
@@ -57,6 +58,83 @@ StationService.prototype.saleSuccess = function(ticket, cb)
         }
     ], function(err) {
         cb(null, ticket, success);
+    });
+};
+
+
+
+/**
+ * 渠道购买彩票，进行扣款
+ * @param stationId
+ * @param amount
+ * @param cb
+ */
+StationService.prototype.buyLot = function(stationId, amount, cb)
+{
+    var self = this;
+    var stationTable = dc.main.get("station");
+    transaction.run(function(wCb){
+        async.waterfall([
+            //find the station(查看投注站是否存在)
+            function(cb){
+                stationTable.find({id:stationId}, {version:1, balance:1}).toArray(function(err, data){
+                    if(err)
+                    {
+                        cb(ec.E9999);
+                    }
+                    else
+                    {
+                        if(data.length == 0)
+                        {
+                            cb(ec.E2035);
+                        }
+                        else
+                        {
+                            cb(null, data[0]);
+                        }
+                    }
+                });
+            },
+            //查看用户的余额是否足够
+            function(station, cb)
+            {
+                if(station.balance < amount)
+                {
+                    cb(ec.E1007);
+                }
+                else
+                {
+                    cb(null, station);
+                }
+            },
+            //decrease the money(扣款)
+            function(station, cb){
+                stationTable.update({id:station.id, version:station.version},
+                    {$inc:{balance:amount*(-1)}, $set:{version:station.version + 1}}, {}, function(err, data){
+                        if(err)
+                        {
+                            cb(ec.E9999);
+                        }
+                        else
+                        {
+                            if(data.affectedRows == 1)
+                            {
+                                station.balance = station.balance + amount;
+                                station.version++;
+                                cb(ec.E0000, station);
+                            }
+                            else
+                            {
+                                cb(ec.E9999);
+                            }
+                        }
+                    });
+            }
+        ], function (err, result) {
+            wCb(err, result);
+        });
+    }, function(err, data){
+        cb(err, data);
     });
 };
 

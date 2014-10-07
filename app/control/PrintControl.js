@@ -1,13 +1,11 @@
 var async = require('async');
 var digestUtil = require("../util/DigestUtil.js");
 var dateUtil = require("../util/DateUtil.js");
-var db = require('../config/McpDataBase.js');
 var errCode = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
-var loginControl = require('./LoginControl.js');
 var log = require('../util/McpLog.js');
 var pageUtil = require('../util/PageUtil.js');
-var mcpMgDb = require('../config/McpMgDb.js');
+var dc = require('../config/DbCenter.js');
 var orderService = require('../service/OrderService.js');
 
 var PrintControl = function(){};
@@ -18,7 +16,7 @@ PrintControl.prototype.handle = function(headNode, bodyStr, userCb)
     async.waterfall([
         //check login state
         function(cb){
-            var stationTable = db.get("station");
+            var stationTable = dc.main.get("station");
             stationTable.find({code:headNode.channelCode}, {}).toArray(function(err, data){
                 if(err)
                 {
@@ -49,6 +47,7 @@ PrintControl.prototype.handle = function(headNode, bodyStr, userCb)
         //check body
         function(user, headNode, bodyNode, cb){
             var cmd = 'handle' + headNode.cmd;
+            headNode.key = user.secretKey;
             self[cmd](user, headNode, bodyNode, cb);
         }
     ], function (err, backBodyNode) {
@@ -67,7 +66,6 @@ PrintControl.prototype.handle = function(headNode, bodyStr, userCb)
 PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
-    headNode.key = user.secretKey;
     var skip = 0;
     var limit = bodyNode.size;
     if(!limit)
@@ -75,7 +73,7 @@ PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
         limit = 10;
     }
     log.info("print_queen_" + user.code);
-    var printQueen = mcpMgDb.get("print_queen_" + user.code);
+    var printQueen = dc.mg.pool.getConn().conn.collection("print_queen_" + user.code);
     var cursor = printQueen.find({}, {}).sort({_id:1}).skip(0).limit(limit);
     cursor.toArray(function(err, data){
         if(err)
@@ -96,7 +94,7 @@ PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
             }
             backBodyNode.rst = data;
             cursor.count(function(err, count){
-                printQueen.remove({_id:{$lte:maxId}}, {}, function(err, data){
+                printQueen.remove({_id:{$lte:maxId}}, [], function(err, data){
                     backBodyNode.pi = pageUtil.get(skip, limit, count);
                     cb(null, backBodyNode);
                 });
@@ -117,7 +115,7 @@ PrintControl.prototype.handleP06 = function(user, headNode, bodyNode, cb)
     var self = this;
     var backBodyNode = {};
     var orderId = bodyNode.orderId;
-    var ticketTable = db.get("tticket");
+    var ticketTable = dc.main.get("tticket");
     ticketTable.find({orderId:orderId, status:prop.ticketStatus.waiting_print},
         {orderId:1, seq:1, termCode:1, gameCode:1, betTypeCode:1,
             playTypeCode:1, amount:1, multiple:1, price:1, numbers:1,
@@ -131,7 +129,7 @@ PrintControl.prototype.handleP06 = function(user, headNode, bodyNode, cb)
                 {}, function(err, data){
                     if(!err)
                     {
-                        if(data.updateCount == 1)
+                        if(data.affectedRows == 1)
                         {
                             ticket.version = undefined;
                             rst[rst.length] = ticket;
@@ -157,7 +155,7 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
 {
     var self = this;
     var backBodyNode = {};
-    var ticketTable = db.get("tticket");
+    var ticketTable = dc.main.get("tticket");
     async.waterfall([
         //select ticket from db
         function(cb)
@@ -280,8 +278,8 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
         {
             if(success)
             {
-                var stationGameTable = db.get("stationgame");
-                var stationTable = db.get("station");
+                var stationGameTable = dc.main.get("stationgame");
+                var stationTable = dc.main.get("station");
                 async.waterfall([
                     //get station game
                     function(cb)

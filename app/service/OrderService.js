@@ -1,6 +1,5 @@
 var async = require('async');
 var prop = require('../config/Prop.js');
-var db = require('../config/McpDataBase.js');
 var errCode = require('../config/ErrCode.js');
 var transaction = require('./Transaction.js');
 

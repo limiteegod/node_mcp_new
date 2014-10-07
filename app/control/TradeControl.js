@@ -1,12 +1,12 @@
 var async = require('async');
 var digestUtil = require("../util/DigestUtil.js");
-var db = require('../config/McpDataBase.js');
+var dc = require('../config/DbCenter.js');
 var errCode = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
-var loginControl = require('./LoginControl.js');
 var log = require('../util/McpLog.js');
-var mcpMgDb = require('../config/McpMgDb.js');
 var dateUtil = require("../util/DateUtil.js");
+var mgKvService = require("../service/MgKvService.js");
+var stationService = require("../service/StationService.js");
 
 var TradeControl = function(){};
 
@@ -16,7 +16,7 @@ TradeControl.prototype.handle = function(headNode, bodyStr, userCb)
     async.waterfall([
         //check login state
         function(cb){
-            var stationTable = db.get("station");
+            var stationTable = dc.main.get("station");
             if(headNode.cmd == 'T03')
             {
                 stationTable.find({code:headNode.channelCode}, {}).toArray(function(err, data){
@@ -109,11 +109,11 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         ticket.version = 0;
         ticket.status = prop.ticketStatus.waiting_print;
     }
-    var stationGameTable = db.get("stationgame");
-    var stationTable = db.get("station");
-    var orderTable = db.get("torder");
-    var ticketTable = db.get("tticket");
-    var termTable = db.get("term");
+    var stationGameTable = dc.main.get("stationgame");
+    var stationTable = dc.main.get("station");
+    var orderTable = dc.main.get("torder");
+    var ticketTable = dc.main.get("tticket");
+    var termTable = dc.main.get("term");
     var gameCode = torder.gameCode;
     async.waterfall([
         //check the term
@@ -129,7 +129,7 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
                 {
                     if(data.length < 1)
                     {
-                        cb(errCode.E2003)
+                        cb(errCode.E2003);
                     }
                     else
                     {
@@ -142,10 +142,22 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
                             ticket.termIndex = 0;
                             ticket.termIndexDeadline = term.endTime;
                         }
-                        cb(null);
+                        cb(null, term);
                     }
                 }
             });
+        },
+        //校验期次状态
+        function(term, cb)
+        {
+            if(term.status != prop.termStatus.ON_SALE && term.status != prop.termStatus.NOT_ON_SALE)
+            {
+                cb(errCode.E2008);
+            }
+            else
+            {
+                cb(null);
+            }
         },
         //get station game
         function(cb)
@@ -166,34 +178,15 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         function(pstation, cb)
         {
             log.info("station money.........................");
-
-            var success = false;
-            async.whilst(
-                function() { return !success},
-                function(whileCb) {
-                    stationTable.find({id:user.id}, {version:1, balance:1}).toArray(function(err, data){
-                        var user = data[0];
-                        stationTable.update({id:user.id, version:user.version},
-                            {$inc:{balance:(-1)*torder.amount}, $set:{version:user.version + 1}}, {}, function(err, data){
-                                log.info(data);
-                                if(data.updateCount == 1)
-                                {
-                                    success = true;
-                                }
-                                whileCb();
-                            });
-                    });
-                },
-                function(err) {
-                    cb(null, pstation);
-                }
-            );
+            stationService.buyLot(user.id, torder.amount, function(err, data){
+                cb(err, pstation);
+            });
         },
         //save the order
         function(pstation, cb)
         {
             torder.printStationId = pstation.id;
-            orderTable.save(torder, function(err, data){
+            orderTable.save(torder, [], function(err, data){
                 cb(null, pstation);
             });
         },
@@ -202,7 +195,7 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         {
             async.each(tickets, function(ticket, callback) {
                 ticket.printerStationId = pstation.id;
-                ticketTable.save(ticket, function(err, data){
+                ticketTable.save(ticket, [], function(err, data){
                     callback();
                 });
             }, function(err){
@@ -211,10 +204,10 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         },
         function(pstation, cb)
         {
-            var printQueen = mcpMgDb.get("print_queen_" + pstation.code);
-            mcpMgDb.getPrintSeqId(function(err, data){
+            var printQueen = dc.mg.pool.getConn().conn.collection("print_queen_" + pstation.code);
+            mgKvService.getPrintSeqId(function(err, data){
                 printQueen.save({_id:data.value, orderId:torder.id,
-                    gameCode:torder.gameCode, termCode:torder.termCode}, {}, function(err, data){
+                    gameCode:torder.gameCode, termCode:torder.termCode}, [], function(err, data){
                     log.info(err);
                     log.info(data);
                     cb(null);
@@ -223,8 +216,11 @@ TradeControl.prototype.handleT03 = function(user, headNode, bodyNode, cb)
         }
     ], function (err) {
         var backBodyNode = {};
-        var repOrder = {id:torder.id, status:torder.status, schemeType:torder.schemeType};
-        backBodyNode.order = repOrder;
+        if(!err)
+        {
+            var repOrder = {id:torder.id, status:torder.status, schemeType:torder.schemeType};
+            backBodyNode.order = repOrder;
+        }
         cb(err, backBodyNode);
     });
 };

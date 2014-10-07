@@ -150,6 +150,11 @@ async.waterfall([
         });
     },
     function(cb){
+        dc.mg.create(function(err){
+            cb(err);
+        });
+    },
+    function(cb){
         resetStation(function(err, data){
             cb(err);
         });

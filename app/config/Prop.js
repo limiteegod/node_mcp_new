@@ -249,6 +249,13 @@ exports.stationStatus = {'open':0, 'close':1};
 //station game status
 exports.stationGameStatus = {'open':0, 'close':1};
 
+exports.termStatus = {'INIT':1000, 'NOT_ON_SALE':1100, 'PRE_ON_SALE':1150, 'ON_SALE':1200};
+
+exports.termStatusArray = [{id:1000, code:'INIT', des:'初始状态'},
+    {id:1100, code:'NOT_ON_SALE', des:'未开售'},
+    {id:1150, code:'PRE_ON_SALE', des:'准备开售中'},
+    {id:1200, code:'ON_SALE', des:'正在销售'}];
+
 //config db basic type
 var dbs = [{
     config:{

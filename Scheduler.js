@@ -71,7 +71,7 @@ Scheduler.prototype.checkOpen = function()
             {
                 termTable.update({id:term.id, version:term.version}, {$set:{status:1200, version:term.version + 1}}, {}, function(err, data){
                     if(err) cb(err);
-                    log.info(dateUtil.getLogTime(), data);
+                    log.info(data);
                     if(data.length < 1)
                     {
                         cb("transaction failed");
@@ -82,7 +82,7 @@ Scheduler.prototype.checkOpen = function()
             //commit the update
             function(term, cb)
             {
-                cb(null, dateUtil.getLogTime() + term.code + " open success");
+                cb(null, term.gameCode + "," + term.code + " open success");
             }
         ], function (err, result) {
             if(err)

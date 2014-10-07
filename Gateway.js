@@ -124,6 +124,7 @@ Gateway.prototype.handle = function(message, cb)
                 bodyNode.repCode = errCode.E0000.repCode;
                 bodyNode.description = errCode.E0000.description;
             }
+            log.info(bodyNode);
             var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
             cb({head: headNode, body: decodedBodyStr});
         });

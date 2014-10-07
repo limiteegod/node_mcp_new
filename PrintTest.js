@@ -76,6 +76,6 @@ PrintTest.prototype.P02 = function(ticketId, code, rNumber)
 };
 
 var pt = new PrintTest();
-pt.P02('3c43faffff8f4d298e9068958cd8da02', prop.printStatus.success, '');
-//pt.P06('9c4c9c2c3ad348ad8b73bdf4eb40c333');
-//pt.P12();
+pt.P12();
+//pt.P02('a9ec39ebaa654f01820cfb0e082cb99a', prop.printStatus.success, '');
+pt.P06('a9ec39ebaa654f01820cfb0e082cb99a');

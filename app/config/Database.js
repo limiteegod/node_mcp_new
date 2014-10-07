@@ -89,7 +89,12 @@ Database.prototype.put = function(table)
 Database.prototype.get = function(name)
 {
     var self = this;
-    return self.tablesByName[name];
+    var table = self.tablesByName[name];
+    if(self.type == prop.dbType.mongodb)
+    {
+        table.col = self.pool.getConn().conn.collection(name, []);
+    }
+    return table;
 };
 
 module.exports = Database;
