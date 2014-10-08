@@ -68,7 +68,7 @@ Filter.prototype.startWeb = function()
     app.post("/mcp-filter/main/interface.htm", function(req, res){
         var message = req.body.message;
         self.handle(message, function(backMsg){
-            res.type('application/json');
+            res.type('application/json;charset=utf-8');
             res.send(backMsg);
         });
     });
@@ -76,7 +76,7 @@ Filter.prototype.startWeb = function()
     app.get("/mcp-filter/main/interface.htm", function(req, res){
         var message = req.query.message;
         self.handle(message, function(backMsg){
-            res.type('application/json');
+            res.type('application/json;charset=utf-8');
             res.send(backMsg);
         });
     });
