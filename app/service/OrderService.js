@@ -2,13 +2,14 @@ var async = require('async');
 var prop = require('../config/Prop.js');
 var errCode = require('../config/ErrCode.js');
 var transaction = require('./Transaction.js');
+var dc = require('../config/DbCenter.js');
 
 var OrderService = function(){};
 
 OrderService.prototype.incSuccessTicketCount = function(orderId, cb)
 {
     var self = this;
-    var orderTable = db.get("torder");
+    var orderTable = dc.main.get("torder");
     transaction.run(function(wCb){
         async.waterfall([
             //find the order

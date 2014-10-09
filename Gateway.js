@@ -107,15 +107,15 @@ Gateway.prototype.handle = function(message, cb)
             if(key == undefined)
             {
                 key = digestUtil.getEmptyKey();
-            }
-            if (err) {
                 if(headNode.digestType == '3des')
                 {
                     headNode.digestType = "3des-empty";
                 }
-                if (bodyNode == undefined) {
-                    bodyNode = {};
-                }
+            }
+            if (bodyNode == undefined) {
+                bodyNode = {};
+            }
+            if (err) {
                 bodyNode.repCode = err.repCode;
                 bodyNode.description = err.description;
             }

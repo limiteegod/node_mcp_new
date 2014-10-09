@@ -96,7 +96,7 @@ PrintControl.prototype.handleP12 = function(user, headNode, bodyNode, cb)
             backBodyNode.rst = data;
             cursor.count(function(err, count){
                 printQueen.remove({_id:{$lte:maxId}}, [], function(err, data){
-                    backBodyNode.pi = pageUtil.get(skip, limit, count);
+                    backBodyNode.pi = pageUtil.getDetail(skip, limit, count);
                     cb(null, backBodyNode);
                 });
             });
@@ -209,8 +209,8 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
         {
             if(success)
             {
-                var stationGameTable = db.get("stationgame");
-                var stationTable = db.get("station");
+                var stationGameTable = dc.main.get("stationgame");
+                var stationTable = dc.main.get("station");
                 async.waterfall([
                     //get station game
                     function(cb)
@@ -233,7 +233,7 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
                                     var user = data[0];
                                     stationTable.update({id:user.id, version:user.version},
                                         {$inc:{balance:amount}, $set:{version:user.version + 1}}, {}, function(err, data){
-                                            if(data.updateCount == 1)
+                                            if(data.affectedRows == 1)
                                             {
                                                 success = true;
                                             }
@@ -303,7 +303,7 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
                                     var user = data[0];
                                     stationTable.update({id:user.id, version:user.version},
                                         {$inc:{balance:amount}, $set:{version:user.version + 1}}, {}, function(err, data){
-                                            if(data.updateCount == 1)
+                                            if(data.affectedRows == 1)
                                             {
                                                 success = true;
                                             }
