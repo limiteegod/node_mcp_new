@@ -1,9 +1,10 @@
-var log = require('./app/util/McpLog.js');
 var dc = require('./app/config/DbCenter.js');
 var async = require('async');
-var digestUtil = require('./app/util/DigestUtil.js');
-var dateUtil = require('./app/util/DateUtil.js');
 var prop = require('./app/config/Prop.js');
+var esut = require("easy_util");
+var log = esut.log;
+var digestUtil = esut.digestUtil;
+var dateUtil = esut.dateUtil;
 
 var resetStation = function(cb)
 {
@@ -165,5 +166,5 @@ async.waterfall([
         });
     }
 ], function (err, result) {
-    log.info("end...........");
+    log.info(err);
 });

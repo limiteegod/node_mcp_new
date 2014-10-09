@@ -6,7 +6,8 @@ var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
 var service = require('./app/config/Service.js');
 var gatewayInterUtil = require('./app/util/GatewayInterUtil.js');
-var log = require("./app/util/McpLog.js");
+var esut = require("easy_util");
+var log = esut.log;
 
 var Filter = function(){
     var self = this;

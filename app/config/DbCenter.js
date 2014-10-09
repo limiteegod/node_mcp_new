@@ -14,6 +14,7 @@ var DbCenter = function(){
 DbCenter.prototype.init = function(cb)
 {
     var self = this;
+    esdb.log.setShowLog(true);
     async.waterfall([
         //the main db
         function(cb){
@@ -41,7 +42,7 @@ DbCenter.prototype.init = function(cb)
 DbCenter.prototype._initMg = function(cb)
 {
     var self = this;
-    var db = new Database(2);
+    var db = new Database(prop.dbs[2]);
 
     //add tables
     var test = new Table(db, "test", [
@@ -61,7 +62,7 @@ DbCenter.prototype._checkMg = function(cb)
 {
     var self = this;
     var kvTable = self.mg.get("mcp_id");
-    kvTable.findOne({_id:"print_seq"}, {}, function(err, data){
+    kvTable.findOne({_id:"print_seq"}, {}, [], function(err, data){
         console.log(data);
         if(data)
         {
@@ -79,7 +80,7 @@ DbCenter.prototype._checkMg = function(cb)
 DbCenter.prototype._initMain = function(cb)
 {
     var self = this;
-    var db = new Database(0);
+    var db = new Database(prop.dbs[0]);
 
     //add tables
     var torder = new Table(db, "torder", [
