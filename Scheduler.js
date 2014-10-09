@@ -3,8 +3,9 @@ var async = require('async');
 var moment = require("moment");
 var dc = require('./app/config/DbCenter.js');
 var prop = require('./app/config/Prop.js');
-var dateUtil = require('./app/util/DateUtil.js');
-var log = require('./app/util/McpLog.js');
+var esut = require("easy_util");
+var log = esut.log;
+var digestUtil = esut.digestUtil;
 
 var Scheduler = function(){};
 

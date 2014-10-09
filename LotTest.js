@@ -1,6 +1,7 @@
 var platInterUtil = require('./app/util/PlatInterUtil.js');
-var digestUtil = require('./app/util/DigestUtil.js');
-var log = require('./app/util/McpLog.js');
+var esut = require("easy_util");
+var log = esut.log;
+var digestUtil = esut.digestUtil;
 
 var LotTest = function(){
     var self = this;
@@ -51,12 +52,21 @@ LotTest.prototype.lotF01 = function()
     orderNode.tickets = ticketsNode;
     bodyNode.order = orderNode;
     self.lot(bodyNode, function(err, backMsgNode){
-        var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
-        var backBodyNode = JSON.parse(backBodyStr);
-        console.log("back-head:");
-        console.log(backMsgNode.head);
-        console.log("back-body:");
-        console.log(backBodyNode);
+        if(err)
+        {
+            log.info('err:' + err);
+        }
+        else
+        {
+            log.info('back:');
+            log.info(backMsgNode);
+            /*var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
+            var backBodyNode = JSON.parse(backBodyStr);
+            console.log("back-head:");
+            console.log(backMsgNode.head);
+            console.log("back-body:");
+            console.log(backBodyNode);*/
+        }
     });
 };
 

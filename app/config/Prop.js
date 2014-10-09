@@ -1,3 +1,4 @@
+var esdb = require('easy_db');
 var target = 'dev';
 
 var argv = process.argv;
@@ -200,12 +201,6 @@ exports.getEnumById = function(name, id)
     }
 };
 
-exports.dbType = {"mysql":0, "oracle":1, "mongodb":2};
-exports.dbTypeArray = [{id:0, code:'mysql', des:"mysql"},
-    {id:1, code:'oracle', des:"oracle"},
-    {id:2, code:'mongodb', des:"mongodb"}];
-
-
 //game type
 exports.gameType = {'normal':1, 'gaopin':2, 'jingcai':3};
 
@@ -234,7 +229,7 @@ var dbs = [{
         'port':3306,
         'database':'mcp'
     },
-    type:exports.dbType.mysql
+    type:esdb.prop.dbType.mysql
 }, {
     config:{
         hostname: "192.168.11.118",
@@ -243,10 +238,13 @@ var dbs = [{
         user: "liming",
         password: "0okmnhy6"
     },
-    type:exports.dbType.oracle
+    type:esdb.prop.dbType.oracle
 }, {
     config:{'url':'mongodb://127.0.0.1:27017/mcp'},
-    type:exports.dbType.mongodb
+    type:esdb.prop.dbType.mongodb
+}, {
+    config:{'url':'mongodb://192.168.222.233:27017/mcp'},
+    type:esdb.prop.dbType.mongodb
 }];
 exports.dbs = dbs;
 

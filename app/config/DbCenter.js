@@ -42,7 +42,12 @@ DbCenter.prototype.init = function(cb)
 DbCenter.prototype._initMg = function(cb)
 {
     var self = this;
-    var db = new Database(prop.dbs[2]);
+    var index = 2;
+    if(prop.target == 'run')
+    {
+        index = 3;
+    }
+    var db = new Database(prop.dbs[index]);
 
     //add tables
     var test = new Table(db, "test", [
@@ -80,8 +85,12 @@ DbCenter.prototype._checkMg = function(cb)
 DbCenter.prototype._initMain = function(cb)
 {
     var self = this;
-    var db = new Database(prop.dbs[0]);
-
+    var index = 0;
+    if(prop.target == 'run')
+    {
+        index = 1;
+    }
+    var db = new Database(prop.dbs[index]);
     //add tables
     var torder = new Table(db, "torder", [
         new Column(db, "id", "varchar", 32, false, undefined, true, false),

@@ -4,12 +4,12 @@ var async = require('async');
 var httpServer = http.createServer(app);
 var prop = require('./app/config/Prop.js');
 var errCode = require('./app/config/ErrCode.js');
-var service = require('./app/config/Service.js');
-var dateUtil = require("./app/util/DateUtil.js");
-var digestUtil = require("./app/util/DigestUtil.js");
-var log = require("./app/util/McpLog.js");
 var cmdFactory = require("./app/control/CmdFactory.js");
 var dc = require('./app/config/DbCenter.js');
+
+var esut = require("easy_util");
+var log = esut.log;
+var digestUtil = esut.digestUtil;
 
 var Gateway = function(){
     var self = this;
