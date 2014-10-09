@@ -1,5 +1,6 @@
-var db = require('../config/Database.js');
-var digestUtil = require("../util/DigestUtil.js");
+var dc = require('../config/DbCenter.js');
+var esut = require('easy_util');
+var digestUtil = esut.digestUtil;
 
 var TestPageControl = function(){};
 

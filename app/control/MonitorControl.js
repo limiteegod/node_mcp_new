@@ -1,7 +1,7 @@
 var async = require('async');
-var cmdFactory = require("./CmdFactory.js");
-var digestUtil = require("../util/DigestUtil.js");
-var db = require('../config/Database.js');
+var esut = require('easy_util');
+var digestUtil = esut.digestUtil;
+var dc = require('../config/DbCenter.js');
 
 var MonitorControl = function(){};
 

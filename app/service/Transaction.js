@@ -1,6 +1,7 @@
 var async = require('async');
+var esut = require('easy_util');
+var log = esut.log;
 var errCode = require('../config/ErrCode.js');
-var log = require('../util/McpLog.js');
 
 var Transaction = function(){};
 

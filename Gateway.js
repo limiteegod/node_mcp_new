@@ -57,7 +57,7 @@ Gateway.prototype.startWeb = function()
     //route requests
     app.use(app.router);
     //public文件夹下面的文件，都暴露出来，客户端访问的时候，不需要使用public路径
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static('/data/app/node_kissy/public'));
 
     app.configure('development', function(){
         app.use(express.errorHandler({dumpExceptions: true, showStack: true}));

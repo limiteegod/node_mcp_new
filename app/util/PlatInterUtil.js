@@ -1,10 +1,10 @@
 var http = require('http');
 var querystring = require('querystring');
-var crypto = require('crypto');
 var prop = require('../config/Prop.js');
-var digestUtil = require('./DigestUtil.js');
-var dateUtil = require('./DateUtil.js');
-var log = require('./McpLog.js');
+var esut = require('easy_util');
+var digestUtil = esut.digestUtil;
+var dateUtil = esut.dateUtil;
+var log = esut.log;
 var options = prop.platform.site;
 var PlatInterUtil = function(){};
 

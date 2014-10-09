@@ -1,9 +1,11 @@
 var async = require('async');
 var prop = require('./Prop.js');
-var Database = require('./Database.js');
-var Table = require('./Table.js');
-var Column = require('./Column.js');
-var log = require('../util/McpLog.js');
+var esdb = require("easy_db");
+var esut = require("easy_util");
+var Database = esdb.Database;
+var Table = esdb.Table;
+var Column = esdb.Column;
+var log = esut.log;
 
 var DbCenter = function(){
     var self = this;

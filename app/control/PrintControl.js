@@ -1,10 +1,11 @@
 var async = require('async');
-var digestUtil = require("../util/DigestUtil.js");
-var dateUtil = require("../util/DateUtil.js");
+var esut = require('easy_util');
+var digestUtil = esut.digestUtil;
+var dateUtil = esut.dateUtil;
 var errCode = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
-var log = require('../util/McpLog.js');
-var pageUtil = require('../util/PageUtil.js');
+var log = esut.log;
+var pageUtil = esut.pageUtil;
 var dc = require('../config/DbCenter.js');
 var orderService = require('../service/OrderService.js');
 
