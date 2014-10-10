@@ -54,20 +54,26 @@ html(lang="en")
                 .vs_grid_plain(style="width:823px;text-align:right;")
                     input(type="button", id="refresh", value="刷新")
             .clearfix(style="margin-top:8px")
-                #terms.container(style="width:823px;")
+                #terms.container(style="width:923px;")
                     table
                         thead
                             tr
-                                td(style="width:276px;") 期次
-                                td(style="width:200px;") 游戏
-                                td(style="width:200px;") 状态
+                                td(style="width:100px;") 游戏
+                                td(style="width:76px;") 期次
+                                td(style="width:76px;") 下一期
+                                td(style="width:100px;") 状态
+                                td(style="width:200px;") 开售时间
+                                td(style="width:200px;") 停售时间
                                 td(style="width:134px;") 操作
                         tbody
                             - each val in rst
                                 tr
-                                    td=val.code
                                     td=val.game.name
+                                    td=val.code
+                                    td=val.nextCode
                                     td=val.status.des
+                                    td=val.openTime
+                                    td=val.endTime
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
             .clearfix(style="margin-top:8px")

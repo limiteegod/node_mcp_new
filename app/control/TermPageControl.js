@@ -1,6 +1,7 @@
 var esut = require('easy_util');
 var dc = require('../config/DbCenter.js');
 var prop = require('../config/Prop.js');
+var dateUtil = esut.dateUtil;
 var digestUtil = esut.digestUtil;
 var log = esut.log;
 var pageUtil = esut.pageUtil;
@@ -27,6 +28,7 @@ TermPageControl.prototype.list = function(headNode, bodyNode, cb)
         for(var key in data)
         {
             var set = data[key];
+            dateUtil.mysqlObj(termTable, set);
             set.game = prop.getGameInfo(set.gameCode);
             set.status = prop.getEnumById('termStatusArray', set.status);
         }
