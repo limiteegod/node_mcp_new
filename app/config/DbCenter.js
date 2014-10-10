@@ -59,6 +59,12 @@ DbCenter.prototype._initMg = function(cb)
         new Column(db, "value", "bigint", -1, false, undefined)
     ]);
     db.put(mcp_id);
+    var stInfoTable = new Table(db, "stInfo", [
+        new Column(db, "_id", "varchar", 80, false, undefined, true, false),
+        new Column(db, "st", "varchar", 32, false, undefined),
+        new Column(db, "lastActiveTime", "bigint", -1, false, undefined)
+    ]);
+    db.put(stInfoTable);
     self.mg = db;
     self.mg.init(cb);
 };
@@ -223,6 +229,14 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "uc_code", "UNIQUE", -1, false, 'code')
     ]);
     db.put(station);
+    var admini = new Table(db, "admini", [
+        new Column(db, "id", "varchar", 32, false, undefined, true, false),
+        new Column(db, "name", "varchar", 40, false, undefined),
+        new Column(db, "password", "varchar", 40, false, undefined),
+        new Column(db, "type", "int", 11, false, undefined),
+        new Column(db, "version", "int", 11, false, undefined)
+    ]);
+    db.put(admini);
     var stationGame = new Table(db, "stationgame", [
         new Column(db, "id", "varchar", 32, false, undefined, true, false),
         new Column(db, "stationId", "varchar", 32, false, undefined),
@@ -236,6 +250,17 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "pFactor", "int", 11, false, undefined)
     ]);
     db.put(stationGame);
+    var operation = new Table(db, "operation", [
+        new Column(db, "id", "varchar", 40, false, undefined),
+        new Column(db, "userType", "int", 11, false, undefined),
+        new Column(db, "hasChildren", "int", 11, false, 0),
+        new Column(db, "name", "varchar", 20, false, undefined),
+        new Column(db, "parent", "varchar", 40, false, ''),
+        new Column(db, "url", "varchar", 80, false, undefined),
+        new Column(db, "status", "int", 11, false, 1),
+        new Column(db, "version", "int", 11, false, 0)
+    ]);
+    db.put(operation);
     self.main = db;
     self.main.init(cb);
 };

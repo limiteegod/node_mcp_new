@@ -220,6 +220,20 @@ exports.termStatusArray = [{id:1000, code:'INIT', des:'初始状态'},
     {id:1150, code:'PRE_ON_SALE', des:'准备开售中'},
     {id:1200, code:'ON_SALE', des:'正在销售'}];
 
+exports.userType = {"GUEST":0, "CUSTOMER":1, "CHANNEL":2, "ADMINISTRATOR":3};
+exports.userTypeArray = [{id:0, code:'GUEST', des:"游客"},
+    {id:1, code:'CUSTOMER', des:"普通用户"},
+    {id:2, code:'CHANNEL', des:"渠道用户"},
+    {id:3, code:'ADMINISTRATOR', des:"系统管理员"}];
+
+//暂时支持3种密钥来源
+exports.digestFromType = {"NONE":0, "DB":1, "CACHE":2};
+exports.digestFromTypeArray = [
+    {id:0, code:'NONE', des:"无"},
+    {id:1, code:'DB', des:"数据库"},
+    {id:2, code:'CACHE', des:"缓存"}
+];
+
 //config db basic type
 var dbs = [{
     config:{

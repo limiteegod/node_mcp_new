@@ -9,13 +9,13 @@ html(lang="en")
                     var pwd = Node.one("#pwd").val();
                     var key = hex_md5(pwd);
                     CurSite.setCookie("userId", name, CurSite.cookieExpireTime);
-                    CurSite.setCookie("userType", "ADMINISTRATOR", CurSite.cookieExpireTime);
+                    CurSite.setCookie("userType", "CHANNEL", CurSite.cookieExpireTime);
                     var body = {name:name, password:pwd, uniqueId:CurSite.createUUID()};
-                    CurSite.sendDigest(Io, Json, "AD01", key, body, function(err, backBodyNode){
+                    CurSite.sendDigest(Io, Json, "ST01", key, body, function(err, backBodyNode){
                         if(backBodyNode.repCode == '0000')
                         {
                             CurSite.setCookie("st", backBodyNode.st, CurSite.cookieExpireTime);
-                            window.location = CurSite.getAbsolutePath("admin_index.html");
+                            window.location = CurSite.getAbsolutePath("station_index.html");
                         }
                         else
                         {

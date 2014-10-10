@@ -5,6 +5,8 @@ var adminPageControl = require("./AdminPageControl.js");
 var monitorPageControl = require("./MonitorPageControl.js");
 var testPageControl = require("./TestPageControl.js");
 var angularPageControl = require("./AngularPageControl.js");
+var stationPageControl = require("./StationPageControl.js");
+var termPageControl = require("./TermPageControl.js");
 
 var PageControl = function(){};
 
@@ -36,6 +38,17 @@ PageControl.prototype.angular = function(headNode, bodyNode, cb)
 {
     angularPageControl.handle(headNode, bodyNode, cb);
 };
+
+PageControl.prototype.station = function(headNode, bodyNode, cb)
+{
+    stationPageControl.handle(headNode, bodyNode, cb);
+};
+
+PageControl.prototype.term = function(headNode, bodyNode, cb)
+{
+    termPageControl.handle(headNode, bodyNode, cb);
+};
+
 
 var pageControl = new PageControl();
 module.exports = pageControl;

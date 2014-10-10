@@ -13,12 +13,19 @@ var ErrCode = function()
     self.E2008 = {repCode:'2008', description:'不是当前期'};
     self.E2035 = {repCode:"2035", description:"投注站不存在"};
     self.E2057 = {repCode:"2057", description:"处于不允许的状态"};
-    self.E0999 = {repCode:"0999", description:"系统内部错误"};
-    self.E9000 = {repCode:"9000", description:"不支持的数据库类型"};
-    self.E9999 = {repCode:"9999", description:"unhandled exception"};
-
     self.E2058 = {repCode:'2058', description:'JSON格式转换出错'};
     self.E2059 = {repCode:'2059', description:'系统繁忙'};
+    self.E2060 = {repCode:"2060", description:"不支持的cmd"};
+    self.E0999 = {repCode:"0999", description:"系统内部错误"};
+    self.E9000 = {repCode:"9000", description:"不支持的数据库类型"};
+    self.E9001 = {repCode:"9001", description:'用户不存在'};
+    self.E9002 = {repCode:"9002", description:'密钥来源错误'};
+    self.E9003 = {repCode:"9003", description:'密钥错误'};
+    self.E9004 = {repCode:"9004", description:'登陆超时'};
+    self.E9005 = {repCode:"9005", description:'不支持的用户类型'};
+    self.E9999 = {repCode:"9999", description:"unhandled exception"};
+
+
 
     self.E3001 = {repCode:'3001', description:'票据不存在'};
     self.E3002 = {repCode:'3002', description:'票据已经失效'};

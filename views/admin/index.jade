@@ -1,7 +1,7 @@
 doctype html
 html(lang="en")
-    frameset(frameborder="0", rows="80,*")
+    frameset(rows="80,*", border='1', bordercolor="#28afae")
         frame(src="./admin_top.html", frameborder="0")
-        frameset(frameborder="0", cols="200,*")
-            frame(src="./admin_left.html", frameborder="0")
-            frame(id="mainFrame", frameborder="no", border="0", name="mainFrame", src="./admin_main.html")
+        frameset(frameborder='1', cols="200,*", border='1', bordercolor="#28afae")
+            frame(src="./admin_left.html")
+            frame(id="mainFrame", name="mainFrame", src="./admin_main.html")

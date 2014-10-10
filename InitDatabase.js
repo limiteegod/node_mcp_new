@@ -21,7 +21,7 @@ var resetStation = function(cb)
         function(cb)
         {
             var curDate = new Date();
-            var station = {id:digestUtil.createUUID(), code:"C0001", balance:0, stationType:prop.stationType.center,
+            var station = {id:digestUtil.createUUID(), code:"C0001", name:"C0001", password:"123456", balance:0, stationType:prop.stationType.center,
                 status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e', buildTime:curDate,
                 expiredTime:curDate, lastLoginTime:curDate, version:0};
             stationTable.save(station, [], function(err, data){
@@ -41,7 +41,8 @@ var resetStation = function(cb)
         function(pstation, cb)
         {
             var curDate = new Date();
-            var station = {id:digestUtil.createUUID(), code:"Q0003", balance:1000000, stationType:prop.stationType.channel,
+            var station = {id:digestUtil.createUUID(), code:"Q0003", name:"Q0003", password:"123456",
+                balance:1000000, stationType:prop.stationType.channel,
                 status:prop.stationStatus.open, secretKey:'cad6011f5f174a359d9a36e06aada07e', buildTime:curDate,
                 expiredTime:curDate, lastLoginTime:curDate, version:0};
             stationTable.save(station, [], function(err, data){
