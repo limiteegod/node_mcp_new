@@ -123,12 +123,17 @@ PrintControl.prototype.handleP06 = function(user, headNode, bodyNode, cb)
             termIndexDeadline:1, version:1})
         .toArray(function(err, data){
         var rst = [];
+        var curTimeStamp = new Date().getTime();
         async.each(data, function(ticket, callback) {
             ticketTable.update({id:ticket.id, version:ticket.version},
-                {$set:{sysTakeTime:dateUtil.getCurTime(), status:prop.ticketStatus.take_away,
+                {$set:{sysTakeTime:curTimeStamp, status:prop.ticketStatus.take_away,
                     version:ticket.version+1}},
                 {}, function(err, data){
-                    if(!err)
+                    if(err)
+                    {
+                        log.info(err);
+                    }
+                    else
                     {
                         if(data.affectedRows == 1)
                         {

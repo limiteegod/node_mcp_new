@@ -7,6 +7,9 @@ var testPageControl = require("./TestPageControl.js");
 var angularPageControl = require("./AngularPageControl.js");
 var stationPageControl = require("./StationPageControl.js");
 var termPageControl = require("./TermPageControl.js");
+var orderPageControl = require("./OrderPageControl.js");
+var ticketPageControl = require("./TicketPageControl.js");
+
 
 var PageControl = function(){};
 
@@ -47,6 +50,16 @@ PageControl.prototype.station = function(headNode, bodyNode, cb)
 PageControl.prototype.term = function(headNode, bodyNode, cb)
 {
     termPageControl.handle(headNode, bodyNode, cb);
+};
+
+PageControl.prototype.order = function(headNode, bodyNode, cb)
+{
+    orderPageControl.handle(headNode, bodyNode, cb);
+};
+
+PageControl.prototype.ticket = function(headNode, bodyNode, cb)
+{
+    ticketPageControl.handle(headNode, bodyNode, cb);
 };
 
 

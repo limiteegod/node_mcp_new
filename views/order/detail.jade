@@ -1,0 +1,54 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-pagebar,vs-round-input",
+                function(S, Io, Node, Json, VsGridTable, VsPagebar, VsRoundInput){
+
+            });
+    body
+        .container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") id:
+                .vs_grid_plain(style="margin-left:8px;")=rst.id
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 外部id:
+                .vs_grid_plain(style="margin-left:8px;")=rst.outerId
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 游戏:
+                .vs_grid_plain(style="margin-left:8px;")=rst.game.name
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 期次:
+                .vs_grid_plain(style="margin-left:8px;")=rst.termCode
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 金额:
+                .vs_grid_plain(style="margin-left:8px;")=rst.amount/100
+                    |(元)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 状态:
+                .vs_grid_plain(style="margin-left:8px;")=rst.status.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 票据数目:
+                .vs_grid_plain(style="margin-left:8px;")=rst.ticketCount
+                    |(张)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 出票成功:
+                .vs_grid_plain(style="margin-left:8px;")=rst.printCount
+                    |(张)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 出票失败:
+                .vs_grid_plain(style="margin-left:8px;")=rst.printFailCount
+                    |(张)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 创建时间:
+                .vs_grid_plain(style="margin-left:8px;")=rst.createTime
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 接受时间:
+                .vs_grid_plain(style="margin-left:8px;")=rst.acceptTime
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 号码:
+                .vs_grid_plain(style="margin-left:8px;")=rst.numbers
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 开奖号码:
+                .vs_grid_plain(style="margin-left:8px;")=rst.dNumber
