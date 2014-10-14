@@ -14,7 +14,7 @@ html(lang="en")
                     data.concedePoints = parseInt(Node.one("#concede").val());
                     data.detailInfo = getDetailInfo();
                     data.openTime = Node.one("#openTime").val();
-                    data.closeTime = Node.one("#closeTime").val();
+                    data.endTime = Node.one("#endTime").val();
                     data.matchTime = Node.one("#matchTime").val();
                     data.status = parseInt(Node.one("#status").val());
                     data.prizePool = parseInt(Node.one("#prizePool").val());
@@ -107,7 +107,7 @@ html(lang="en")
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 停售时间*:
                 .vs_grid_plain(style="margin-left:8px;")
-                    input(id="closeTime", type="text", value=curTime)
+                    input(id="endTime", type="text", value=curTime)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 比赛时间:
                 .vs_grid_plain(style="margin-left:8px;")
