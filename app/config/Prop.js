@@ -59,8 +59,8 @@ if(target == 'yun')
 {
     //平台地址
     platform.site = {
-        hostname: '127.0.0.1',
-        port: 8081,
+        hostname: '182.254.129.17',
+        port: 9090,
         path: '/mcp-filter/main/interface.htm',
         method: 'POST'
     };
@@ -165,8 +165,14 @@ exports.digestFromTypeArray = [
     {id:2, code:'CACHE', des:"缓存"}
 ];
 
-//config db basic type
+/**
+ * 数据库配置信息，
+ * config，数据库的连接信息
+ * type，类型，暂时支持oracle，mysql，mongodb三种类型
+ * dateToLong，ture，则在生成表的时候，会把date类型映射为long类型
+ */
 var dbs = [{
+    //dev
     config:{
         'host':'localhost',
         'user':'root',
@@ -174,8 +180,10 @@ var dbs = [{
         'port':3306,
         'database':'mcp'
     },
-    type:esdb.prop.dbType.mysql
+    type:esdb.prop.dbType.mysql,
+    dateToLong:true
 }, {
+    //oracle dev
     config:{
         hostname: "192.168.11.118",
         port: 1521,
@@ -185,10 +193,27 @@ var dbs = [{
     },
     type:esdb.prop.dbType.oracle
 }, {
+    //dev
     config:{'url':'mongodb://127.0.0.1:27017/mcp'},
     type:esdb.prop.dbType.mongodb
 }, {
+    //run
     config:{'url':'mongodb://192.168.222.233:27017/mcp'},
+    type:esdb.prop.dbType.mongodb
+}, {
+    //yun test
+    config:{
+        'host':'localhost',
+        'user':'root',
+        'password':'0okmnhy6',
+        'port':3306,
+        'database':'mcp'
+    },
+    type:esdb.prop.dbType.mysql,
+    dateToLong:false
+}, {
+    //yun test
+    config:{'url':'mongodb://10.131.172.66:27017/mcp'},
     type:esdb.prop.dbType.mongodb
 }];
 exports.dbs = dbs;

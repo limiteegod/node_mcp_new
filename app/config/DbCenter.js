@@ -47,6 +47,10 @@ DbCenter.prototype._initMg = function(cb)
     {
         index = 3;
     }
+    else if(prop.target == 'yun')
+    {
+        index = 5;
+    }
     var db = new Database(prop.dbs[index]);
 
     //add tables
@@ -95,6 +99,10 @@ DbCenter.prototype._initMain = function(cb)
     if(prop.target == 'run')
     {
         index = 1;
+    }
+    else if(prop.target == 'yun')
+    {
+        index = 4;
     }
     var db = new Database(prop.dbs[index]);
     //add tables
