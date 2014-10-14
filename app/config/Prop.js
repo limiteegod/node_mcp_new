@@ -1,5 +1,6 @@
 var esdb = require('easy_db');
 var target = 'dev';
+var exports = {};
 
 var argv = process.argv;
 var kvs = {};
@@ -54,6 +55,19 @@ if(target == 'test')
     platform.gateways = [{host:'127.0.0.1', port:8080, method:'POST'}];
     exports.platform = platform;
 }
+if(target == 'yun')
+{
+    //平台地址
+    platform.site = {
+        hostname: '127.0.0.1',
+        port: 8081,
+        path: '/mcp-filter/main/interface.htm',
+        method: 'POST'
+    };
+    platform.ver = "s.1.01";
+    platform.gateways = [{host:'127.0.0.1', port:8081, method:'POST'}];
+    exports.platform = platform;
+}
 else if(target == 'run')
 {
     //平台地址
@@ -78,19 +92,6 @@ exports.loginExpiredSeconds = 30*60;
 
 //machine status
 exports.machineStatus = {"running":1, "unknown":-1, "stopped":0};
-
-//ticket status
-exports.ticketStatus = {"init":1000, "waiting_pay":1080, "presale":1090,
-    "waiting_print":1100, "take_away":1200, "print_success":1300, "print_failure":1500};
-
-//ticket status
-exports.ticketStatusArray = [{id:1000, code:'init', des:"初始状态"},
-    {id:1080, code:'waiting_pay', des:"等待支付"},
-    {id:1090, code:'presale', des:"预售"},
-    {id:1100, code:'waiting_print', des:"等待打印"},
-    {id:1200, code:'take_away', des:"程序取走"},
-    {id:1300, code:'print_success', des:"打印成功"},
-    {id:1500, code:'print_failure', des:"打印失败"}];
 
 //print status
 exports.printStatus = {"success":0, "failure":1};
@@ -117,76 +118,6 @@ exports.orderType = {"customer":0, "channel":1};
 exports.orderTypeArray = [{id:0, code:'customer', des:"普通用户"},
     {id:1, code:'channel', des:"渠道"}];
 
-//order status
-exports.orderStatus = {"init":1000, "presale":1001, "waiting_print":1100,
-    "success":1200, "partial_success":1300};
-//order status
-exports.orderStatusArray = [{id:1000, code:'init', des:"初始状态"},
-    {id:1001, code:'presale', des:"预售"},
-    {id:1100, code:'waiting_print', des:"等待出票"},
-    {id:1200, code:'success', des:"出票成功"},
-    {id:1300, code:'partial_success', des:"部分出票成功"}];
-
-exports.games =
-[
-    {id:'F01', name:'双色球', playTypes:
-        [
-            {id:'00', name:'普通', price:200, betTypes:
-                [
-                    {id:'00', name:'单式'},
-                    {id:'01', name:'复式'},
-                    {id:'02', name:'胆拖'}
-                ]
-            }
-        ]
-    }
-];
-
-//init the game tree
-for(var key in exports.games)
-{
-    var game = exports.games[key];
-    exports.games[game.id] = game;
-    for(var pKey in game.playTypes)
-    {
-        var playType = game.playTypes[pKey];
-        playType.parent = game;
-        game[playType.id] = playType;
-
-        for(var bkey in playType.betTypes)
-        {
-            var betType = playType.betTypes[bkey];
-            betType.parent = playType;
-            playType[betType.id] = betType;
-        }
-    }
-};
-
-/**
- * get the game info
- * @param gameCode
- * @param playTypeCode
- * @param betTypeCode
- * @returns {*}
- */
-exports.getGameInfo = function(gameCode, playTypeCode, betTypeCode)
-{
-    var self = this;
-    var obj;
-    if(gameCode)
-    {
-        obj = self.games[gameCode];
-    }
-    if(playTypeCode)
-    {
-        obj = obj[playTypeCode];
-    }
-    if(betTypeCode)
-    {
-        obj = obj[betTypeCode];
-    }
-    return obj;
-};
 
 exports.getEnumById = function(name, id)
 {
