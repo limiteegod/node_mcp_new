@@ -1,0 +1,132 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-data-select,vs-window", function(S, Io, Node, Json, VsDataSelect, VsWindow){
+
+
+                var getData = function(){
+                    var data = {};
+                    data.gameCode = Node.one("#gameCode").val();
+                    data.code = parseInt(Node.one("#code").val());
+                    data.nextCode = parseInt(Node.one("#nextCode").val());
+                    data.concedePoints = parseInt(Node.one("#concede").val());
+                    data.detailInfo = getDetailInfo();
+                    data.openTime = Node.one("#openTime").val();
+                    data.endTime = Node.one("#endTime").val();
+                    data.matchTime = Node.one("#matchTime").val();
+                    data.status = parseInt(Node.one("#status").val());
+                    data.prizePool = parseInt(Node.one("#prizePool").val());
+                    return data;
+                };
+
+                var getDetailInfo = function()
+                {
+                    var hostTeamId = Node.one("#hostTeamId").val();
+                    var guestTeamId = Node.one("#guestTeamId").val();
+                    var league = Node.one("#league").val();
+                    var concedePoints = parseInt(Node.one("#concede").val());
+                    if(hostTeamId.length == 0 || guestTeamId.length == 0 || league.length == 0)
+                    {
+                        return '';
+                    }
+                    else
+                    {
+                        var detailInfo = hostTeamId + '|' + guestTeamId + '|' + league + '|' + concedePoints;
+                        return detailInfo;
+                    }
+                };
+
+                var getCond = function()
+                {
+                    var termId = Node.one("#termId").val();
+                    return {id:termId};
+                };
+
+                var checkParam = function(data){
+                    if(data.code.length == 0)
+                    {
+                        alert("请输入代码");
+                        return false;
+                    }
+                    return true;
+                };
+
+                Node.one("#success").on("click", function(){
+                    var data = getData();
+                    if(checkParam(data))
+                    {
+                        var bodyNode = {cond:getCond(), data:{$set:data}};
+                        CurSite.sendDigest(Io, Json, "AD07", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    }
+                });
+            });
+    body
+        input(id="termId", type="hidden", value=term.id)
+        #tWin.container
+        .bodyAdminDiv
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 游戏*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    select(id="gameCode")
+                        - each val in game
+                            if(val.id == term.gameCode)
+                                option(value=val.id, selected="true")=val.name
+                            else
+                                option(value=val.id)=val.name
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 期次*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="code", type="text", value=term.code)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 下一期:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="nextCode", type="text", value=term.nextCode)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 奖池:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="prizePool", type="text" value=term.prizePool)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 联赛:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="league", type="text", value=term.league)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 主队:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="hostTeamId", type="text", value=term.hostTeamId)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 客队:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="guestTeamId", type="text", value=term.guestTeamId)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") (主)让球:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="concede", type="text", value=term.concedePoints)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 开售时间*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="openTime", type="text", value=term.openTime)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 停售时间*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="endTime", type="text", value=term.endTime)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 比赛时间:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="matchTime", type="text", value=term.matchTime)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 状态*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    select(id="status")
+                        - each val in termStatus
+                            if(val.id == term.status)
+                                option(value=val.id, selected="true")=val.des
+                            else
+                                option(value=val.id)=val.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") &nbsp;
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="修改", id="success")

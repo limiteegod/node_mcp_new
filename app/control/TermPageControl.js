@@ -19,6 +19,19 @@ TermPageControl.prototype.handle = function(headNode, bodyNode, cb)
     self[cmd[1]](headNode, bodyNode, cb);
 };
 
+TermPageControl.prototype.detail = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"期次详情"};
+    backBodyNode.termStatus = termStatus.getInfoById();
+    backBodyNode.game = game.getInfo();
+    var table = dc.main.get("term");
+    table.findOne({id:bodyNode.id}, {}, [], function(err, data){
+        backBodyNode.term = data;
+        cb(null, backBodyNode);
+    }, {dateToString:true});
+};
+
 TermPageControl.prototype.list = function(headNode, bodyNode, cb)
 {
     var self = this;

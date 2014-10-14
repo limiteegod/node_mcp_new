@@ -29,14 +29,8 @@ GamePageControl.prototype.add = function(headNode, bodyNode, cb)
 GamePageControl.prototype.detail = function(headNode, bodyNode, cb)
 {
     var self = this;
-    var backBodyNode = {title:"投注站详情"};
-    backBodyNode.rst = stationType.getInfoById();
-
-    var table = dc.main.get("station");
-    table.findOne({id:bodyNode.id}, {}, [], function(err, data){
-        backBodyNode.station = data;
+    var backBodyNode = {title:"期次详情"};
         cb(null, backBodyNode);
-    });
 };
 
 GamePageControl.prototype.list = function(headNode, bodyNode, cb)

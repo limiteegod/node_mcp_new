@@ -30,15 +30,15 @@ html(lang="en")
                 };
 
                 //绑定事件
-                /*Node.all("input.detail").each(function(item){
+                Node.all("input.detail").each(function(item){
                     item.on("click", function(){
                         var tId = Node.one(this).attr("tId");
-                        var url = "league_detail.html?id=" + tId;
-                        var win = new VsWindow("#tWin", {title:"联赛详情", width:500, height:400, url:url, controlBt:[
+                        var url = "term_detail.html?id=" + tId;
+                        var win = new VsWindow("#tWin", {title:"期次详情", width:500, height:400, url:url, controlBt:[
                             {name:'关闭', cb:null}
                         ]});
                     });
-                });*/
+                });
 
                 Node.one("#search").on("click", function(){
                     toPage(cur);
