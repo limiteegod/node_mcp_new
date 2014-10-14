@@ -6,6 +6,8 @@ var digestUtil = esut.digestUtil;
 var log = esut.log;
 var pageUtil = esut.pageUtil;
 var async = require('async');
+var game = require('../config/Game.js');
+var termStatus = require('../config/TermStatus.js');
 
 var TermPageControl = function(){};
 
@@ -29,8 +31,8 @@ TermPageControl.prototype.list = function(headNode, bodyNode, cb)
         {
             var set = data[key];
             dateUtil.mysqlObj(termTable, set);
-            set.game = prop.getGameInfo(set.gameCode);
-            set.status = prop.getEnumById('termStatusArray', set.status);
+            set.game = game.getInfo(set.gameCode);
+            set.status = termStatus.getInfoById(set.status);
         }
         backBodyNode.rst = data;
         backBodyNode.count = cursor.count(function(err, count){
@@ -38,6 +40,16 @@ TermPageControl.prototype.list = function(headNode, bodyNode, cb)
             cb(null, backBodyNode);
         });
     });
+};
+
+TermPageControl.prototype.add = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"view terms"};
+    backBodyNode.game = game.getInfo();
+    backBodyNode.termStatus = termStatus.getInfoById();
+    backBodyNode.curTime = dateUtil.getCurTime();
+    cb(null, backBodyNode);
 };
 
 module.exports = new TermPageControl();

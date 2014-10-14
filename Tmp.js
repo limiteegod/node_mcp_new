@@ -144,4 +144,35 @@ var initTicket = function()
     });
 };
 
-addOperation();
+var initTerm = function()
+{
+    async.waterfall([
+        function(cb){
+            dc.init(function(err){
+                cb(err);
+            });
+        },
+        function(cb){
+            var table = dc.main.get("term");
+            table.drop(function(err, data){
+                cb(null);
+            });
+        },
+        function(cb)
+        {
+            var table = dc.main.get("term");
+            table.create(function(err, data){
+                cb(err);
+            });
+        },
+        function(cb)
+        {
+            cb(null, "success");
+        }
+    ], function (err, result) {
+        log.info(err);
+        log.info("end...........");
+    });
+};
+
+initTerm();

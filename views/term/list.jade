@@ -40,8 +40,13 @@ html(lang="en")
                     });
                 });*/
 
-                Node.one("#refresh").on("click", function(){
+                Node.one("#search").on("click", function(){
                     toPage(cur);
+                });
+
+                Node.one("#add").on("click", function(){
+                    var url = "term_add.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
                 });
             });
     body
@@ -51,20 +56,22 @@ html(lang="en")
             input(type='hidden', id="limit", value=limit)
             #tWin.container
             .clearfix(style="margin-top:8px")
-                .vs_grid_plain(style="width:823px;text-align:right;")
-                    input(type="button", id="refresh", value="刷新")
+                .vs_grid_plain(style="width:423px;")
+                    input(type="button", id="search", value="查询")
+                    input(type="button", id="add", value="新增")
             .clearfix(style="margin-top:8px")
-                #terms.container(style="width:923px;")
+                #terms.container
                     table
                         thead
                             tr
-                                td(style="width:100px;") 游戏
-                                td(style="width:76px;") 期次
-                                td(style="width:76px;") 下一期
-                                td(style="width:100px;") 状态
-                                td(style="width:200px;") 开售时间
-                                td(style="width:200px;") 停售时间
-                                td(style="width:134px;") 操作
+                                td(w="100") 游戏
+                                td(w="76") 期次
+                                td(w="76") 下一期
+                                td(w="100") 状态
+                                td(w="200") 开售时间
+                                td(w="200") 停售时间
+                                td(w="200") 对阵
+                                td(w="134") 操作
                         tbody
                             - each val in rst
                                 tr
@@ -74,6 +81,7 @@ html(lang="en")
                                     td=val.status.des
                                     td=val.openTime
                                     td=val.endTime
+                                    td=val.detailInfo
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
             .clearfix(style="margin-top:8px")
