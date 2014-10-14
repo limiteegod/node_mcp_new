@@ -185,7 +185,8 @@ AdminControl.prototype.handleAD03 = function(user, headNode, bodyNode, cb)
     table.save(station, [], function(err, data){
         if(err)
         {
-            cb(ec.E9999);
+            log.info(err);
+            cb(ec.E0999);
         }
         else
         {
@@ -205,7 +206,15 @@ AdminControl.prototype.handleAD04 = function(user, headNode, bodyNode, cb)
     var backBodyNode = {};
     var table = dc.main.get("station");
     table.update(bodyNode.cond, bodyNode.data, [], function(err, data){
-        cb(null, backBodyNode);
+        if(err)
+        {
+            log.info(err);
+            cb(ec.E0999);
+        }
+        else
+        {
+            cb(err, backBodyNode);
+        }
     });
 };
 
