@@ -27,6 +27,26 @@ var addOperation = function()
                 cb(err);
             });
         },
+        function(cb){
+            var table = dc.main.get("admini");
+            table.drop(function(err, data){
+                cb(null);
+            });
+        },
+        function(cb)
+        {
+            var table = dc.main.get("admini");
+            table.create(function(err, data){
+                cb(err);
+            });
+        },
+        function(cb)
+        {
+            var table = dc.main.get("admini");
+            table.save({id:digestUtil.createUUID(), name:"admin", password:"123456"}, [], function(err, data){
+                cb(err);
+            });
+        },
         function(cb)
         {
             var operationTable = dc.main.get("operation");
@@ -138,4 +158,4 @@ var initTicket = function()
     });
 };
 
-initTicket();
+addOperation();
