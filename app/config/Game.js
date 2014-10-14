@@ -14,8 +14,8 @@ var Game = function(){
         },
         {id:'T51', name:'竞彩足球', playTypes:
             [
-                {id:'00', name:'胜平负', price:200, betTypes:[]},
-                {id:'01', name:'让球胜平负', price:200, betTypes:[]}
+                {id:'01', name:'让球胜平负', price:200, betTypes:[]},
+                {id:'02', name:'胜平负', price:200, betTypes:[]}
             ]
         }
     ];
