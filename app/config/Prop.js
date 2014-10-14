@@ -203,7 +203,7 @@ var dbs = [{
 }, {
     //yun test
     config:{
-        'host':'localhost',
+        'host':'10.131.172.66',
         'user':'root',
         'password':'0okmnhy6',
         'port':3306,
