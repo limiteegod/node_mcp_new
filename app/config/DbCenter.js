@@ -231,7 +231,7 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "lastLoginTime", "date", -1, true, undefined),
         new Column(db, "stationType", "int", 11, false, undefined),
         new Column(db, "status", "int", 11, false, undefined),
-        new Column(db, "version", "int", 11, false, undefined),
+        new Column(db, "version", "int", 11, false, 0),
         new Column(db, "queueIndex", "int", 11, false, undefined),
         new Column(db, "secretKey", "varchar", 32, false, undefined),
         new Column(db, "uc_code", "UNIQUE", -1, false, 'code')

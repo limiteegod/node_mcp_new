@@ -182,6 +182,7 @@ AdminControl.prototype.handleAD03 = function(user, headNode, bodyNode, cb)
     var station = bodyNode.station;
     station.id = digestUtil.createUUID();
     station.balance = 0;
+    station.queueIndex = -1;
     var table = dc.main.get("station");
     table.save(station, [], function(err, data){
         if(err)
