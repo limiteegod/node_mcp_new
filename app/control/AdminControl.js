@@ -11,12 +11,13 @@ var digestService = require('../service/DigestService.js');
 
 var AdminControl = function(){
     var self = this;
-    self.cmd = {'AD01':1, 'AD02':2, 'AD03':3, 'AD04':4, 'AD05':5};
+    self.cmd = {'AD01':1, 'AD02':2, 'AD03':3, 'AD04':4, 'AD05':5, 'AD06':6};
     self.cmdArray = [{}, {id:1, code:'AD01', fromType:prop.digestFromType.DB, des:"管理员登陆"},
         {id:2, code:'AD02', fromType:prop.digestFromType.CACHE, des:'获得权限菜单'},
         {id:3, code:'AD03', fromType:prop.digestFromType.CACHE, des:'添加投注站'},
         {id:4, code:'AD04', fromType:prop.digestFromType.CACHE, des:'修改投注站'},
-        {id:5, code:'AD05', fromType:prop.digestFromType.CACHE, des:'添加期次'}];
+        {id:5, code:'AD05', fromType:prop.digestFromType.CACHE, des:'添加期次'},
+        {id:6, code:'AD06', fromType:prop.digestFromType.CACHE, des:'添加游戏'}];
 };
 
 AdminControl.prototype.handle = function(headNode, bodyStr, userCb)
@@ -112,6 +113,11 @@ AdminControl.prototype.checkAD04 = function(user, headNode, bodyNode, cb)
 };
 
 AdminControl.prototype.checkAD05 = function(user, headNode, bodyNode, cb)
+{
+    cb(null);
+};
+
+AdminControl.prototype.checkAD06 = function(user, headNode, bodyNode, cb)
 {
     cb(null);
 };
@@ -245,6 +251,35 @@ AdminControl.prototype.handleAD05 = function(user, headNode, bodyNode, cb)
     term.version = 0;
     var table = dc.main.get("term");
     table.save(term, [], function(err, data){
+        if(err)
+        {
+            log.info(err);
+            cb(ec.E0999);
+        }
+        else
+        {
+            cb(err, backBodyNode);
+        }
+    });
+};
+
+/**
+ * 添加游戏
+ * @param user
+ * @param headNode
+ * @param bodyNode
+ * @param cb
+ */
+AdminControl.prototype.handleAD06 = function(user, headNode, bodyNode, cb)
+{
+    var backBodyNode = {};
+    var game = bodyNode.game;
+    game.id = digestUtil.createUUID();
+    game.version = 0;
+    game.offset = 0;
+    game.isSynchro = 0;
+    var table = dc.main.get("game");
+    table.save(game, [], function(err, data){
         if(err)
         {
             log.info(err);

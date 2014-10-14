@@ -63,6 +63,8 @@ var addOperation = function()
                 });
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_TERM', parent:'ADMIN_GAME', name:'期次列表', url:'term_list.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_DB_GAME', parent:'ADMIN_GAME', name:'游戏(DB)', url:'game_dblist.html', hasChildren:0}, [], function(err, data){
+                });
             });
             operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_SALE', name:'销售管理', url:'', hasChildren:1}, [], function(err, data){
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_ORDER', parent:'ADMIN_SALE', name:'订单列表', url:'order_list.html', hasChildren:0}, [], function(err, data){
@@ -175,4 +177,4 @@ var initTerm = function()
     });
 };
 
-initTerm();
+addOperation();

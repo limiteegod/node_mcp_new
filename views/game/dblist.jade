@@ -1,0 +1,39 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-pagebar,vs-round-input,vs-window",
+                function(S, Io, Node, Json, VsGridTable, VsPagebar, VsRoundInput, VsWindow){
+                var table = new VsGridTable('#games', {});
+
+                Node.one("#add").on("click", function(){
+                    var url = "game_add.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
+                });
+            });
+    body
+        .bodyAdminDiv
+            #tWin.container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:423px;")
+                    input(type="button", id="search", value="查询")
+                    input(type="button", id="add", value="新增")
+            .clearfix(style="margin-top:8px")
+                #games.container(style="width:423px;")
+                    table
+                        thead
+                            tr
+                                td(w="76") 代码
+                                td(w="76") 名称
+                                td(w="126") 状态
+                                td(w="126") 类型
+                        tbody
+                            - each val in rst
+                                tr
+                                    td=val.code
+                                    td=val.name
+                                    td=val.status.des
+                                    td=val.type.des
+            .clearfix(style="margin-top:8px")
+                #bar.vs_grid_plain(style="width:600px;")
