@@ -3,6 +3,7 @@ var esut = require('easy_util');
 var log = esut.log;
 var digestUtil = esut.digestUtil;
 var pageUtil = esut.pageUtil;
+var stationStatus = require('../config/StationStatus.js');
 var dc = require('../config/DbCenter.js');
 var ec = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
@@ -184,6 +185,7 @@ AdminControl.prototype.handleAD03 = function(user, headNode, bodyNode, cb)
     station.balance = 0;
     station.queueIndex = -1;
     station.relayable = -1;
+    station.status = stationStatus.OPEN;
     var table = dc.main.get("station");
     table.save(station, [], function(err, data){
         if(err)

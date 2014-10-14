@@ -1,5 +1,6 @@
 var dc = require('../config/DbCenter.js');
 var stationType = require('../config/StationType.js');
+var stationStatus = require('../config/StationStatus.js');
 var esut = require('easy_util');
 var digestUtil = esut.digestUtil;
 var log = esut.log;
