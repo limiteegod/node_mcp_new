@@ -10,11 +10,11 @@ var digestService = require('../service/DigestService.js');
 
 var AdminControl = function(){
     var self = this;
-    self.cmd = {'AD01':0, 'AD02':1, 'AD03':2, 'AD04':3};
-    self.cmdArray = [{id:0, code:'AD01', fromType:prop.digestFromType.DB, des:"管理员登陆"},
-        {id:1, code:'AD02', fromType:prop.digestFromType.CACHE, des:'获得权限菜单'},
-        {id:2, code:'AD03', fromType:prop.digestFromType.CACHE, des:'添加联赛'},
-        {id:3, code:'AD04', fromType:prop.digestFromType.CACHE, des:'修改联赛'}];
+    self.cmd = {'AD01':1, 'AD02':2, 'AD03':3, 'AD04':4};
+    self.cmdArray = [{}, {id:1, code:'AD01', fromType:prop.digestFromType.DB, des:"管理员登陆"},
+        {id:2, code:'AD02', fromType:prop.digestFromType.CACHE, des:'获得权限菜单'},
+        {id:3, code:'AD03', fromType:prop.digestFromType.CACHE, des:'添加投注站'},
+        {id:4, code:'AD04', fromType:prop.digestFromType.CACHE, des:'修改投注站'}];
 };
 
 AdminControl.prototype.handle = function(headNode, bodyStr, userCb)
@@ -179,8 +179,10 @@ AdminControl.prototype.handleAD02 = function(user, headNode, bodyNode, cb)
 AdminControl.prototype.handleAD03 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
-    var leagueTable = dc.main.get("league");
-    leagueTable.save(bodyNode.league, [], function(err, data){
+    var station = bodyNode.station;
+    station.id = digestUtil.createUUID();
+    var table = dc.main.get("station");
+    table.save(station, [], function(err, data){
         if(err)
         {
             cb(ec.E9999);
@@ -201,8 +203,8 @@ AdminControl.prototype.handleAD03 = function(user, headNode, bodyNode, cb)
 AdminControl.prototype.handleAD04 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
-    var leagueTable = dc.main.get("league");
-    leagueTable.update(bodyNode.cond, bodyNode.data, [], function(err, data){
+    var table = dc.main.get("station");
+    table.update(bodyNode.cond, bodyNode.data, [], function(err, data){
         cb(null, backBodyNode);
     });
 };

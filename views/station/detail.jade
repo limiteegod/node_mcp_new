@@ -1,0 +1,97 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json", function(S, Io, Node, Json){
+                var getData = function(){
+                    var data = {};
+                    data.code = Node.one("#code").val();
+                    data.name = Node.one("#name").val();
+                    data.stationType = Node.one("#stationType").val();
+                    data.password = Node.one('#password').val();
+                    data.secretKey = Node.one('#secretKey').val();
+                    return data;
+                };
+
+                var getCond = function(){
+                    var data = {};
+                    data.id = Node.one("#stationId").val();
+                    return data;
+                };
+
+                var checkParam = function(data){
+                    if(data.code.length == 0)
+                    {
+                        alert("请输入代码");
+                        return false;
+                    }
+                    if(data.name.length == 0)
+                    {
+                        alert("请输入名称");
+                        return false;
+                    }
+                    if(data.password.length == 0)
+                    {
+                        alert("请输入密码");
+                        return false;
+                    }
+                    return true;
+                };
+
+                Node.one("#modify").on("click", function(){
+                    var data = getData();
+                    if(checkParam(data))
+                    {
+                        var bodyNode = {data:{$set:data}, cond:getCond()};
+                        CurSite.sendDigest(Io, Json, "AD04", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    }
+                });
+
+                Node.one("#getKey").on("click", function(){
+                    var key = CurSite.createUUID();
+                    Node.one('#secretKey').val(key);
+                });
+            });
+    body
+        .bodyAdminDiv
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") id*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="stationId", type="text", value=station.id, disabled=true)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 代码*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="code", type="text", value=station.code)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 名称*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="name", type="text", value=station.name)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 密码*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="password", type="text", value=station.password)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 余额*:
+                .vs_grid_plain(style="margin-left:8px;")=station.balance/100+ '(元)'
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 密钥*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="secretKey", type="text", value=station.secretKey)
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="随机生成", id="getKey")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 类型*:
+                .vs_grid_plain(style="margin-left:8px;", value=station.code)
+                    select(id="stationType")
+                        - each val in rst
+                            if(val.id == station.stationType)
+                                option(value=val.id, selected="true")=val.des
+                            else
+                                option(value=val.id)=val.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") &nbsp;
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="修改", id="modify")

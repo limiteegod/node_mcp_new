@@ -58,24 +58,6 @@ var addOperation = function()
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_OPERATION', parent:'ADMIN_POPEDOM', name:'权限列表', url:'admin_listOperation.html', hasChildren:0}, [], function(err, data){
                 });
             });
-            operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_AREA', name:'地区管理', url:'', hasChildren:1}, [], function(err, data){
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_ADD_AREA', parent:'ADMIN_AREA', name:'添加地区', url:'admin_addArea.html', hasChildren:0}, [], function(err, data){
-                });
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_AREA', parent:'ADMIN_AREA', name:'地区列表', url:'admin_listArea.html', hasChildren:0}, [], function(err, data){
-                });
-            });
-            operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LEAGUE', name:'联赛管理', url:'', hasChildren:1}, [], function(err, data){
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_ADD_LEAGUE', parent:'ADMIN_LEAGUE', name:'添加联赛', url:'league_add.html', hasChildren:0}, [], function(err, data){
-                });
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_LEAGUE', parent:'ADMIN_LEAGUE', name:'联赛列表', url:'league_list.html', hasChildren:0}, [], function(err, data){
-                });
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_SEASON', parent:'ADMIN_LEAGUE', name:'赛季列表', url:'season_list.html', hasChildren:0}, [], function(err, data){
-                });
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_STAGE', parent:'ADMIN_LEAGUE', name:'阶段列表', url:'stage_list.html', hasChildren:0}, [], function(err, data){
-                });
-                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_TEAM', parent:'ADMIN_LEAGUE', name:'球队列表', url:'team_list.html', hasChildren:0}, [], function(err, data){
-                });
-            });
             operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_GAME', name:'游戏管理', url:'', hasChildren:1}, [], function(err, data){
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_GAME', parent:'ADMIN_GAME', name:'游戏列表', url:'game_list.html', hasChildren:0}, [], function(err, data){
                 });
@@ -86,6 +68,10 @@ var addOperation = function()
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_ORDER', parent:'ADMIN_SALE', name:'订单列表', url:'order_list.html', hasChildren:0}, [], function(err, data){
                 });
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_TICKET', parent:'ADMIN_SALE', name:'票据列表', url:'ticket_list.html', hasChildren:0}, [], function(err, data){
+                });
+            });
+            operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_STATION', name:'机构管理', url:'', hasChildren:1}, [], function(err, data){
+                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_STATION', parent:'ADMIN_STATION', name:'机构列表', url:'station_list.html', hasChildren:0}, [], function(err, data){
                 });
             });
             cb(null, "success");

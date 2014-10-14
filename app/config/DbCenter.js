@@ -241,8 +241,8 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "id", "varchar", 32, false, undefined, true, false),
         new Column(db, "name", "varchar", 40, false, undefined),
         new Column(db, "password", "varchar", 40, false, undefined),
-        new Column(db, "type", "int", 11, false, undefined),
-        new Column(db, "version", "int", 11, false, undefined)
+        new Column(db, "type", "int", 11, false, 0),
+        new Column(db, "version", "int", 11, false, 0)
     ]);
     db.put(admini);
     var stationGame = new Table(db, "stationgame", [

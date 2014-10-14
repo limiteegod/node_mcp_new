@@ -1,0 +1,76 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json", function(S, Io, Node, Json){
+                var getData = function(){
+                    var data = {};
+                    data.code = Node.one("#code").val();
+                    data.name = Node.one("#name").val();
+                    data.stationType = Node.one("#stationType").val();
+                    data.password = Node.one('#password').val();
+                    return data;
+                };
+
+                var checkParam = function(data){
+                    if(data.code.length == 0)
+                    {
+                        alert("请输入代码");
+                        return false;
+                    }
+                    if(data.name.length == 0)
+                    {
+                        alert("请输入名称");
+                        return false;
+                    }
+                    if(data.password.length == 0)
+                    {
+                        alert("请输入密码");
+                        return false;
+                    }
+                    return true;
+                };
+
+                Node.one("#success").on("click", function(){
+                    var data = getData();
+                    if(checkParam(data))
+                    {
+                        var bodyNode = {station:data};
+                        CurSite.sendDigest(Io, Json, "AD03", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    }
+                });
+
+                Node.one("#backToList").on("click", function(){
+                    var url = "station_list.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
+                });
+
+            });
+    body
+        .bodyAdminDiv
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 代码*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="code", type="text")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 名称*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="name", type="text")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 密码*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="password", type="text")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 类型*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    select(id="stationType")
+                        - each val in rst
+                            option(value=val.id)=val.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") &nbsp;
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="添加", id="success")
+                    input(type="button", value="返回列表", id="backToList")
