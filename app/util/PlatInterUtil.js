@@ -11,7 +11,6 @@ var PlatInterUtil = function(){};
 PlatInterUtil.prototype.get = function(userId, userType, channelCode, digestType, userKey, cmd, body, cb)
 {
     body.uniqueId = digestUtil.createUUID();
-    log.info(body);
     var bodyStr = JSON.stringify(body);
     var head = {userId:userId, userType:userType, channelCode:channelCode, digest:"", digestType:digestType, cmd:cmd, ver:prop.platform.ver};
     head.timestamp = dateUtil.getCurTime();
@@ -25,6 +24,7 @@ PlatInterUtil.prototype.get = function(userId, userType, channelCode, digestType
         encodedBody = digestUtil.generate(head, userKey, bodyStr);
     }
     var msgJson = {head:head, body:encodedBody};
+    log.info(msgJson);
     var msgToSend = JSON.stringify(msgJson);
     var post_data  = querystring.stringify({
         message:msgToSend

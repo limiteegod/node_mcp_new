@@ -212,4 +212,4 @@ var initMoneyLog = function()
     });
 };
 
-initMoneyLog();
+addOperation();

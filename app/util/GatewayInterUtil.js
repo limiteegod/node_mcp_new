@@ -5,10 +5,10 @@ var gts = prop.platform.gateways;
 
 var GatewayInterUtil = function(){};
 
-GatewayInterUtil.prototype.get= function(service, headStr, bodyStr, cb)
+GatewayInterUtil.prototype.get= function(service, headNode, bodyStr, cb)
 {
     var post_data  = querystring.stringify({
-        head:headStr,
+        head:headNode,
         body:bodyStr
     });
     var headers = {

@@ -16,7 +16,7 @@ html(lang="en")
 
                 var getCondition = function()
                 {
-                    var cond = {};
+                    var cond = {createTimeStamp:0};
                     return cond;
                 };
 
@@ -64,12 +64,24 @@ html(lang="en")
                     table
                         thead
                             tr
-                                td(w="276") id
+                                td(w="134") 操作码
+                                td(w="80") 科目
+                                td(w="60") 操作前
+                                td(w="60") 操作后
+                                td(w="60") 金额
+                                td(w="240") 订单号
+                                td(w="160") 创建时间
                                 td(w="134") 操作
                         tbody
                             - each val in rst
                                 tr
-                                    td=val.id
+                                    td=val.operationCode
+                                    td=val.subject
+                                    td=val.stateBefore/100
+                                    td=val.stateAfter/100
+                                    td=val.amount/100
+                                    td=val.orderId
+                                    td=val.createTimeStamp
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
             .clearfix(style="margin-top:8px")

@@ -6,6 +6,7 @@ var dc = require('../config/DbCenter.js');
 var game = require('../config/Game.js');
 var gameStatus = require('../config/GameStatus.js');
 var gameType = require('../config/GameType.js');
+var moment = require("moment");
 
 var MoneyLogPageControl = function(){};
 
@@ -37,10 +38,19 @@ MoneyLogPageControl.prototype.list = function(headNode, bodyNode, cb)
 {
     var self = this;
     var backBodyNode = {title:"账户流水查询"};
+    if(bodyNode.sort == undefined)
+    {
+        backBodyNode.sort = {createTimeStamp:0};
+    }
     pageUtil.parse(bodyNode, backBodyNode);
     var table = dc.main.get("moneylog");
     var cursor = table.find(backBodyNode.cond, {}, []).sort(backBodyNode.sort).limit(backBodyNode.skip, backBodyNode.limit);
     cursor.toArray(function(err, data){
+        for(var key in data)
+        {
+            var set = data[key];
+            set.createTimeStamp = moment(set.createTimeStamp).format("YYYY-MM-DD HH:mm:ss")
+        }
         backBodyNode.rst = data;
         backBodyNode.count = cursor.count(function(err, count){
             backBodyNode.count = count;

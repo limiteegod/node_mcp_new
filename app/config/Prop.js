@@ -33,12 +33,12 @@ if(target == 'dev' || target == 'home')
     //平台地址
     platform.site = {
         hostname: '127.0.0.1',
-        port: 9081,
+        port: 9090,
         path: '/mcp-filter/main/interface.htm',
         method: 'POST'
     };
     platform.ver = "s.1.01";
-    platform.gateway = [{host:'127.0.0.1', port:8080, method:'POST'}];
+    platform.gateways = [{host:'127.0.0.1', port:8080, method:'POST'}];
 
     exports.platform = platform;
 }
@@ -135,22 +135,6 @@ exports.getEnumById = function(name, id)
 //game type
 exports.gameType = {'normal':1, 'gaopin':2, 'jingcai':3};
 
-//station type
-exports.stationType = {'channel':2, 'center':1};
-
-//station status
-exports.stationStatus = {'open':0, 'close':1};
-
-//station game status
-exports.stationGameStatus = {'open':0, 'close':1};
-
-exports.termStatus = {'INIT':1000, 'NOT_ON_SALE':1100, 'PRE_ON_SALE':1150, 'ON_SALE':1200};
-
-exports.termStatusArray = [{id:1000, code:'INIT', des:'初始状态'},
-    {id:1100, code:'NOT_ON_SALE', des:'未开售'},
-    {id:1150, code:'PRE_ON_SALE', des:'准备开售中'},
-    {id:1200, code:'ON_SALE', des:'正在销售'}];
-
 exports.userType = {"GUEST":0, "CUSTOMER":1, "CHANNEL":2, "ADMINISTRATOR":3};
 exports.userTypeArray = [{id:0, code:'GUEST', des:"游客"},
     {id:1, code:'CUSTOMER', des:"普通用户"},
@@ -172,7 +156,7 @@ exports.digestFromTypeArray = [
  * dateToLong，ture，则在生成表的时候，会把date类型映射为long类型
  */
 var dbs = [{
-    //dev
+    //本地开发环境
     config:{
         'host':'localhost',
         'user':'root',
@@ -181,7 +165,7 @@ var dbs = [{
         'database':'mcp'
     },
     type:esdb.prop.dbType.mysql,
-    dateToLong:true
+    dateToLong:false
 }, {
     //oracle dev
     config:{

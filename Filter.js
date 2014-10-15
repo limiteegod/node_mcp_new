@@ -88,7 +88,6 @@ Filter.prototype.startWeb = function()
 Filter.prototype.handle = function(message, cb)
 {
     var self = this;
-    //console.log(message);
     try {
         var msgNode = JSON.parse(message);
         var headNode = msgNode.head;
@@ -105,6 +104,7 @@ Filter.prototype.handle = function(message, cb)
     }
     catch (err)
     {
+        log.info(err);
         cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
         return;
     }

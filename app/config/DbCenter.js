@@ -6,6 +6,7 @@ var Database = esdb.Database;
 var Table = esdb.Table;
 var Column = esdb.Column;
 var log = esut.log;
+var gameStatus = require("./GameStatus.js");
 
 var DbCenter = function(){
     var self = this;
@@ -253,7 +254,7 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "gameCode", "varchar", 20, false, undefined),
         new Column(db, "earlyStopBufferSimplex", "int", 11, false, 0),
         new Column(db, "earlyStopBufferDuplex", "int", 11, false, 0),
-        new Column(db, "status", "int", 11, false, prop.stationGameStatus.open),
+        new Column(db, "status", "int", 11, false, gameStatus.OPEN),
         new Column(db, "rFactor", "int", 11, false, undefined),
         new Column(db, "pFactor", "int", 11, false, undefined)
     ]);
