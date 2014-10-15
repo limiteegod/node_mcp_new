@@ -1,0 +1,65 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-pagebar,vs-round-input,vs-window",
+                function(S, Io, Node, Json, VsGridTable, VsPagebar, VsRoundInput, VsWindow){
+                var channelCodeInput = new VsRoundInput("#channelCode", {});
+                var table = new VsGridTable('#games', {});
+
+                Node.one("#backToList").on("click", function(){
+                    var url = "station_list.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
+                });
+
+                //绑定事件
+                Node.all("input.detail").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var gameCode = Node.one(this).attr("gameCode");
+                        var stationId = Node.one("#stationId").val();
+                        var url = "station_detailGame.html?id=" + tId + "&gameCode=" + gameCode + "&stationId=" + stationId;
+                        var win = new VsWindow("#tWin", {title:"游戏详情", width:500, height:480, url:url, controlBt:[
+                            {name:'关闭', cb:function(err, data){
+                                var url = "station_gameList.html?id=" + stationId;
+                                CurSite.redirectTo(null, url);
+                                //return true;
+                            }}
+                        ]});
+                    });
+                });
+            });
+    body
+        input(type="hidden", id="stationId", value=station.id)
+        .bodyAdminDiv
+            #tWin.container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 渠道号:
+                #channelCode.vs_grid_plain(initValue=station.code)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:423px;")
+                    input(type="button", id="backToList", value="返回列表")
+            .clearfix(style="margin-top:8px")
+                #games.container(style="width:423px;")
+                    table
+                        thead
+                            tr
+                                td(w="76") 游戏
+                                td(w="76") 状态
+                                td(w="76") 销售提成
+                                td(w="76") 出票提成
+                                td(w="146") 出票投注站
+                                td(w="134") 操作
+                        tbody
+                            - each val in rst
+                                tr
+                                    td=val.gameCode
+                                    td=val.status.des
+                                    td=val.rFactor/100 + '%'
+                                    td=val.pFactor/100 + '%'
+                                    td=val.relayToId.name
+                                    td
+                                        input(type="button", value="详情", class="detail", tId=val.id, gameCode=val.gameCode)
+            .clearfix(style="margin-top:8px")
+                #bar.vs_grid_plain(style="width:600px;")

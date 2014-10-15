@@ -10,6 +10,7 @@ var termPageControl = require("./TermPageControl.js");
 var orderPageControl = require("./OrderPageControl.js");
 var ticketPageControl = require("./TicketPageControl.js");
 var gamePageControl = require("./GamePageControl.js");
+var moneyLogPageControl = require("./MoneyLogPageControl.js");
 
 
 var PageControl = function(){};
@@ -66,6 +67,11 @@ PageControl.prototype.ticket = function(headNode, bodyNode, cb)
 PageControl.prototype.game = function(headNode, bodyNode, cb)
 {
     gamePageControl.handle(headNode, bodyNode, cb);
+};
+
+PageControl.prototype.moneylog = function(headNode, bodyNode, cb)
+{
+    moneyLogPageControl.handle(headNode, bodyNode, cb);
 };
 
 var pageControl = new PageControl();

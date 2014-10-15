@@ -13,7 +13,7 @@ StationStatus.prototype.init = function()
     {
         var set = self.info[key];
         self.infoArray[set.id] = set;
-        self[set.code] = set;
+        self[set.code] = set.id;
     };
 };
 

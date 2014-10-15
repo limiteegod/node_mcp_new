@@ -1,14 +1,12 @@
-var StationType = function(){
+var StationGameStatus = function(){
     var self = this;
-    self.info = [{id:0, code:'COMMON', des:"普通投注站"},
-        {id:1, code:'CENTER', des:"出票中心"},
-        {id:2, code:'CHANNEL', des:"销售渠道"},
-        {id:3, code:'DEFAULT', des:"自有渠道"}];
+    self.info = [{id:0, code:'OPEN', des:'可用'},
+        {id:1, code:'STOP', des:'不可用'}];
     self.infoArray = {};
     self.init();
 };
 
-StationType.prototype.init = function()
+StationGameStatus.prototype.init = function()
 {
     var self = this;
     for(var key in self.info)
@@ -19,7 +17,7 @@ StationType.prototype.init = function()
     };
 };
 
-StationType.prototype.getInfoById = function(id)
+StationGameStatus.prototype.getInfoById = function(id)
 {
     var self = this;
     var obj = self.info;
@@ -31,5 +29,5 @@ StationType.prototype.getInfoById = function(id)
     return obj;
 };
 
-module.exports = new StationType();
+module.exports = new StationGameStatus();
 

@@ -76,6 +76,10 @@ var addOperation = function()
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_STATION', parent:'ADMIN_STATION', name:'机构列表', url:'station_list.html', hasChildren:0}, [], function(err, data){
                 });
             });
+            operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_ACCOUNT', name:'账户管理', url:'', hasChildren:1}, [], function(err, data){
+                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_MONEYLOG', parent:'ADMIN_ACCOUNT', name:'账户流水', url:'moneylog_list.html', hasChildren:0}, [], function(err, data){
+                });
+            });
             cb(null, "success");
         }
     ], function (err, result) {
@@ -177,4 +181,35 @@ var initTerm = function()
     });
 };
 
-addOperation();
+var initMoneyLog = function()
+{
+    async.waterfall([
+        function(cb){
+            dc.init(function(err){
+                cb(err);
+            });
+        },
+        function(cb){
+            var table = dc.main.get("moneylog");
+            table.drop(function(err, data){
+                cb(null);
+            });
+        },
+        function(cb)
+        {
+            var table = dc.main.get("moneylog");
+            table.create(function(err, data){
+                cb(err);
+            });
+        },
+        function(cb)
+        {
+            cb(null, "success");
+        }
+    ], function (err, result) {
+        log.info(err);
+        log.info("end...........");
+    });
+};
+
+initMoneyLog();

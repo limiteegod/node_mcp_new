@@ -19,6 +19,7 @@ var Game = function(){
             ]
         }
     ];
+    self.infoArray = {};
     self.init();
 };
 
@@ -28,7 +29,7 @@ Game.prototype.init = function(){
     for(var key in self.info)
     {
         var game = self.info[key];
-        self.info[game.id] = game;
+        self.infoArray[game.id] = game;
         for(var pKey in game.playTypes)
         {
             var playType = game.playTypes[pKey];
@@ -57,7 +58,7 @@ Game.prototype.getInfo = function(gameCode, playTypeCode, betTypeCode)
     var obj;
     if(gameCode)
     {
-        obj = self.info[gameCode];
+        obj = self.infoArray[gameCode];
     }
     else
     {

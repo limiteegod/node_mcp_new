@@ -55,7 +55,7 @@ DbCenter.prototype._initMg = function(cb)
 
     //add tables
     var test = new Table(db, "test", [
-        new Column(db, "_id", "varchar", 32, false, undefined, true, false),
+        new Column(db, "_id", "varchar", 32, false, undefined, true, false)
     ]);
     db.put(test);
     var mcp_id = new Table(db, "mcp_id", [
@@ -259,7 +259,7 @@ DbCenter.prototype._initMain = function(cb)
     ]);
     db.put(stationGame);
     var operation = new Table(db, "operation", [
-        new Column(db, "id", "varchar", 40, false, undefined),
+        new Column(db, "id", "varchar", 40, false, undefined, true, false),
         new Column(db, "userType", "int", 11, false, undefined),
         new Column(db, "hasChildren", "int", 11, false, 0),
         new Column(db, "name", "varchar", 20, false, undefined),
@@ -269,6 +269,25 @@ DbCenter.prototype._initMain = function(cb)
         new Column(db, "version", "int", 11, false, 0)
     ]);
     db.put(operation);
+    var moneylog = new Table(db, "moneylog", [
+        new Column(db, "id", "varchar", 32, false, undefined, true, false),
+        new Column(db, "handlerCode", "varchar", 40, false, undefined),
+        new Column(db, "operationCode", "varchar", 40, false, undefined),
+        new Column(db, "subject", "varchar", 40, false, undefined),
+        new Column(db, "orderId", "varchar", 40, false, undefined),
+        new Column(db, "userId", "varchar", 32, false, undefined),
+        new Column(db, "createTimeStamp", "bigint", -1, false, 0),
+        new Column(db, "acceptTimeStamp", "bigint", -1, false, 0),
+        new Column(db, "fromAccountCode", "varchar", 40, false, undefined),
+        new Column(db, "fromEntityId", "varchar", 32, false, undefined),
+        new Column(db, "stateBefore", "bigint", -1, false, 0),
+        new Column(db, "stateAfter", "bigint", -1, false, 0),
+        new Column(db, "amount", "bigint", -1, false, 0),
+        new Column(db, "toAccountCode", "varchar", 40, false, undefined),
+        new Column(db, "toEntityId", "varchar", 32, false, undefined),
+        new Column(db, "status", "int", 11, false, 0)
+    ]);
+    db.put(moneylog);
     self.main = db;
     self.main.init(cb);
 };
