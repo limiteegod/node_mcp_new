@@ -222,25 +222,77 @@ StationService.prototype.buyLot = function(stationId, amount, cb)
     });
 };
 
-StationService.prototype.money = function(stationId, amount, cb)
+/**
+ * 机构的账户操作
+ * @param station
+ * @param amount
+ * @param cb
+ */
+StationService.prototype.money = function(station, amount, cb)
 {
     var self = this;
+    var table = dc.main.get("station");
     transaction.run(function(wCb){
-        var stationTable = db.get("station");
-        stationTable.find({id:stationId}, {version:1, balance:1}).toArray(function(err, data){
-            if(err) throw errCode.E9999;
-            var user = data[0];
-            stationTable.update({id:user.id, version:user.version},
-                {$inc:{balance:amount}, $set:{version:user.version + 1}}, {}, function(err, data){
-                    if(data.updateCount == 1)
+        async.waterfall([
+            //查找机构
+            function(cb){
+                var cond = {};
+                if(station.id)
+                {
+                    cond.id = station.id;
+                }
+                else
+                {
+                    cond.code = station.code;
+                }
+                table.findOne(cond, {version:1, balance:1}, [], function(err, data){
+                    if(err)
                     {
-                        success = true;
+                        cb(ec.E9999);
                     }
-                    wCb();
+                    else
+                    {
+                        if(!data)
+                        {
+                            cb(ec.E2035);
+                        }
+                        else
+                        {
+                            cb(null, data);
+                        }
+                    }
                 });
+            },
+            //操作余额
+            function(station, cb)
+            {
+                var cond = {id:station.id, version:station.version};
+                station.version++;
+                station.balance += amount;
+                var data = {$set:{version:station.version, balance:station.balance}};
+                table.update(cond, data, [], function(err, data){
+                    if(err)
+                    {
+                        cb(ec.E9999);
+                    }
+                    else
+                    {
+                        if(data.affectedRows == 1)
+                        {
+                            cb(ec.E0000, station);
+                        }
+                        else
+                        {
+                            cb(ec.E9999);
+                        }
+                    }
+                });
+            }
+        ], function (err, result) {
+            wCb(err, result);
         });
     }, function(err, data){
-
+        cb(err, data);
     });
 };
 

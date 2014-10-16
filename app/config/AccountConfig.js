@@ -97,4 +97,18 @@ AccountConfig.prototype.getInfo = function(roleId, accountId, typeId, subjectId)
     }
 };
 
+/**
+ * 根据id获得账户的详细明细
+ * @param roleId
+ * @param accountId
+ * @param typeId
+ * @param subjectId
+ * @returns {*}
+ */
+AccountConfig.prototype.getInfoById = function(id)
+{
+    var self = this;
+    return self.infoArray[id];
+};
+
 module.exports = new AccountConfig();

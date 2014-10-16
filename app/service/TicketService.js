@@ -26,4 +26,5 @@ TicketService.prototype.printBack = function(ticket, cb)
     });
 };
 
+
 module.exports = new TicketService();

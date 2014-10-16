@@ -4,10 +4,12 @@ var log = esut.log;
 var digestUtil = esut.digestUtil;
 var pageUtil = esut.pageUtil;
 var stationStatus = require('../config/StationStatus.js');
+var ac = require('../config/AccountConfig.js');
 var dc = require('../config/DbCenter.js');
 var ec = require('../config/ErrCode.js');
 var prop = require('../config/Prop.js');
 var digestService = require('../service/DigestService.js');
+var stationService = require('../service/StationService.js');
 
 var AdminControl = function(){
     var self = this;
@@ -370,8 +372,50 @@ AdminControl.prototype.handleAD08 = function(user, headNode, bodyNode, cb)
 AdminControl.prototype.handleAD09 = function(user, headNode, bodyNode, cb)
 {
     var backBodyNode = {};
-    console.log(bodyNode);
-    cb(null, backBodyNode);
+    var subjectId = bodyNode.subjectId;
+    var subject = ac.getInfoById(subjectId);
+    var role = subjectId.substr(0, 2);
+    var account = subjectId.substr(2, 2);
+    var type = subjectId.substr(4, 1);
+    var subjectDetailId = subjectId.substr(5, 4);
+    var handlerCode = subjectId.substr(0, 7);
+    var amount = bodyNode.amount;
+    var orderId = bodyNode.orderId;
+    var entityId = bodyNode.entityId;
+    var timeStamp = new Date().getTime();
+    var mlTable = dc.main.get("moneylog");
+    var moneylog = {id:digestUtil.createUUID(), handlerCode:handlerCode, operationCode:subjectId,
+    subject:subject.name, orderId:orderId, userId:'ADMIN', createTimeStamp:timeStamp,
+    acceptTimeStamp:timeStamp, fromAccountCode:'', fromEntityId:'', amount:amount,
+    toAccountCode:'', toEntityId:'', status:0};
+    if(type == '1')
+    {
+        amount = amount*(-1);
+    }
+    //机构账户操作
+    if(role == 'RS')
+    {
+        stationService.money({code:entityId}, amount, function(err, station){
+            if(err)
+            {
+                cb(err);
+            }
+            else
+            {
+                moneylog.stateBefore = station.balance - amount;
+                moneylog.stateAfter = station.balance;
+                moneylog.fromEntityId = station.id;
+                moneylog.toEntityId = station.id;
+                mlTable.save(moneylog, [], function(err, data){
+                    cb(err, backBodyNode);
+                });
+            }
+        });
+    }
+    else if(role == 'RU')
+    {
+        cb(null, backBodyNode);
+    }
 };
 
 var adminControl = new AdminControl();
