@@ -7,7 +7,10 @@ var prop = require('../config/Prop.js');
 var log = esut.log;
 var pageUtil = esut.pageUtil;
 var dc = require('../config/DbCenter.js');
+var ticketStatus = require('../config/TicketStatus.js');
 var orderService = require('../service/OrderService.js');
+var ticketService = require('../service/TicketService.js');
+var stationService = require('../service/StationService.js');
 
 var PrintControl = function(){};
 
@@ -194,75 +197,27 @@ PrintControl.prototype.handleP02 = function(user, headNode, bodyNode, outerCb)
         {
             if(bodyNode.code == prop.printStatus.success)
             {
-                ticketTable.update({id:bodyNode.ticketId, version:ticket.version},
-                    {$set:{status:prop.ticketStatus.print_success, rNumber:bodyNode.rNumber, version:ticket.version+1}},
-                    {}, function(err, data){
-                        cb(null, ticket, true);
-                    });
+                ticket.status = ticketStatus.print_success;
+                ticket.rNumber = bodyNode.rNumber;
             }
             else
             {
-                ticketTable.update({id:bodyNode.ticketId, version:ticket.version},
-                    {$set:{status:prop.ticketStatus.print_failure, version:ticket.version+1}},
-                    {}, function(err, data){
-                        cb(null, ticket, false);
-                    });
+                ticket.status = ticketStatus.print_failure;
             }
+            ticketService.printBack(ticket, cb);
         },
-        //if print success, handle moneylog
-        function(ticket, success, cb)
+        //如果打印成功，则出票机构获得出票提成
+        function(ticket, cb)
         {
-            if(success)
+            if(ticket.status == ticketStatus.print_success)
             {
-                var stationGameTable = dc.main.get("stationgame");
-                var stationTable = dc.main.get("station");
-                async.waterfall([
-                    //get station game
-                    function(cb)
-                    {
-                        stationGameTable.find({stationId:user.id, gameCode:ticket.gameCode},
-                            {pFactor:1}).toArray(function(err, data){
-                                cb(null, data[0]);
-                            });
-                    },
-                    //print station get the money
-                    function(sg, cb)
-                    {
-                        log.info(sg);
-                        var amount = (sg.pFactor/10000)*ticket.amount;
-                        var success = false;
-                        async.whilst(
-                            function() { return !success},
-                            function(whileCb) {
-                                stationTable.find({id:user.id}, {version:1, balance:1}).toArray(function(err, data){
-                                    var user = data[0];
-                                    stationTable.update({id:user.id, version:user.version},
-                                        {$inc:{balance:amount}, $set:{version:user.version + 1}}, {}, function(err, data){
-                                            if(data.affectedRows == 1)
-                                            {
-                                                success = true;
-                                            }
-                                            whileCb();
-                                        });
-                                });
-                            },
-                            function(err) {
-                                cb(null);
-                            }
-                        );
-                    },
-                    //sale station get the money.
-                    function(cb)
-                    {
-                        cb(null);
-                    }
-                ], function(err) {
-                    cb(null, ticket, success);
+                stationService.printSuccess(ticket, function(err, station){
+                    cb(err, ticket, station);
                 });
             }
             else
             {
-                cb(null, ticket, success);
+                cb(err, ticket, null);
             }
         },
         //increase the ticket count of torder

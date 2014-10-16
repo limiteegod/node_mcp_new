@@ -29,5 +29,7 @@ var ErrCode = function()
 
     self.E3001 = {repCode:'3001', description:'票据不存在'};
     self.E3002 = {repCode:'3002', description:'票据已经失效'};
+    self.E3003 = {repCode:'3003', description:'机构不支持的游戏'};
+    self.E3004 = {repCode:'3004', description:'票据状态错误'};
 };
 module.exports = new ErrCode();

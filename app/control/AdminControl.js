@@ -12,7 +12,7 @@ var digestService = require('../service/DigestService.js');
 var AdminControl = function(){
     var self = this;
     self.cmd = {'AD01':1, 'AD02':2, 'AD03':3, 'AD04':4, 'AD05':5, 'AD06':6,
-    'AD07':7, 'AD08':8};
+    'AD07':7, 'AD08':8, 'AD09':9};
     self.cmdArray = [{}, {id:1, code:'AD01', fromType:prop.digestFromType.DB, des:"管理员登陆"},
         {id:2, code:'AD02', fromType:prop.digestFromType.CACHE, des:'获得权限菜单'},
         {id:3, code:'AD03', fromType:prop.digestFromType.CACHE, des:'添加投注站'},
@@ -20,7 +20,8 @@ var AdminControl = function(){
         {id:5, code:'AD05', fromType:prop.digestFromType.CACHE, des:'添加期次'},
         {id:6, code:'AD06', fromType:prop.digestFromType.CACHE, des:'添加游戏'},
         {id:7, code:'AD07', fromType:prop.digestFromType.CACHE, des:'修改期次'},
-        {id:8, code:'AD08', fromType:prop.digestFromType.CACHE, des:'修改机构游戏'}];
+        {id:8, code:'AD08', fromType:prop.digestFromType.CACHE, des:'修改机构游戏'},
+        {id:9, code:'AD09', fromType:prop.digestFromType.CACHE, des:'账户操作'}];
 };
 
 AdminControl.prototype.handle = function(headNode, bodyStr, userCb)
@@ -131,6 +132,12 @@ AdminControl.prototype.checkAD07 = function(user, headNode, bodyNode, cb)
 };
 
 AdminControl.prototype.checkAD08 = function(user, headNode, bodyNode, cb)
+{
+    cb(null);
+};
+
+
+AdminControl.prototype.checkAD09 = function(user, headNode, bodyNode, cb)
 {
     cb(null);
 };
@@ -351,6 +358,20 @@ AdminControl.prototype.handleAD08 = function(user, headNode, bodyNode, cb)
             cb(err, backBodyNode);
         }
     });
+};
+
+/**
+ * 账户操作
+ * @param user
+ * @param headNode
+ * @param bodyNode
+ * @param cb
+ */
+AdminControl.prototype.handleAD09 = function(user, headNode, bodyNode, cb)
+{
+    var backBodyNode = {};
+    console.log(bodyNode);
+    cb(null, backBodyNode);
 };
 
 var adminControl = new AdminControl();

@@ -227,5 +227,32 @@ StationPageControl.prototype.list = function(headNode, bodyNode, cb)
     });
 };
 
+StationPageControl.prototype.select = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"投注站选择"};
+    if(bodyNode.sort == undefined)
+    {
+        backBodyNode.sort = {code:1};
+    }
+    backBodyNode.select = bodyNode.select;
+    pageUtil.parse(bodyNode, backBodyNode);
+    var table = dc.main.get("station");
+    var cursor = table.find(backBodyNode.cond, {}, []).sort(backBodyNode.sort).limit(backBodyNode.skip, backBodyNode.limit);
+    cursor.dateToString();
+    cursor.toArray(function(err, data){
+        for(var key in data)
+        {
+            var set = data[key];
+            set.stationType = stationType.getInfoById(set.stationType);
+        }
+        backBodyNode.rst = data;
+        backBodyNode.count = cursor.count(function(err, count){
+            backBodyNode.count = count;
+            cb(null, backBodyNode);
+        });
+    });
+};
+
 var stationPageControl = new StationPageControl();
 module.exports = stationPageControl;

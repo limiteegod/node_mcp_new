@@ -5,10 +5,94 @@ var transaction = require('./Transaction.js');
 
 var StationService = function(){};
 
+
+/**
+ * 出票成功之后，出票机构获得出票提成
+ * @param ticket
+ * @param cb
+ */
 StationService.prototype.printSuccess = function(ticket, cb)
 {
     var self = this;
-
+    var stationGameTable = db.get("stationgame");
+    var stationTable = db.get("station");
+    transaction.run(function(wCb){
+        async.waterfall([
+            //获得出票机构的提成详细信息
+            function(cb)
+            {
+                var cond = {stationId:ticket.printerStationId, gameCode:ticket.gameCode};
+                stationGameTable.findOne(cond, {pFactor:1}, [], function(err, data){
+                    if(err)
+                    {
+                        cb(ec.E9999);
+                    }
+                    else
+                    {
+                        if(data)
+                        {
+                            cb(null, data);
+                        }
+                        else
+                        {
+                            cb(ec.E3003);
+                        }
+                    }
+                });
+            },
+            //获得票据的出票机构
+            function(sg, cb){
+                var cond = {id:ticket.printerStationId};
+                var columns = {version:1, balance:1};
+                stationTable.findOne(cond, columns, [], function(err, data){
+                    if(err)
+                    {
+                        cb(ec.E9999);
+                    }
+                    else
+                    {
+                        if(data)
+                        {
+                            cb(null, sg, data);
+                        }
+                        else
+                        {
+                            cb(ec.E2035);
+                        }
+                    }
+                });
+            },
+            //出票机构获得出票提成
+            function(sg, station, cb){
+                var amount = (sg.pFactor/10000)*ticket.amount;
+                var cond = {id:station.id, version:station.version};
+                station.balance += amount;
+                station.version++;
+                var data = {$set:{version:station.version, balance:station.balance}};
+                stationTable.update(cond, data, [], function(err, data){
+                    if(err)
+                    {
+                        cb(ec.E9999);
+                    }
+                    else
+                    {
+                        if(data.affectedRows == 1)
+                        {
+                            cb(ec.E0000, station);
+                        }
+                        else
+                        {
+                            cb(ec.E9999);
+                        }
+                    }
+                });
+            }
+        ], function (err, result) {
+            wCb(err, result);
+        });
+    }, function(err, data){
+        cb(err, data);
+    });
 };
 
 StationService.prototype.saleSuccess = function(ticket, cb)

@@ -3,6 +3,7 @@ var digestUtil = esut.digestUtil;
 var log = esut.log;
 var pageUtil = esut.pageUtil;
 var dc = require('../config/DbCenter.js');
+var ac = require('../config/AccountConfig.js');
 var game = require('../config/Game.js');
 var gameStatus = require('../config/GameStatus.js');
 var gameType = require('../config/GameType.js');
@@ -21,9 +22,7 @@ MoneyLogPageControl.prototype.handle = function(headNode, bodyNode, cb)
 MoneyLogPageControl.prototype.add = function(headNode, bodyNode, cb)
 {
     var self = this;
-    var backBodyNode = {title:"新增游戏"};
-    backBodyNode.status = gameStatus.getInfoById();
-    backBodyNode.type = gameType.getInfoById();
+    var backBodyNode = {title:"新增账户流水"};
     cb(null, backBodyNode);
 };
 
@@ -31,7 +30,7 @@ MoneyLogPageControl.prototype.detail = function(headNode, bodyNode, cb)
 {
     var self = this;
     var backBodyNode = {title:"期次详情"};
-        cb(null, backBodyNode);
+    cb(null, backBodyNode);
 };
 
 MoneyLogPageControl.prototype.list = function(headNode, bodyNode, cb)
@@ -57,6 +56,23 @@ MoneyLogPageControl.prototype.list = function(headNode, bodyNode, cb)
             cb(null, backBodyNode);
         });
     });
+};
+
+MoneyLogPageControl.prototype.subjectList = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"查看系统账户科目"};
+    backBodyNode.rst = ac.getInfo();
+    cb(null, backBodyNode);
+};
+
+MoneyLogPageControl.prototype.selectSubject = function(headNode, bodyNode, cb)
+{
+    var self = this;
+    var backBodyNode = {title:"选择科目"};
+    backBodyNode.select = bodyNode.select;
+    backBodyNode.rst = ac.getInfo();
+    cb(null, backBodyNode);
 };
 
 MoneyLogPageControl.prototype.dblist = function(headNode, bodyNode, cb)

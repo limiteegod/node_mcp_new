@@ -79,6 +79,8 @@ var addOperation = function()
             operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_ACCOUNT', name:'账户管理', url:'', hasChildren:1}, [], function(err, data){
                 operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_MONEYLOG', parent:'ADMIN_ACCOUNT', name:'账户流水', url:'moneylog_list.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:prop.userType.ADMINISTRATOR, id:'ADMIN_LIST_ACCOUNTCFG', parent:'ADMIN_ACCOUNT', name:'系统科目', url:'moneylog_subjectList.html', hasChildren:0}, [], function(err, data){
+                });
             });
             cb(null, "success");
         }
