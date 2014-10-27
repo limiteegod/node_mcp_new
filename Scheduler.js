@@ -5,6 +5,7 @@ var dc = require('./app/config/DbCenter.js');
 var prop = require('./app/config/Prop.js');
 var esut = require("easy_util");
 var log = esut.log;
+var dateUtil = esut.dateUtil;
 var digestUtil = esut.digestUtil;
 
 var Scheduler = function(){};
@@ -53,7 +54,8 @@ Scheduler.prototype.checkOpen = function()
             //find term to open
             function(cb)
             {
-                termTable.find({status:1100, openTime:{$lt:new Date()}},
+                var now = dateUtil.toString(new Date());
+                termTable.find({status:1100, openTime:{$lt:now}},
                     {gameCode:1, code:1, nextCode:1, version:1}).toArray(function(err, data){
                     log.info(data);
                     if(err) cb(err);

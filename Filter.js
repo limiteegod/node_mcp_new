@@ -92,15 +92,6 @@ Filter.prototype.handle = function(message, cb)
         var msgNode = JSON.parse(message);
         var headNode = msgNode.head;
         var ser = service.getByCode(headNode.cmd);
-        gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
-            if(err)
-            {
-                console.log('problem with request: ', err);
-                backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
-            }
-            log.info(backMsg);
-            cb(backMsg);
-        });
     }
     catch (err)
     {
@@ -108,6 +99,15 @@ Filter.prototype.handle = function(message, cb)
         cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
         return;
     }
+    gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
+        if(err)
+        {
+            console.log('problem with request: ', err);
+            backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
+        }
+        log.info(backMsg);
+        cb(backMsg);
+    });
 };
 
 var f = new Filter();
