@@ -80,7 +80,8 @@ else if(target == 'run')
     platform.ver = "s.1.01";
     platform.gateways = [{host:'192.168.222.233', port:8501, method:'POST'},
         {host:'192.168.222.232', port:8401, method:'POST'},
-        {host:'192.168.222.234', port:8601, method:'POST'}
+        {host:'192.168.222.234', port:8601, method:'POST'},
+        {host:'192.168.222.234', port:8701, method:'POST'}
     ];
     exports.platform = platform;
 }
