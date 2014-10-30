@@ -29,6 +29,10 @@ var Service = function(){
         {cmd:"P10", path:"/mcp/print/resetTakeAway.htm"},
         {cmd:"P11", path:"/mcp/print/printFailure.htm"},
         {cmd:"P12", path:"/mcp/print/getPrintQueen.htm"},
+        {cmd:"P20", path:"/mcp/print/getNewPrintQueen.htm"},
+        {cmd:"P21", path:"/mcp/print/newPrintBack.htm"},
+
+
 
         {cmd:"Q01", path:"/mcp/query/getGameTerm.htm"},
         {cmd:"Q02", path:"/mcp/query/getScheme.htm"},
