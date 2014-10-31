@@ -1,41 +1,25 @@
-var log = require('./app/util/McpLog.js');
-var dc = require('./app/config/DbCenter.js');
-var async = require('async');
+var config = require('mcp_config');
+var ec = config.ec;
 
-async.waterfall([
-    //connect to the db
-    function(cb){
-        dc.init(function(err){
-            cb(err);
-        });
-    },
-    function(cb){
-        var testTable = dc.mg.get("test");
-        testTable.drop(function(err){
-            cb(err);
-        });
-    },
-    function(cb){
-        var testTable = dc.mg.get("test");
-        testTable.create(function(err){
-            cb(err);
-        });
-    },
-    function(cb){
-        var testTable = dc.mg.get("test");
-        testTable.save({_id:"123"}, [], function(err, data){
+var dc = require("mcp_dao").dc;
+
+var esutil = require("easy_util");
+var log = esutil.log;
+
+log.info(ec.E0000);
+
+dc.init(function(err, data){
+    if(err)
+    {
+        log.info("初始化数据库连接出错...............");
+        log.info(err);
+    }
+    else
+    {
+        var table = dc.main.get("game");
+        table.find({}, {}).toArray(function(err, data){
             log.info(data);
-            cb(err);
-        });
-    },
-    function(cb){
-        var testTable = dc.mg.get("test");
-        testTable.find({}, {}).toArray(function(err, data){
-            log.info(data);
-            cb(err, data);
         });
     }
-], function (err, result) {
-    log.info("end...........");
-});
+})
 

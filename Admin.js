@@ -2,11 +2,19 @@ var express = require('express'), app = express();
 var http = require('http');
 var async = require('async');
 var httpServer = http.createServer(app);
-var prop = require('./app/config/Prop.js');
-var errCode = require('./app/config/ErrCode.js');
-var cmdFactory = require("./app/control/CmdFactory.js");
-var dc = require('./app/config/DbCenter.js');
-var pageControl = require("./app/control/PageControl.js");
+
+var config = require('mcp_config');
+var prop = config.prop;
+var errCode = config.ec;
+
+var fac = require('mcp_factory');
+var cmdFactory = fac.cmdFac;
+
+var dao = require('mcp_dao');
+var dc = dao.dc;
+
+var ctrl = require('mcp_control');
+var pageControl = ctrl.pageCtrl;
 
 var esut = require("easy_util");
 var log = esut.log;
