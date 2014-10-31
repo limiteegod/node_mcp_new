@@ -105,10 +105,13 @@ Filter.prototype.startWeb = function()
 Filter.prototype.handle = function(message, cb)
 {
     var self = this;
+    var msgNode;
+    var headNode;
+    var ser;
     try {
-        var msgNode = JSON.parse(message);
-        var headNode = msgNode.head;
-        var ser = service.getByCode(headNode.cmd);
+        msgNode = JSON.parse(message);
+        headNode = msgNode.head;
+        ser = service.getByCode(headNode.cmd);
     }
     catch (err)
     {
