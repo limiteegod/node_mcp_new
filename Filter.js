@@ -2,10 +2,15 @@ var express = require('express'), app = express();
 var http = require('http');
 var async = require('async');
 var httpServer = http.createServer(app);
-var prop = require('./app/config/Prop.js');
-var errCode = require('./app/config/ErrCode.js');
-var service = require('./app/config/Service.js');
-var gatewayInterUtil = require('./app/util/GatewayInterUtil.js');
+
+var config = require('mcp_config');
+var prop = config.prop;
+var errCode = config.ec;
+var service = config.service;
+
+var util = require('mcp_util');
+var gatewayInterUtil = util.gatewayInterUtil;
+
 var esut = require("easy_util");
 var log = esut.log;
 

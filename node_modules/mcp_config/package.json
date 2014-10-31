@@ -1,0 +1,8 @@
+{
+  "name": "mcp_config",
+  "description": "系统配置",
+  "version": "0.0.1",
+  "main":"./index.js",
+  "dependencies": {
+  }
+}
