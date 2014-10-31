@@ -99,7 +99,7 @@ Filter.prototype.startWeb = function()
         });
     });
 
-    httpServer.listen(9090);
+    httpServer.listen(prop.filterPort);
 };
 
 Filter.prototype.handle = function(message, cb)
