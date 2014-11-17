@@ -84,7 +84,7 @@ else if(target == 'run')
         {host:'192.168.222.234', port:8701, method:'POST'}
     ];
     exports.platform = platform;
-}
+} 
 exports.zzc = zzc;
 exports.oracle = oracle;
 exports.mcpmg = mcpmg;
