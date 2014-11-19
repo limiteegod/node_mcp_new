@@ -50,6 +50,18 @@ html(lang="en")
                     }
                 });
 
+                //修改mongodb中的交易密钥
+                Node.one("#modifyFixSt").on("click", function(){
+                    var st = Node.one("#fixSt").val();
+                    var code = Node.one("#code").val();
+                    var data = {fixSt:st};
+                    var cond = {_id:code};
+                    var bodyNode = {data:{$set:data}, cond:cond};
+                    CurSite.sendDigest(Io, Json, "AD10", null, bodyNode, function(err, backBodyNode){
+                        alert(backBodyNode.description);
+                    });
+                });
+
                 Node.one("#getKey").on("click", function(){
                     var key = CurSite.createUUID();
                     Node.one('#secretKey').val(key);
@@ -82,6 +94,12 @@ html(lang="en")
                     input(id="secretKey", type="text", value=station.secretKey)
                 .vs_grid_plain(style="margin-left:8px;")
                     input(type="button", value="随机生成", id="getKey")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 密钥(MG)*:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="fixSt", type="text", value=stInfo.fixSt)
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="修改", id="modifyFixSt")
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 类型*:
                 .vs_grid_plain(style="margin-left:8px;", value=station.code)
