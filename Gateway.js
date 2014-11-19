@@ -2,10 +2,13 @@ var express = require('express'), app = express();
 var http = require('http');
 var async = require('async');
 var httpServer = http.createServer(app);
-var prop = require('./app/config/Prop.js');
-var errCode = require('./app/config/ErrCode.js');
-var cmdFactory = require("./app/control/CmdFactory.js");
-var dc = require('./app/config/DbCenter.js');
+
+var config = require('mcp_config');
+var prop = config.prop;
+var errCode = config.ec;
+
+var cmdFactory = require("mcp_factory").cmdFac;
+var dc = require('mcp_dao').dc;
 
 var esut = require("easy_util");
 var log = esut.log;
@@ -56,8 +59,6 @@ Gateway.prototype.startWeb = function()
     app.use(express.methodOverride());
     //route requests
     app.use(app.router);
-    //public文件夹下面的文件，都暴露出来，客户端访问的时候，不需要使用public路径
-    app.use(express.static('/data/app/node_kissy/public'));
 
     app.configure('development', function(){
         app.use(express.errorHandler({dumpExceptions: true, showStack: true}));
