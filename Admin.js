@@ -118,7 +118,7 @@ Gateway.prototype.startWeb = function()
         }
     });
 
-    httpServer.listen(9088);
+    httpServer.listen(9080);
 };
 
 Gateway.prototype.handle = function(message, cb)
