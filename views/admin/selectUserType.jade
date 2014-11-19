@@ -31,7 +31,7 @@ html(lang="en")
     body
         input(id="backValue", type="hidden", value="")
         input(id="selectedId", type="hidden", value=selectedId)
-        #userTypeList(class="container", style="width:180px;height:700px;")
+        #userTypeList(class="container", style="width:180px;height:700px;text-align:left;")
             ol
                 - each val in rst
-                    li(value=val._id)= val.name
+                    li(value=val.code)= val.des
