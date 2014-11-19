@@ -20,7 +20,9 @@ var run = function()
         function(cb)
         {
             var table = dc.main.get("admini");
-            table.save({id:digestUtil.createUUID(), name:"admin", password:"123456"}, [], function(err, data){
+            var admini = {id:digestUtil.createUUID(), name:"admin", password:"123456",
+            type:0, version:0};
+            table.save(admini, [], function(err, data){
                 cb(err);
             });
         }
