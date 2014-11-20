@@ -10,6 +10,7 @@ var service = config.service;
 
 var util = require('mcp_util');
 var gatewayInterUtil = util.gatewayInterUtil;
+var platInterUtil = util.platInterUtil;
 
 var esut = require("easy_util");
 var log = esut.log;
@@ -119,15 +120,29 @@ Filter.prototype.handle = function(message, cb)
         cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
         return;
     }
-    gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
-        if(err)
-        {
-            console.log('problem with request: ', err);
-            backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
-        }
-        log.info(backMsg);
-        cb(backMsg);
-    });
+    if(headNode.cmd == "P02")
+    {
+        platInterUtil.getP02(message, function(err, backMsg){
+            if(err)
+            {
+                console.log('problem with request: ', err);
+                backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
+            }
+            cb(backMsg);
+        });
+    }
+    else
+    {
+        gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
+            if(err)
+            {
+                console.log('problem with request: ', err);
+                backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
+            }
+            log.info(backMsg);
+            cb(backMsg);
+        });
+    }
 };
 
 var f = new Filter();
