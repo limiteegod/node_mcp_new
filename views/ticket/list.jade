@@ -112,6 +112,7 @@ html(lang="en")
                                 td(w="76") 投注方式
                                 td(w="176") 创建时间
                                 td(w="176") 取票时间
+                                td(w="176") 截止时间
                                 td(w="76") 状态
                                 td(w="134") 操作
                         tbody
@@ -124,6 +125,7 @@ html(lang="en")
                                     td=val.betType.name+ '(' + val.betType.id + ')'
                                     td=val.createTime
                                     td=val.sysTakeTime
+                                    td=val.termIndexDeadline
                                     td=val.status.des
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
