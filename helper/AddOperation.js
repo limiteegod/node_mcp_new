@@ -57,6 +57,10 @@ var run = function()
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_ACCOUNTCFG', parent:'ADMIN_ACCOUNT', name:'系统科目', url:'moneylog_subjectList.html', hasChildren:0}, [], function(err, data){
                 });
             });
+            operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_PRINT', name:'出票管理', url:'', hasChildren:1, parent:''}, [], function(err, data){
+                operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_PRINT_ORDER_QUEEN', parent:'ADMIN_PRINT', name:'订单队列', url:'print_list.html', hasChildren:0}, [], function(err, data){
+                });
+            });
             cb(null, "success");
         }
     ], function (err, result) {
