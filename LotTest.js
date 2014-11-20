@@ -1,4 +1,6 @@
-var platInterUtil = require('./app/util/PlatInterUtil.js');
+var util = require('mcp_util');
+var platInterUtil = util.platInterUtil;
+
 var esut = require("easy_util");
 var log = esut.log;
 var digestUtil = esut.digestUtil;
@@ -60,19 +62,13 @@ LotTest.prototype.lotF01 = function()
         {
             log.info('back:');
             log.info(backMsgNode);
-            /*var backBodyStr = digestUtil.check(backMsgNode.head, self.key, backMsgNode.body);
-            var backBodyNode = JSON.parse(backBodyStr);
-            console.log("back-head:");
-            console.log(backMsgNode.head);
-            console.log("back-body:");
-            console.log(backBodyNode);*/
         }
     });
 };
 
 var lotTest = new LotTest();
 var count = 0;
-while(count < 1000)
+while(count < 1)
 {
     lotTest.lotF01();
     count++;
