@@ -7,7 +7,9 @@ var log = esut.log;
 var digestUtil = esut.digestUtil;
 
 var cons = require('mcp_cons');
-
+var ticketStatus = cons.ticketStatus;
+var printStatus = cons.printStatus;
+var userType = cons.userType;
 
 var PrintTest = function(){
     var self = this;
@@ -23,11 +25,10 @@ PrintTest.prototype.print = function(cmd, bodyNode, cb)
     platInterUtil.get(self.userId, self.userType, self.channelCode, "md5", self.key, cmd, bodyNode, cb);
 };
 
-PrintTest.prototype.printP01 = function(cb)
+PrintTest.prototype.printP02 = function(bodyNode, cb)
 {
     var self = this;
-    var bodyNode = {};
-    self.print("P01", bodyNode, function(err, backMsgNode){
+    self.print("P02", bodyNode, function(err, backMsgNode){
         if(err)
         {
             cb(err, null);
@@ -137,8 +138,23 @@ printTest.printP12(bodyNode, function(err, p12BackBodyNode){
         var p06BodyNode = {orderId:order.orderId};
         printTest.printP06(p06BodyNode, function(err, p06BackBodyNode){
             log.info(p06BackBodyNode);
+            var tickets = p06BackBodyNode.tickets;
+            async.eachSeries(tickets, function(ticket, callback) {
+                var backTicket = {};
+                backTicket.ticketId = ticket.id;
+                backTicket.terminalCode = "1234";
+                backTicket.stubInfo = "99999999999999";
+                backTicket.paper = false;
+                backTicket.rNumber = ticket.numbers;
+                backTicket.code = printStatus.success;
 
-            
+                printTest.printP02(backTicket, function(err, p02BackBodyNode){
+                    log.info(p02BackBodyNode);
+                    callback()
+                });
+            }, function(err){
+                log.info("finished...............");
+            });
         });
     }
 });

@@ -112,7 +112,9 @@ html(lang="en")
                                 td(w="76") 期次
                                 td(w="76") 金额
                                 td(w="176") 创建时间
+                                td(w="176") 打印时间
                                 td(w="76") 状态
+                                td(w="76") 类型
                                 td(w="134") 操作
                         tbody
                             - each val in rst
@@ -124,7 +126,9 @@ html(lang="en")
                                     td=val.termCode
                                     td=val.amount/100 + '(元)'
                                     td=val.createTime
+                                    td=val.printTime
                                     td=val.status.des
+                                    td=val.type.des
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
             .clearfix(style="margin-top:8px")

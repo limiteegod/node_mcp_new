@@ -46,6 +46,8 @@ var run = function()
                 });
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_TICKET', parent:'ADMIN_SALE', name:'票据列表', url:'ticket_list.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_DRAW_TICKET', parent:'ADMIN_SALE', name:'算奖队列', url:'ticket_drawList.html', hasChildren:0}, [], function(err, data){
+                });
             });
             operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_STATION', name:'机构管理', url:'', hasChildren:1, parent:''}, [], function(err, data){
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_STATION', parent:'ADMIN_STATION', name:'机构列表', url:'station_list.html', hasChildren:0}, [], function(err, data){

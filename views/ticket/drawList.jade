@@ -8,8 +8,6 @@ html(lang="en")
                 var count = parseInt(Node.one('#count').val());
                 var skip = parseInt(Node.one('#skip').val());
                 var limit = parseInt(Node.one('#limit').val());
-                var channelCodeInput = new VsRoundInput("#channelCode", {});
-                var orderIdInput = new VsRoundInput("#orderId", {});
                 var cur = parseInt(skip/limit) + 1;
                 var table = new VsGridTable('#tickets', {});
                 var pageBar = new VsPagebar('#bar', {count:count, limit:limit, cur:cur, toPage:function(index){
@@ -19,36 +17,40 @@ html(lang="en")
                 var getCondition = function()
                 {
                     var cond = {};
+                    return cond;
+                };
+
+                var getAdd = function()
+                {
+                    var add = {};
                     var gameCode = Node.one('#gameCode').val();
                     if(gameCode)
                     {
-                        cond.gameCode = gameCode;
+                        add.gameCode = gameCode;
                     }
-                    var status = parseInt(Node.one("#status").val());
-                    if(status > 0)
+                    var termCode = Node.one('#termCode').val();
+                    if(termCode.length > 0)
                     {
-                        cond.status = status;
+                        add.termCode = termCode;
                     }
-                    var channelCode = channelCodeInput.getData();
-                    if(channelCode.length > 0)
-                    {
-                        cond.channelCode = channelCode;
-                    }
-                    var orderId = orderIdInput.getData();
-                    if(orderId.length > 0)
-                    {
-                        cond.orderId = orderId;
-                    }
-                    return cond;
-                };
+                    return add;
+                }
 
                 var toPage = function(index){
                     console.log(index);
                     var limit = parseInt(Node.one('#limit').val());
                     var skip = (index - 1)*limit;
-                    var cond = encodeURIComponent(Json.stringify(getCondition()));
-                    console.log(cond);
-                    CurSite.redirectTo(null, "ticket_list.html?" + 'skip=' + skip + "&limit=" + limit + "&cond=" + cond);
+                    var add = getAdd();
+                    if(add.gameCode)
+                    {
+                        var cond = encodeURIComponent(Json.stringify(getCondition()));
+                        add = encodeURIComponent(Json.stringify(add));
+                        CurSite.redirectTo(null, "ticket_drawList.html?" + 'skip=' + skip + "&limit=" + limit + "&cond=" + cond+ "&add=" + add);
+                    }
+                    else
+                    {
+                        alert("游戏必须选择");
+                    }
                 };
 
                 //绑定事件
@@ -80,23 +82,13 @@ html(lang="en")
                     select(id="gameCode")
                         option(value="") 所有
                         - each val in games
-                            if(val.id == cond.gameCode)
+                            if(val.id == add.gameCode)
                                 option(value=val.id, selected="true")=val.name
                             else
                                 option(value=val.id)=val.name
-                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 状态:
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 期次:
                 .vs_grid_plain(style="padding-top:4px;")
-                    select(id="status")
-                        option(value="-1") 所有
-                        - each val in ticketStatus
-                            if(val.id == cond.status)
-                                option(value=val.id, selected="true")=val.des
-                            else
-                                option(value=val.id)=val.des
-                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 渠道号:
-                #channelCode.vs_grid_plain(initValue=cond.channelCode)
-                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 订单号:
-                #orderId.vs_grid_plain(initValue=cond.orderId)
+                    input(id="termCode", type="text", value=add.termCode)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
@@ -106,32 +98,40 @@ html(lang="en")
                         thead
                             tr
                                 td(w="276") id
+                                td(w="276") 订单id
                                 td(w="76") 渠道
                                 td(w="276") 销售机构id
                                 td(w="276") 出票机构id
                                 td(w="76") 游戏
+                                td(w="126") 期次
                                 td(w="76") 玩法
                                 td(w="76") 投注方式
+                                td(w="76") 倍数
+                                td(w="96") 金额
                                 td(w="176") 创建时间
-                                td(w="176") 取票时间
-                                td(w="176") 截止时间
                                 td(w="176") 打印时间
+                                td(w="176") 号码
+                                td(w="176") 出票号码
                                 td(w="76") 状态
                                 td(w="134") 操作
                         tbody
                             - each val in rst
                                 tr
-                                    td=val.id
+                                    td=val._id
+                                    td=val.orderId
                                     td=val.channelCode
                                     td=val.stationId
                                     td=val.printerStationId
                                     td=val.game.name
+                                    td=val.termCode
                                     td=val.playType.name + '(' + val.playType.id + ')'
                                     td=val.betType.name+ '(' + val.betType.id + ')'
+                                    td=val.multiple
+                                    td=val.amount/100
                                     td=val.createTime
-                                    td=val.sysTakeTime
-                                    td=val.termIndexDeadline
                                     td=val.printTime
+                                    td=val.numbers
+                                    td=val.rNumber
                                     td=val.status.des
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
