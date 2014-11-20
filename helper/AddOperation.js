@@ -66,6 +66,8 @@ var run = function()
             operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_NOTIFY', name:'通知管理', url:'', hasChildren:1, parent:''}, [], function(err, data){
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_NOTIFY_CHANNEL', parent:'ADMIN_NOTIFY', name:'通知渠道', url:'notify_chList.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_NOTIFY_LIST', parent:'ADMIN_NOTIFY', name:'通知列表', url:'notify_list.html', hasChildren:0}, [], function(err, data){
+                });
             });
             cb(null, "success");
         }
