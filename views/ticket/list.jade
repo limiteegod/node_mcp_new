@@ -69,6 +69,17 @@ html(lang="en")
                     });
                 });
 
+                //重新加入出票队列
+                Node.all("input.addToQueen").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var bodyNode = {id:tId};
+                        CurSite.sendDigest(Io, Json, "AD11", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    });
+                });
+
                 Node.one("#search").on("click", function(){
                     toPage(cur);
                 });
@@ -128,7 +139,7 @@ html(lang="en")
                                 td(w="176") 截止时间
                                 td(w="176") 打印时间
                                 td(w="76") 状态
-                                td(w="134") 操作
+                                td(w="234") 操作
                         tbody
                             - each val in rst
                                 tr
@@ -148,5 +159,7 @@ html(lang="en")
                                     td=val.status.des
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
+                                        if(val.status.id == ticketStatusOrg.print_success)
+                                            input(type="button", value="加入队列", class="addToQueen", tId=val.id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
