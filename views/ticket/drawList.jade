@@ -17,6 +17,11 @@ html(lang="en")
                 var getCondition = function()
                 {
                     var cond = {};
+                    var ticketId = Node.one('#ticketId').val();
+                    if(ticketId)
+                    {
+                        cond._id = ticketId;
+                    }
                     return cond;
                 };
 
@@ -80,7 +85,6 @@ html(lang="en")
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 游戏:
                 .vs_grid_plain(style="padding-top:4px;")
                     select(id="gameCode")
-                        option(value="") 所有
                         - each val in games
                             if(val.id == add.gameCode)
                                 option(value=val.id, selected="true")=val.name
@@ -89,6 +93,9 @@ html(lang="en")
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 期次:
                 .vs_grid_plain(style="padding-top:4px;")
                     input(id="termCode", type="text", value=add.termCode)
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 票号:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(id="ticketId", type="text", value=cond._id)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
