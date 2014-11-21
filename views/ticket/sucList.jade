@@ -75,7 +75,7 @@ html(lang="en")
                 //从队列中删除
                 Node.all("input.delete").each(function(item){
                     item.on("click", function(){
-                        var tId = Node.one(this).attr("tId");
+                        var tId = parseInt(Node.one(this).attr("tId"));
                         var gameCode = Node.one('#gameCode').val();
                         var bodyNode = {cond:{_id:tId}, gameCode:gameCode};
                         CurSite.sendDigest(Io, Json, "AD12", null, bodyNode, function(err, backBodyNode){
