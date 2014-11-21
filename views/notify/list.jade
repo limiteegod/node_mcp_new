@@ -63,6 +63,11 @@ html(lang="en")
                 Node.one("#search").on("click", function(){
                     toPage(cur);
                 });
+
+                Node.one("#deleteUsed").on("click", function(){
+
+                });
+
             });
     body
         .bodyAdminDiv
@@ -77,6 +82,7 @@ html(lang="en")
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
+                    input(type="button", id="deleteUsed", value="删除已发送数据")
             .clearfix(style="margin-top:8px")
                 #rst.container(style="width:423px;")
                     table

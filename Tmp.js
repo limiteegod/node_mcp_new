@@ -1,1 +1,9 @@
-{"head":{"ver":"s.1.01","id":"f671555fd5c0485e8537293a424dc639","timestamp":"2014-11-20T21:10:51.681+0800","channelCode":"BJJG","cmd":"N02","digestType":"md5","digest":"846ea0d5c444d772d53d3db2bdc7a06a"},"body":"{\"repCode\":\"0000\",\"description\":\"系统处理成功\",\"order\":{\"id\":\"c1aee688a8f249b0b9c05a222aba0dce\",\"termCode\":\"201411215015\",\"schemeId\":null,\"gameCode\":\"T51\",\"outerId\":\"141120210826010051202\",\"amount\":200,\"ticketCount\":1,\"bonus\":0,\"acceptTime\":\"2014-11-20T21:08:57.000+0800\",\"printTime\":\"Invalid date\",\"status\":1200,\"multiple\":1,\"numbers\":\"02|201411215014|0;02|201411215015|3\",\"tickets\":[{\"id\":\"c7d6c19160494a9e9cf2ef55d95e7e07\",\"rNumber\":\"02|201411215014|0@7.550;02|201411215015|3@3.400\",\"channelCode\":\"BJJG\",\"terminalId\":null}]}}"}
+var esut = require("easy_util");
+var log = esut.log;
+var dateUtil = esut.dateUtil;
+var digestUtil = esut.digestUtil;
+var dateUtil = esut.dateUtil;
+
+var str = '{"repCode":"0000","description":"系统处理成功","order":{"id":"c2405ac0f8ab4a05bd978427c5918702","termCode":"14137","schemeId":null,"gameCode":"T01","outerId":"141121130957010011032","amount":200,"ticketCount":1,"bonus":0,"acceptTime":"2014-11-21T13:09:53.000+0800","status":1200,"multiple":1,"numbers":null,"printTime":"2014-11-21T13:10:07.000+0800","tickets":[{"id":"40058cdab2344f1baddad5c3f7283573","channelCode":"BJJG","terminalId":"00011607"}]}}2014-11-21T13:10:07.669+08000okmnhy6123';
+var md5 = digestUtil.md5(str);
+console.log(md5);
