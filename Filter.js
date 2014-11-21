@@ -120,7 +120,7 @@ Filter.prototype.handle = function(message, cb)
         cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
         return;
     }
-    /*if(headNode.cmd == "P02")
+    if(headNode.cmd == "P02")
     {
         platInterUtil.getP02(message, function(err, backMsg){
             if(err)
@@ -132,7 +132,7 @@ Filter.prototype.handle = function(message, cb)
         });
     }
     else
-    {*/
+    {
         gatewayInterUtil.get(ser, JSON.stringify(headNode), msgNode.body, function(err, backMsg){
             if(err)
             {
@@ -142,7 +142,7 @@ Filter.prototype.handle = function(message, cb)
             log.info(backMsg);
             cb(backMsg);
         });
-    //}
+    }
 };
 
 var f = new Filter();
