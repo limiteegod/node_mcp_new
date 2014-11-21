@@ -39,6 +39,11 @@ html(lang="en")
                     {
                         cond.orderId = orderId;
                     }
+                    var ticketId = Node.one("#ticketId").val();
+                    if(ticketId.length > 0)
+                    {
+                        cond.id = ticketId;
+                    }
                     return cond;
                 };
 
@@ -93,8 +98,12 @@ html(lang="en")
                                 option(value=val.id, selected="true")=val.des
                             else
                                 option(value=val.id)=val.des
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 票号:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(type=text, id="ticketId", value=cond.id)
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 渠道号:
                 #channelCode.vs_grid_plain(initValue=cond.channelCode)
+            .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 订单号:
                 #orderId.vs_grid_plain(initValue=cond.orderId)
             .clearfix(style="margin-top:8px")
@@ -112,6 +121,8 @@ html(lang="en")
                                 td(w="76") 游戏
                                 td(w="76") 玩法
                                 td(w="76") 投注方式
+                                td(w="76") 倍数
+                                td(w="126") 金额
                                 td(w="176") 创建时间
                                 td(w="176") 取票时间
                                 td(w="176") 截止时间
@@ -128,6 +139,8 @@ html(lang="en")
                                     td=val.game.name
                                     td=val.playType.name + '(' + val.playType.id + ')'
                                     td=val.betType.name+ '(' + val.betType.id + ')'
+                                    td=val.multiple
+                                    td=val.amount/100
                                     td=val.createTime
                                     td=val.sysTakeTime
                                     td=val.termIndexDeadline
