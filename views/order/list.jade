@@ -39,6 +39,11 @@ html(lang="en")
                     {
                         cond.id = orderId;
                     }
+                    var outerId = Node.one("#outerId").val();
+                    if(outerId && outerId.length > 0)
+                    {
+                        cond.outerId = outerId;
+                    }
                     return cond;
                 };
 
@@ -97,6 +102,8 @@ html(lang="en")
                 #channelCode.vs_grid_plain(initValue=cond.channelCode)
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 订单id:
                 #orderId.vs_grid_plain(initValue=cond.id)
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 外部订单号:
+                    input(type=text, id="outerId", value=cond.outerId)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
