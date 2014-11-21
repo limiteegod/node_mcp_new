@@ -126,6 +126,7 @@ html(lang="en")
                         thead
                             tr
                                 td(w="276") id
+                                td(w="276") 订单号
                                 td(w="76") 渠道
                                 td(w="276") 销售机构id
                                 td(w="276") 出票机构id
@@ -144,6 +145,7 @@ html(lang="en")
                             - each val in rst
                                 tr
                                     td=val.id
+                                    td=val.orderId
                                     td=val.channelCode
                                     td=val.stationId
                                     td=val.printerStationId
