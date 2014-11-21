@@ -72,6 +72,18 @@ html(lang="en")
                     });
                 });
 
+                //从队列中删除
+                Node.all("input.delete").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var gameCode = Node.one('#gameCode').val();
+                        var bodyNode = {cond:{_id:tId}, gameCode:gameCode};
+                        CurSite.sendDigest(Io, Json, "AD12", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    });
+                });
+
                 Node.one("#search").on("click", function(){
                     toPage(cur);
                 });
@@ -119,6 +131,7 @@ html(lang="en")
                                     td=val.termCode
                                     td=val.finishedCount
                                     td
-                                        input(type="button", value="详情", class="detail", tId=val.id)
+                                        input(type="button", value="详情", class="detail", tId=val._id)
+                                        input(type="button", value="删除", class="delete", tId=val._id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
