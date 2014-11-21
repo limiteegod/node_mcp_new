@@ -22,6 +22,11 @@ html(lang="en")
                     {
                         cond.termCode = termCode;
                     }
+                    var ticketId = Node.one('#ticketId').val();
+                    if(ticketId.length > 0)
+                    {
+                        cond.ticketId = ticketId;
+                    }
                     return cond;
                 };
 
@@ -90,6 +95,9 @@ html(lang="en")
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 期次:
                 .vs_grid_plain(style="padding-top:4px;")
                     input(id="termCode", type="text", value=add.termCode)
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 票据id:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(id="ticketId", type="text", value=cond.ticketId)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
