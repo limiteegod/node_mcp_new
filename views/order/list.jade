@@ -80,6 +80,17 @@ html(lang="en")
                     });
                 });
 
+                //再次发送通知
+                Node.all("input.notify").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var bodyNode = {id:tId};
+                        CurSite.sendDigest(Io, Json, "AD14", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    });
+                });
+
                 Node.one("#search").on("click", function(){
                     toPage(cur);
                 });
@@ -135,7 +146,7 @@ html(lang="en")
                                 td(w="176") 打印时间
                                 td(w="76") 状态
                                 td(w="76") 类型
-                                td(w="234") 操作
+                                td(w="334") 操作
                         tbody
                             - each val in rst
                                 tr
@@ -155,5 +166,7 @@ html(lang="en")
                                         input(type="button", value="详情", class="detail", tId=val.id)
                                         if(val.status.id == orderStatusOrg.waiting_print)
                                             input(type="button", value="直接成功", class="success", tId=val.id)
+                                        if(val.status.id == orderStatusOrg.success)
+                                            input(type="button", value="再次通知", class="notify", tId=val.id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
