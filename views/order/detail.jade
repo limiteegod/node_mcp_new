@@ -26,6 +26,14 @@ html(lang="en")
                 .vs_grid_plain(style="margin-left:8px;")=rst.amount/100
                     |(元)
             .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 税前奖金:
+                .vs_grid_plain(style="margin-left:8px;")=rst.bonusBeforeTax/100
+                    |(元)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") 税后奖金:
+                .vs_grid_plain(style="margin-left:8px;")=rst.bonus/100
+                    |(元)
+            .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;") 状态:
                 .vs_grid_plain(style="margin-left:8px;")=rst.status.des
             .clearfix(style="margin-top:8px")
