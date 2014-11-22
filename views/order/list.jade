@@ -24,6 +24,11 @@ html(lang="en")
                     {
                         cond.gameCode = gameCode;
                     }
+                    var termCode = Node.one('#termCode').val();
+                    if(termCode)
+                    {
+                        cond.termCode = termCode;
+                    }
                     var status = parseInt(Node.one("#status").val());
                     if(status > 0)
                     {
@@ -111,6 +116,9 @@ html(lang="en")
                                 option(value=val.id, selected="true")=val.name
                             else
                                 option(value=val.id)=val.name
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 期次:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(type=text, id="termCode", value=cond.termCode)
                 .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 状态:
                 .vs_grid_plain(style="padding-top:4px;")
                     select(id="status")
