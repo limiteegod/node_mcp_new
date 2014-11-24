@@ -65,7 +65,11 @@ html(lang="en")
                 });
 
                 Node.one("#deleteUsed").on("click", function(){
-
+                    var tId = Node.one("#channelCode").val();
+                    var bodyNode = {id:tId};
+                    CurSite.sendDigest(Io, Json, "AD16", null, bodyNode, function(err, backBodyNode){
+                        alert(backBodyNode.description);
+                    });
                 });
 
             });
