@@ -1,0 +1,62 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-data-select,vs-window", function(S, Io, Node, Json, VsDataSelect, VsWindow){
+
+                var getData = function(){
+                    var data = {};
+                    return data;
+                };
+
+                var getCond = function()
+                {
+                    var tId = Node.one("#tId").val();
+                    return {_id:tId};
+                };
+
+                var checkParam = function(data){
+                    return true;
+                };
+
+                Node.one("#urlBt").on("click", function(){
+                    var cond = getCond();
+                    var notifyIp = Node.one("#notifyIp").val();
+                    var notifyPort = parseInt(Node.one("#notifyPort").val());
+                    var notifyPath = Node.one("#notifyPath").val();
+                    var key = Node.one("#key").val();
+                    var data = {notifyIp:notifyIp, notifyPort:notifyPort, notifyPath:notifyPath, key:key};
+                    var bodyNode = {cond:cond, data:{$set:data}};
+                    CurSite.sendDigest(Io, Json, "AD15", null, bodyNode, function(err, backBodyNode){
+                        alert(backBodyNode.description);
+                    });
+                });
+            });
+    body
+        input(id="tId", type="hidden", value=rst._id)
+        #tWin.container
+        .bodyAdminDiv
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 通知密钥:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="key", type="text", value=rst.key)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") url:
+                .vs_grid_plain(style="margin-left:8px;")=rst.url
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 通知地址:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="notifyIp", type="text", value=rst.notifyIp)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 端口:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="notifyPort", type="text", value=rst.notifyPort)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 路径:
+                .vs_grid_plain(style="margin-left:8px;")
+                    textarea(id="notifyPath", cols="25", rows="6")=rst.notifyPath
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") &nbsp;
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="urlBt", type="button", value="修改")

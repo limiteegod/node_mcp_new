@@ -83,6 +83,12 @@ Gateway.prototype.startWeb = function()
         });
     });
 
+    app.post("/main/notify.htm", function(req, res){
+        var message = req.body.message;
+        log.info(message);
+        res.json({});
+    });
+
     app.post("/mcp-filter/main/interface.htm", function(req, res){
         var message = req.body.message;
         self.handle(message, function(backMsgNode){
