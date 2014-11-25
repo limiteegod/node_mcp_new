@@ -74,12 +74,23 @@ html(lang="en")
                     });
                 });
 
-                //重新加入出票队列
+                //重新加入算奖队列
                 Node.all("input.addToQueen").each(function(item){
                     item.on("click", function(){
                         var tId = Node.one(this).attr("tId");
                         var bodyNode = {id:tId};
                         CurSite.sendDigest(Io, Json, "AD11", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    });
+                });
+
+                //退款
+                Node.all("input.refund").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var bodyNode = {id:tId};
+                        CurSite.sendDigest(Io, Json, "AD17", null, bodyNode, function(err, backBodyNode){
                             alert(backBodyNode.description);
                         });
                     });
@@ -173,7 +184,9 @@ html(lang="en")
                                     td=val.status.des
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
+                                        if(val.status.id == ticketStatusOrg.waiting_print || val.status.id == ticketStatusOrg.take_away)
+                                            input(type="button", value="退款", class="refund", tId=val.id)
                                         if(val.status.id == ticketStatusOrg.print_success)
-                                            input(type="button", value="加入队列", class="addToQueen", tId=val.id)
+                                            input(type="button", value="加入算奖队列", class="addToQueen", tId=val.id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
