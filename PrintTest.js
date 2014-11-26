@@ -46,6 +46,7 @@ PrintTest.prototype.printP06 = function(bodyNode, cb)
 {
     var self = this;
     self.print("P06", bodyNode, function(err, backMsgNode){
+        log.info(backMsgNode);
         if(err)
         {
             cb(err, null);
@@ -129,7 +130,7 @@ PrintTest.prototype.printUtilEmpty = function()
 
 
 var printTest = new PrintTest();
-var bodyNode = {size:1};
+var bodyNode = {size:4};
 printTest.printP12(bodyNode, function(err, p12BackBodyNode){
     log.info(p12BackBodyNode);
     if(p12BackBodyNode.rst.length > 0)

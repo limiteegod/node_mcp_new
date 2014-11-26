@@ -120,9 +120,10 @@ Filter.prototype.handle = function(message, cb)
         cb(JSON.stringify({head:{cmd:'E01'}, body:JSON.stringify(errCode.E2058)}));
         return;
     }
-    if(headNode.cmd == "P02")
+    var start = new Date().getTime();
+    if(headNode.cmd == "P02" || headNode.cmd == "P12" || headNode.cmd == "P06")
     {
-        platInterUtil.getP02(message, function(err, backMsg){
+        platInterUtil.getNew(message, function(err, backMsg){
             if(err)
             {
                 console.log('problem with request: ', err);
