@@ -129,6 +129,8 @@ Filter.prototype.handle = function(message, cb)
                 console.log('problem with request: ', err);
                 backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
             }
+            var end = new Date().getTime();
+            log.info(headNode.cmd + ":" + headNode.channelCode + ":" + headNode.id + ",用时:" + (end - start) + "ms");
             cb(backMsg);
         });
     }
@@ -140,7 +142,8 @@ Filter.prototype.handle = function(message, cb)
                 console.log('problem with request: ', err);
                 backMsg = JSON.stringify({head:headNode, body:JSON.stringify(errCode.E2059)});
             }
-            log.info(backMsg);
+            var end = new Date().getTime();
+            log.info(headNode.cmd + ":" + headNode.channelCode + ":" + headNode.id + ",用时:" + (end - start) + "ms");
             cb(backMsg);
         });
     }

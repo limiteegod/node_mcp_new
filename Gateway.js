@@ -89,7 +89,8 @@ Gateway.prototype.startWeb = function()
         });
     });
 
-    httpServer.listen(9081);
+    log.info("程序在端口" + prop.gtPort + "启动.........");
+    httpServer.listen(prop.gtPort);
 };
 
 Gateway.prototype.handle = function(message, cb)
@@ -102,7 +103,10 @@ Gateway.prototype.handle = function(message, cb)
         var bodyStr = msgNode.body;
         cmdFactory.handle(headNode, bodyStr, function(err, bodyNode) {
             var key = headNode.key;
-            headNode.key = undefined;
+            if(headNode.key)
+            {
+                delete headNode.key;
+            }
             if(key == undefined)
             {
                 key = digestUtil.getEmptyKey();
@@ -123,9 +127,11 @@ Gateway.prototype.handle = function(message, cb)
                 bodyNode.repCode = errCode.E0000.repCode;
                 bodyNode.description = errCode.E0000.description;
             }
-            log.info(bodyNode);
+
             var decodedBodyStr = digestUtil.generate(headNode, key, JSON.stringify(bodyNode));
-            cb({head: headNode, body: decodedBodyStr});
+            var backMsgNode = {head: headNode, body: decodedBodyStr};
+            log.info(backMsgNode);
+            cb(backMsgNode);
         });
     }
     catch (err)
