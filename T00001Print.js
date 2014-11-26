@@ -89,7 +89,7 @@ PrintTest.prototype.printUtilEmpty = function()
                 if(p12BackBodyNode)
                 {
                     var orders = p12BackBodyNode.rst;
-                    if(orders && orders.length > 0)
+                    if(orders != undefined && orders.length > 0)
                     {
                         cb(null, orders);
                     }
