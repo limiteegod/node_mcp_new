@@ -13,10 +13,10 @@ var userType = cons.userType;
 
 var PrintTest = function(){
     var self = this;
-    self.userId = 'C0001';
-    self.channelCode = 'C0001';
+    self.userId = 'T00001';
+    self.channelCode = 'T00001';
     self.userType = 2;
-    self.key = 'cad6011f5f174a359d9a36e06aada07e';
+    self.key = '123456';
 };
 
 PrintTest.prototype.print = function(cmd, bodyNode, cb)
@@ -161,7 +161,10 @@ PrintTest.prototype.printUtilEmpty = function()
 };
 
 var printTest = new PrintTest();
-printTest.printUtilEmpty();
+var printJob = new CronJob('*/20 * * * * *', function () {
+    printTest.printUtilEmpty();
+});
+printJob.start();
 
 
 
