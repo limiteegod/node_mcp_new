@@ -121,7 +121,7 @@ Filter.prototype.handle = function(message, cb)
         return;
     }
     var start = new Date().getTime();
-    if(headNode.cmd == "P02" || headNode.cmd == "P12" || headNode.cmd == "P06")
+    if(prop.cmdToNew[headNode.cmd] != undefined)
     {
         platInterUtil.getNew(message, function(err, backMsg){
             if(err)

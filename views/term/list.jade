@@ -64,6 +64,18 @@ html(lang="en")
                     var url = "term_add.html?time=" + new Date().getTime();
                     CurSite.redirectTo(null, url);
                 });
+
+                //开奖
+                Node.all("input.draw").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var url = "term_draw.html?id=" + tId;
+                        var win = new VsWindow("#tWin", {title:"期次开奖", width:600, height:500, url:url, controlBt:[
+                            {name:'关闭', cb:null}
+                        ]});
+                    });
+                });
+
             });
     body
         .bodyAdminDiv
@@ -119,5 +131,7 @@ html(lang="en")
                                     td=val.detailInfo
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id)
+                                        if val.status.id == termStatusObj.WAITING_DRAW_NUMBER
+                                            input(type="button", value="开奖", class="draw", tId=val.id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")

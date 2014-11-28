@@ -1,3 +1,5 @@
+var async = require('async');
+
 var util = require('mcp_util');
 var platInterUtil = util.platInterUtil;
 
@@ -43,7 +45,7 @@ LotTest.prototype.lotT01 = function()
     });
 };
 
-LotTest.prototype.lotF01 = function()
+LotTest.prototype.lotF01 = function(cb)
 {
     var self = this;
     var bodyNode = {};
@@ -54,22 +56,21 @@ LotTest.prototype.lotF01 = function()
     orderNode.tickets = ticketsNode;
     bodyNode.order = orderNode;
     self.lot(bodyNode, function(err, backMsgNode){
-        if(err)
-        {
-            log.info('err:' + err);
-        }
-        else
-        {
-            log.info('back:');
-            log.info(backMsgNode);
-        }
+        cb(err, backMsgNode);
     });
 };
 
 var lotTest = new LotTest();
 var count = 0;
-while(count < 1000)
-{
-    lotTest.lotF01();
-    count++;
-}
+async.whilst(
+    function() { return count < 1},
+    function(whileCb) {
+        lotTest.lotF01(function(){
+            count++;
+            whileCb();
+        });
+    },
+    function(err) {
+        log.info(err);
+    }
+);
