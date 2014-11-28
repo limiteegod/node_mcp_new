@@ -65,12 +65,16 @@ html(lang="en")
                             tr
                                 td(w="100") 游戏
                                 td(w="76") 期次
-                                td(w="134") 操作
+                                td(w="126") 封存时间
+                                td(w="246") 文件路径
+                                td(w="76") 操作
                         tbody
                             - each val in rst
                                 tr
                                     td=val.gameCode
                                     td=val.termCode
+                                    td=val.sTime
+                                    td=val.filePath
                                     td
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")

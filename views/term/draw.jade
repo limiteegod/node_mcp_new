@@ -10,8 +10,8 @@ html(lang="en")
 
                 var getData = function(){
                     var data = {};
-                    data.wNum = Node.one("#wNum").val();
-                    data.pool = parseInt(Node.one("#pool").val());
+                    data.winningNumber = Node.one("#winningNumber").val();
+                    data.prizePool = parseInt(Node.one("#prizePool").val());
                     return data;
                 };
 
@@ -33,27 +33,42 @@ html(lang="en")
                     {
                         var obj = {};
                         obj.code = 'LV' + i;
-                        obj.bonus = parseInt(Node.one("#lv" + i + "_bonus").val())*100;
-                        var countStr = Node.one("#lv" + i + "_count").val();
+                        obj.bonus = parseInt(Node.one("#LV" + i + "_bonus").val())*100;
+                        obj.name = Node.one("#LV" + i + "_name").val();
+                        var countStr = Node.one("#LV" + i + "_count").val();
                         if(countStr == null || countStr.length == 0)
                         {
-                            obj.count = 0;
+                            obj.gCount = 0;
                         }
                         else
                         {
-                            obj.count = parseInt(countStr);
+                            obj.gCount = parseInt(countStr);
                         }
+                        obj.gLevel = i;
+                        obj.id = i + '';
                         lvs[lvs.length] = obj;
                     }
                     return lvs;
                 }
 
                 Node.one("#success").on("click", function(){
-                    var lvsStr = Json.stringify(getLvs());
-                    alert(lvsStr);
-                    /*var id = Node.one("#termId").val();
-                    var url = "term_drawConfirm.html?id=" + id;
-                    CurSite.redirectTo(null, url);*/
+                    var data = getData();
+                    var lvsStr = Json.stringify({grades:getLvs()});
+                    data.prizeDesc = lvsStr;
+
+                    var bodyNode = {cond:getCond(), data:{$set:data}};
+                    CurSite.sendDigest(Io, Json, "AD07", null, bodyNode, function(err, backBodyNode){
+                        if(backBodyNode.repCode == '0000')
+                        {
+                            var id = Node.one("#termId").val();
+                            var url = "term_drawConfirm.html?id=" + id;
+                            CurSite.redirectTo(null, url);
+                        }
+                        else
+                        {
+                            alert(backBodyNode.description);
+                        }
+                    });
                 });
 
 
@@ -88,11 +103,12 @@ html(lang="en")
                             tbody
                                 - each val in rst
                                     tr
-                                        td=val.des
+                                        td=val.name
+                                            input(id=val.code + '_name', type="hidden", value=val.name)
                                         td
                                             input(id=val.code + '_bonus', type="text" value=val.bonus/100, style="width:80px;")
                                         td
-                                            input(id=val.code + '_count', type="text" value=val.count, style="width:70px;")
+                                            input(id=val.code + '_count', type="text" value=val.gCount, style="width:70px;")
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;") &nbsp;
                 .vs_grid_plain(style="margin-left:8px;")

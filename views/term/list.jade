@@ -76,6 +76,19 @@ html(lang="en")
                     });
                 });
 
+                //审核通过
+                Node.all("input.check").each(function(item){
+                    item.on("click", function(){
+                        var tId = Node.one(this).attr("tId");
+                        var cond = {id:tId};
+                        var data = {status:1602};
+                        var bodyNode = {cond:cond, data:{$set:data}};
+                        CurSite.sendDigest(Io, Json, "AD07", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    });
+                });
+
             });
     body
         .bodyAdminDiv
@@ -133,5 +146,7 @@ html(lang="en")
                                         input(type="button", value="详情", class="detail", tId=val.id)
                                         if val.status.id == termStatusObj.WAITING_DRAW_NUMBER
                                             input(type="button", value="开奖", class="draw", tId=val.id)
+                                        if val.status.id == termStatusObj.CALCULATE
+                                            input(type="button", value="审核通过", class="check", tId=val.id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
