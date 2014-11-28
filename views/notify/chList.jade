@@ -66,9 +66,11 @@ html(lang="en")
                     });
                 });
 
-                Node.one("#search").on("click", function(){
-                    toPage(cur);
+                Node.one("#add").on("click", function(){
+                    var url = "notify_addCh.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
                 });
+
             });
     body
         .bodyAdminDiv
@@ -76,6 +78,9 @@ html(lang="en")
             input(type='hidden', id="skip", value=skip)
             input(type='hidden', id="limit", value=limit)
             #tWin.container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:423px;")
+                    input(type="button", id="add", value="新增")
             .clearfix(style="margin-top:8px")
                 #rst.container(style="width:423px;")
                     table

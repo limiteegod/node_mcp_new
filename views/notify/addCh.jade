@@ -1,0 +1,78 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-data-select,vs-window", function(S, Io, Node, Json, VsDataSelect, VsWindow){
+
+
+                var getData = function(){
+                    var data = {};
+                    data._id = Node.one("#_id").val();
+                    data.status = parseInt(Node.one("#status").val());
+                    data.ftpPath = Node.one("#ftpPath").val();
+                    data.key = Node.one("#key").val();
+                    data.notifyIp = Node.one("#notifyIp").val();
+                    data.notifyPort = Node.one("#notifyPort").val();
+                    data.notifyPath = Node.one("#notifyPath").val();
+                    return data;
+                };
+
+                var checkParam = function(data){
+                    return true;
+                };
+
+                Node.one("#success").on("click", function(){
+                    var data = getData();
+                    if(checkParam(data))
+                    {
+                        var bodyNode = {data:data};
+                        CurSite.sendDigest(Io, Json, "AD19", null, bodyNode, function(err, backBodyNode){
+                            alert(backBodyNode.description);
+                        });
+                    }
+                });
+
+                Node.one("#backToList").on("click", function(){
+                    var url = "notify_chList.html?time=" + new Date().getTime();
+                    CurSite.redirectTo(null, url);
+                });
+
+            });
+    body
+        .bodyAdminDiv
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 渠道:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="_id", type="text", value='')
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 状态:
+                .vs_grid_plain(style="margin-left:8px;")
+                    select(id="status")
+                        - each val in notifyChannelStatus
+                            option(value=val.id)=val.des
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 算奖文件路径:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="ftpPath", type="text", value='')
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 通知密钥:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="key", type="text", value='')
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 通知地址:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="notifyIp", type="text", value='')
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 端口:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="notifyPort", type="text", value='')
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 路径:
+                .vs_grid_plain(style="margin-left:8px;")
+                    textarea(id="notifyPath", cols="25", rows="6")
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;") &nbsp;
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(type="button", value="添加", id="success")
+                    input(type="button", value="返回列表", id="backToList")
