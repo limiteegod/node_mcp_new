@@ -17,16 +17,6 @@ html(lang="en")
                 var getCondition = function()
                 {
                     var cond = {};
-                    var gameCode = Node.one('#gameCode').val();
-                    if(gameCode)
-                    {
-                        cond.gameCode = gameCode;
-                    }
-                    var status = parseInt(Node.one("#status").val());
-                    if(status > 0)
-                    {
-                        cond.status = status;
-                    }
                     return cond;
                 };
 
