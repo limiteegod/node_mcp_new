@@ -72,6 +72,14 @@ html(lang="en")
                     });
                 });
 
+                Node.one("#deleteAll").on("click", function(){
+                    var tId = Node.one("#channelCode").val();
+                    var bodyNode = {id:tId};
+                    CurSite.sendDigest(Io, Json, "AD21", null, bodyNode, function(err, backBodyNode){
+                        alert(backBodyNode.description);
+                    });
+                });
+
             });
     body
         .bodyAdminDiv
@@ -87,6 +95,7 @@ html(lang="en")
                 .vs_grid_plain(style="width:423px;")
                     input(type="button", id="search", value="查询")
                     input(type="button", id="deleteUsed", value="删除已发送数据")
+                    input(type="button", id="deleteAll", value="删除所有")
             .clearfix(style="margin-top:8px")
                 #rst.container(style="width:423px;")
                     table
