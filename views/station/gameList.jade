@@ -50,6 +50,8 @@ html(lang="en")
                                 td(w="76") 销售提成
                                 td(w="76") 出票提成
                                 td(w="146") 出票投注站
+                                td(w="76") 单式截止
+                                td(w="76") 复式截止
                                 td(w="134") 操作
                         tbody
                             - each val in rst
@@ -58,6 +60,8 @@ html(lang="en")
                                     td=val.status.des
                                     td=val.rFactor/100 + '%'
                                     td=val.pFactor/100 + '%'
+                                    td=val.earlyStopBufferSimplex
+                                    td=val.earlyStopBufferDuplex
                                     td=val.relayToId.name
                                     td
                                         input(type="button", value="详情", class="detail", tId=val.id, gameCode=val.gameCode)
