@@ -139,8 +139,8 @@ PrintTest.prototype.printUtilEmpty = function()
                 backTicket.stubInfo = digestUtil.createUUID();
                 backTicket.paper = false;
                 backTicket.rNumber = ticket.numbers;
-                //backTicket.code = printStatus.success;
-                backTicket.code = printStatus.failure;
+                backTicket.code = printStatus.success;
+                //backTicket.code = printStatus.failure;
                 self.printP02(backTicket, function(err, p02BackBodyNode){
                     log.info(p02BackBodyNode);
                     callback(err);
