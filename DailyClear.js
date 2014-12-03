@@ -329,8 +329,10 @@ DailyClear.prototype.getTodayStartTime = function()
 DailyClear.prototype.getTimeRegion = function()
 {
     var self = this;
-    var start = self.getTodayStartTime();
-    var end = start + 24*60*60*1000;
+    //var start = self.getTodayStartTime();
+    //var end = start + 24*60*60*1000;
+    var end = self.getTodayStartTime();
+    var start = end - 24*60*60*1000;
     return {start:start, end:end};
 }
 
