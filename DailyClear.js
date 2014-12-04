@@ -167,7 +167,7 @@ DailyClear.prototype.saveToFile = function(cb)
                     content += line;
                     if(content.length >= 40000) //大于缓存大小，先写入文件
                     {
-                        self.writeToFile(name, content, function(err, data){
+                        self.writeToFile(name, suffix, content, function(err, data){
                             channelFileToSave[name] = '';
                             callback();
                         });
