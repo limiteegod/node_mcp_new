@@ -50,6 +50,8 @@ var run = function()
                 });
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_SUC_TICKET', parent:'ADMIN_SALE', name:'成功队列', url:'ticket_sucList.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_TERM_SALE', parent:'ADMIN_SALE', name:'期次报表', url:'term_saleReport.html', hasChildren:0}, [], function(err, data){
+                });
             });
             operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_STATION', name:'机构管理', url:'', hasChildren:1, parent:''}, [], function(err, data){
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_LIST_STATION', parent:'ADMIN_STATION', name:'机构列表', url:'station_list.html', hasChildren:0}, [], function(err, data){

@@ -1,0 +1,146 @@
+doctype html
+html(lang="en")
+    head
+        include ../includes/script.jade
+        script(type='text/javascript').
+            KISSY.use("io,node,json,vs-grid-table,vs-pagebar,vs-round-input,vs-window",
+                function(S, Io, Node, Json, VsGridTable, VsPagebar, VsRoundInput, VsWindow){
+                var count = parseInt(Node.one('#count').val());
+                var skip = parseInt(Node.one('#skip').val());
+                var limit = parseInt(Node.one('#limit').val());
+                var cur = parseInt(skip/limit) + 1;
+                var table = new VsGridTable('#terms', {});
+                var pageBar = new VsPagebar('#bar', {count:count, limit:limit, cur:cur, toPage:function(index){
+                    toPage(index);
+                }});
+
+                var getCondition = function()
+                {
+                    var cond = {};
+                    var gameCode = Node.one("#gameCode").val();
+                    if(gameCode)
+                    {
+                        cond.gameCode = gameCode;
+                    }
+                    var termCode = Node.one("#termCode").val();
+                    if(termCode)
+                    {
+                        cond.termCode = termCode;
+                    }
+                    var channelCode = Node.one("#channelCode").val();
+                    if(channelCode)
+                    {
+                        cond.channelCode = channelCode;
+                    }
+                    var rptType = parseInt(Node.one("#rptType").val());
+                    if(rptType > -1)
+                    {
+                        cond.rptType = rptType;
+                    }
+                    return cond;
+                };
+
+                var getSort = function()
+                {
+                    var sort = {id:-1};
+                    return sort;
+                }
+
+                var getAdd = function()
+                {
+                    var add = {};
+                    return add;
+                }
+
+                var toPage = function(index){
+                    console.log(index);
+                    var limit = parseInt(Node.one('#limit').val());
+                    var skip = (index - 1)*limit;
+                    var cond = encodeURIComponent(Json.stringify(getCondition()));
+                    var sort = encodeURIComponent(Json.stringify(getSort()));
+                    var add = encodeURIComponent(Json.stringify(getAdd()));
+                    CurSite.redirectTo(null, "term_saleReport.html?" + 'skip=' + skip + "&limit=" + limit + "&cond=" + cond + '&sort=' + sort + "&add=" + add);
+                };
+
+                Node.one("#search").on("click", function(){
+                    toPage(cur);
+                });
+            });
+    body
+        .bodyAdminDiv
+            input(type='hidden', id="count", value=count)
+            input(type='hidden', id="skip", value=skip)
+            input(type='hidden', id="limit", value=limit)
+            #tWin.container
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 游戏:
+                .vs_grid_plain(style="padding-top:4px;")
+                    select(id="gameCode")
+                        option(value="") 所有
+                        - each val in games
+                            if(val.id == cond.gameCode)
+                                option(value=val.id, selected="true")=val.name
+                            else
+                                option(value=val.id)=val.name
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 期次:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(id="termCode", type="text", value=cond.termCode)
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 类型:
+                .vs_grid_plain(style="padding-top:4px;")
+                    select(id="rptType")
+                        option(value="") 所有
+                        - each val in termReportType
+                            if(val.id == cond.rptType)
+                                option(value=val.id, selected="true")=val.des
+                            else
+                                option(value=val.id)=val.des
+                .vs_grid_plain(style="padding-top:6px;margin-left:12px;") 渠道:
+                .vs_grid_plain(style="padding-top:4px;")
+                    input(id="channelCode", type="text", value=cond.channelCode)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:423px;")
+                    input(type="button", id="search", value="查询")
+            .clearfix(style="margin-top:8px")
+                #terms.container
+                    table
+                        thead
+                            tr
+                                td(w="100") 游戏
+                                td(w="76") 期次
+                                td(w="76") 渠道
+                                td(w="76") 类型
+                                td(w="76") 中奖票数目
+                                td(w="76") 中奖票金额
+                                td(w="76") 票据奖金
+                                td(w="76") 票据税前奖金
+                                td(w="76") 未中奖票数目
+                                td(w="76") 未中奖票金额
+                                td(w="76") 中奖订单数目
+                                td(w="76") 中奖订单金额
+                                td(w="76") 订单奖金
+                                td(w="76") 订单税前奖金
+                                td(w="76") 未中奖订单数目
+                                td(w="76") 未中奖订单金额
+                                td(w="76") 操作
+                        tbody
+                            - each val in rst
+                                tr
+                                    td=val.gameCode
+                                    td=val.termCode
+                                    td=val.channelCode
+                                    td=val.rptType.des
+                                    td=val.ticketHitCount
+                                    td=val.ticketHitAmount/100
+                                    td=val.ticketHitBonus/100
+                                    td=val.ticketHitBonusBeforeTax/100
+                                    td=val.ticketNotHitCount
+                                    td=val.ticketNotHitAmount/100
+                                    td=val.orderHitCount
+                                    td=val.orderHitAmount/100
+                                    td=val.orderHitBonus/100
+                                    td=val.orderHitBonusBeforeTax/100
+                                    td=val.orderNotHitCount
+                                    td=val.orderNotHitAmount/100
+                                    td
+            .clearfix(style="margin-top:8px")
+                #bar.vs_grid_plain(style="width:600px;")
