@@ -27,7 +27,12 @@ html(lang="en")
                     var notifyPath = Node.one("#notifyPath").val();
                     var key = Node.one("#key").val();
                     var status = Node.one("#status").val();
-                    var data = {notifyIp:notifyIp, notifyPort:notifyPort, notifyPath:notifyPath, key:key, status:status};
+                    var ftpPath = Node.one("#ftpPath").val();
+                    var data = {
+                        notifyIp:notifyIp, notifyPort:notifyPort,
+                        notifyPath:notifyPath, key:key, status:status,
+                        ftpPath:ftpPath
+                    };
                     var bodyNode = {cond:cond, data:{$set:data}};
                     CurSite.sendDigest(Io, Json, "AD15", null, bodyNode, function(err, backBodyNode){
                         alert(backBodyNode.description);
@@ -51,6 +56,10 @@ html(lang="en")
                 .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 通知密钥:
                 .vs_grid_plain(style="margin-left:8px;")
                     input(id="key", type="text", value=rst.key)
+            .clearfix(style="margin-top:8px")
+                .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") 文件目录:
+                .vs_grid_plain(style="margin-left:8px;")
+                    input(id="ftpPath", type="text", value=rst.ftpPath)
             .clearfix(style="margin-top:8px")
                 .vs_grid_plain(style="width:100px;text-align:right;margin-top:4px") url:
                 .vs_grid_plain(style="margin-left:8px;")=rst.url

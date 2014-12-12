@@ -48,22 +48,42 @@ LotTest.prototype.lotT01 = function()
 LotTest.prototype.lotF01 = function(cb)
 {
     var self = this;
-    var bodyNode = {};
-    var orderNode = {gameCode:'F01', termCode:'2014001', amount:2000, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
-    var ticketsNode = [{betTypeCode:'00', amount:200, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25|15'},
-        {betTypeCode:'01', amount:1400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25,26|15'},
-        {betTypeCode:'02', amount:400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21$25,26|10'}];
-    orderNode.tickets = ticketsNode;
-    bodyNode.order = orderNode;
-    self.lot(bodyNode, function(err, backMsgNode){
-        cb(err, backMsgNode);
+    async.waterfall([
+        function(cb)
+        {
+            var bodyNode = {};
+            var orderNode = {gameCode:'F01', termCode:'2014001', amount:2000, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
+            var ticketsNode = [{betTypeCode:'00', amount:200, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25|15'},
+                {betTypeCode:'01', amount:1400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25,26|15'},
+                {betTypeCode:'02', amount:400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21$25,26|10'}];
+            orderNode.tickets = ticketsNode;
+            bodyNode.order = orderNode;
+            self.lot(bodyNode, function(err, backMsgNode){
+                cb(err);
+            });
+        },
+        function(cb)
+        {
+            var bodyNode = {};
+            var orderNode = {gameCode:'F01', termCode:'2014001', amount:2000, multiple:1, outerId:digestUtil.createUUID(), platform:"ANDROID"};
+            var ticketsNode = [{betTypeCode:'00', amount:200, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25|15'},
+                {betTypeCode:'01', amount:1400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21,25,26|15'},
+                {betTypeCode:'02', amount:400, playTypeCode:'00', multiple:1, numbers:'09,14,17,18,21$25,26|12'}];
+            orderNode.tickets = ticketsNode;
+            bodyNode.order = orderNode;
+            self.lot(bodyNode, function(err, backMsgNode){
+                cb(err);
+            });
+        }
+    ], function (err, rst) {
+        cb(err, rst);
     });
 };
 
 var lotTest = new LotTest();
 var count = 0;
 async.whilst(
-    function() { return count < 10000},
+    function() { return count < 5000},
     function(whileCb) {
         lotTest.lotF01(function(){
             count++;

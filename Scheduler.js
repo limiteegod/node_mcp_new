@@ -1,12 +1,19 @@
 var CronJob = require("cron").CronJob;
 var async = require('async');
 var moment = require("moment");
-var dc = require('./app/config/DbCenter.js');
-var prop = require('./app/config/Prop.js');
+
+
+var dc = require('mcp_dao').dc;
+
+var config = require('mcp_config');
+var prop = config.prop;
+
 var esut = require("easy_util");
 var log = esut.log;
 var dateUtil = esut.dateUtil;
 var digestUtil = esut.digestUtil;
+
+var job = require("mcp_job");
 
 var Scheduler = function(){};
 
@@ -26,7 +33,7 @@ Scheduler.prototype.start = function()
         //start web
         function(cb)
         {
-            self.checkOpen();
+            self.issueJob();
             cb(null, "success");
         }
     ], function (err, result) {
@@ -40,6 +47,17 @@ Scheduler.prototype.start = function()
         }
     });
 };
+
+/**
+ * 期次相关任务
+ */
+Scheduler.prototype.issueJob = function()
+{
+    var self = this;
+    var games = ['F01'];
+    //启动算奖任务
+    new job.CheckJob(games);
+}
 
 /**
  * 校验是否有需要开售的期次
