@@ -76,6 +76,8 @@ var run = function()
             operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_SYSTEM', name:'系统维护', url:'', hasChildren:1, parent:''}, [], function(err, data){
                 operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_SYSTEM_TERM_SEAL', parent:'ADMIN_SYSTEM', name:'期次封存', url:'term_sealList.html', hasChildren:0}, [], function(err, data){
                 });
+                operationTable.save({userType:userType.ADMINISTRATOR, id:'ADMIN_SYSTEM_TERM_LOG', parent:'ADMIN_SYSTEM', name:'期次日志', url:'term_logList.html', hasChildren:0}, [], function(err, data){
+                });
             });
             cb(null, "success");
         }

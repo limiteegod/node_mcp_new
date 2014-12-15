@@ -51,8 +51,9 @@ html(lang="en")
                 Node.all("input.detail").each(function(item){
                     item.on("click", function(){
                         var tId = Node.one(this).attr("tId");
-                        var url = "ticket_detail.html?id=" + tId;
-                        var win = new VsWindow("#tWin", {title:"票据详情", width:500, height:400, url:url, controlBt:[
+                        var channelCode = Node.one('#channelCode').val();
+                        var url = "notify_detail.html?id=" + tId + "&channelCode=" + channelCode;
+                        var win = new VsWindow("#tWin", {title:"通知详情", width:640, height:480, url:url, controlBt:[
                             {name:'关闭', cb:function(err, data){
                                 return true;
                             }}
@@ -116,5 +117,6 @@ html(lang="en")
                                     td=val.status.des
                                     td=val.createTime
                                     td
+                                        input(type="button", value="详情", class="detail", tId=val._id)
             .clearfix(style="margin-top:8px")
                 #bar.vs_grid_plain(style="width:600px;")
