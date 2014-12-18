@@ -110,7 +110,7 @@ var handle = function(id, cb)
         function(scheme, order, tickets, cb)
         {
             delete order.printTime;
-            delete order.sysTakeTime;
+            delete order.takeAwayTime;
 
             var now = new Date();
             order.id = digestUtil.createUUID();
