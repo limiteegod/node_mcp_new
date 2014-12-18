@@ -97,33 +97,42 @@ var handle = function(id, cb)
                 }
             });
         },
-        //find the tickets
-        function(scheme, order, cb)
+        ,
+        //find the new term order
+        function(scheme, oldTermOrder, cb)
         {
-            var cond = {orderId:order.id};
+            var cond = {schemeId:scheme.id, termCode:nextTermCode};
+            oTable.findOne(cond, {}, [], function(err, data){
+                if(err)
+                {
+                    cb(err, data);
+                }
+                else
+                {
+                    if(data)
+                    {
+                        cb(err, scheme, oldTermOrder, data);
+                    }
+                    else
+                    {
+                        cb("找不到上一期的订单");
+                    }
+                }
+            });
+        },
+        //find the tickets
+        function(scheme, oldTermOrder, newTermOrder, cb)
+        {
+            var cond = {orderId:oldTermOrder.id};
             var cursor = tTable.find(cond, {}, []);
             cursor.toArray(function(err, data){
-                cb(err, scheme, order, data);
+                cb(err, scheme, newTermOrder, data);
             });
         },
         //create the new order and tickets
         function(scheme, order, tickets, cb)
         {
-            delete order.printTime;
-            delete order.takeAwayTime;
-
             var now = new Date();
-            order.id = digestUtil.createUUID();
-            order.acceptTime = now;
-            order.createTime = now;
-            order.bonus = 0;
-            order.bonusBeforeTax = 0;
-            order.finishedTicketCount = 0;
-            order.printCount = 0;
-            order.printFailCount = 0;
-            order.status = orderStatus.waiting_print;
-            order.termCode = nextTermCode;
-            order.version = 0;
 
             for(var key in tickets)
             {
@@ -143,16 +152,14 @@ var handle = function(id, cb)
                 ticket.finishedCount = 0;
                 delete ticket.printTime;
                 delete ticket.sysTakeTime;
+                delete ticket.termIndexDeadline;
             }
             cb(null, scheme, order, tickets);
         },
         //save the order
         function(scheme, order, tickets, cb)
         {
-            log.info(order);
-            oTable.save(order, [], function(err, data){
-                cb(err, scheme, order, tickets);
-            });
+            cb(null, scheme, order, tickets);
         },
         //save the tickets
         function(scheme, order, tickets, cb)
