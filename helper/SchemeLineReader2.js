@@ -97,7 +97,6 @@ var handle = function(id, cb)
                 }
             });
         },
-        ,
         //find the new term order
         function(scheme, oldTermOrder, cb)
         {
