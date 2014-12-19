@@ -20,7 +20,7 @@ var mgKvService = service.kvSer;
 
 var handle = function(id, cb)
 {
-    var collection = dc.mg.pool.getConn().conn.collection("prize_order_prized_F01_2014147");
+    var collection = dc.mg.pool.getConn().conn.collection("check_scheme_follow_F01_2014147");
     async.waterfall([
         //find scheme
         function(cb)
@@ -47,15 +47,12 @@ async.waterfall([
     //start web
     function(cb)
     {
-        lineReader.eachLine('/data/app/lorder.txt', function(line, last, callback) {
+        lineReader.eachLine('/data/app/scheme.txt', function(line, last, callback) {
             var strArray = line.split(',');
             var obj = {
                 _id:strArray[0],
-                customerId:strArray[1],
-                stationId:strArray[2],
-                type:parseInt(strArray[3]),
-                bonus:parseInt(strArray[4]),
-                schemeType:parseInt(strArray[5])
+                bonus:parseInt(strArray[1]),
+                bonusBeforeTax:parseInt(strArray[2])
             }
             log.info(obj);
             handle(obj, function(err, data){
