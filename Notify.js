@@ -151,6 +151,7 @@ Notify.prototype.sendMsg = function(options, msg, tryCount, cb)
     notifyUtil.send(options, msg, function(err, data){
         if(err)
         {
+            log.error(err);
             tryCount++;
             if(tryCount >= 3)
             {
@@ -163,6 +164,7 @@ Notify.prototype.sendMsg = function(options, msg, tryCount, cb)
         }
         else
         {
+            log.info(data);
             cb(err, data);
         }
     });
