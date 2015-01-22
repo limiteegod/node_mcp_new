@@ -14,7 +14,15 @@ var notifyUtil = mcpUtil.notifyUtil;
 var config = require('mcp_config');
 var ec = config.ec;
 
-var Notify = function(){};
+var Notify = function(){
+    var self = this;
+
+    //模块内部错误码
+    self.ec = {
+        E0001:{code:"0001", description:'没有可发送的消息'},
+        E0002:{code:"0002", description:'缺少通知配置'}
+    };
+};
 
 /**
  *
@@ -66,8 +74,13 @@ Notify.prototype.sendNotify = function()
             function(configs, cb)
             {
                 async.eachSeries(configs, function(config, callback) {
-                    self.sendUntilEmpty(config);
-                    callback();
+                    self.sendUntilEmpty(config, function(err, data){
+                        if(err)
+                        {
+                            log.error(err);
+                        }
+                        callback();
+                    });
                 }, function(err){
                     cb(null, "finished...............");
                 });
@@ -83,91 +96,101 @@ Notify.prototype.sendNotify = function()
 /**
  * 发送消息，直到为空
  */
-Notify.prototype.sendUntilEmpty = function(config)
+Notify.prototype.sendUntilEmpty = function(config, cb)
 {
     var self = this;
     var colName = 'notify_queen_' + config._id;
     var table = dc.mg.getConn().collection(colName);
+
+    var options = {
+        hostname: config.notifyIp,
+        port: config.notifyPort,
+        path: config.notifyPath,
+        method: 'POST'
+    };
+
     async.waterfall([
-        //从队列中取消息
+        //校验是否有通知地址配置
         function(cb)
         {
-            table.findAndRemove({}, {}, [], function(err, data){
-                if(err)
-                {
-                    cb(err);
-                    return;
-                }
-                if(!data)
-                {
-                    cb("no msg to send...");
-                    return;
-                }
-                cb(null, data);
-            });
+            if(config.notifyIp)
+            {
+                cb(null);
+            }
+            else
+            {
+                cb(self.ec.E0002);
+            }
         },
-        //发送消息
-        function(msgObj, cb)
+        //从队列中取消息，并进行发送
+        function(cb)
         {
-            var options = {
-                hostname: config.notifyIp,
-                port: config.notifyPort,
-                path: config.notifyPath,
-                method: 'POST'
-            };
-            self.sendMsg(options, msgObj.msg, 0, function(err, data){
-                cb(err, data);
-            });
+            var hasNext = true;
+            async.whilst(
+                function () { return hasNext;},
+                function (callback) {
+                    table.findAndRemove({}, {}, [], function(err, data){
+                        if(err)
+                        {
+                            callback(err);
+                            return;
+                        }
+                        if(data)
+                        {
+                            self.sendMsg(options, data.msg, function(err, data){
+                                callback(err);
+                            });
+                        }
+                        else
+                        {
+                            callback();
+                            hasNext = false;
+                        }
+                    });
+                },
+                function (err) {
+                    cb(err);
+                }
+            );
         }
     ], function (err, result) {
-        if(err)
-        {
-            log.info(err);
-            if(err == ec.E4002)
-            {
-                self.sendUntilEmpty(config);
-            }
-        }
-        else
-        {
-            self.sendUntilEmpty(config);
-        }
+        cb(err, result);
     });
 }
 
 /**
  * 发送单个消息
  */
-Notify.prototype.sendMsg = function(options, msg, tryCount, cb)
+Notify.prototype.sendMsg = function(options, msg, cb)
 {
     var self = this;
-    if(!options.hostname)
-    {
-        cb(ec.E4002);
-        return;
-    }
-    log.info('第' + (tryCount + 1) + "次发送:");
-    log.info(msg);
-    notifyUtil.send(options, msg, function(err, data){
-        if(err)
-        {
-            log.error(err);
-            tryCount++;
-            if(tryCount >= 3)
-            {
-                cb(err, data);
-            }
-            else
-            {
-                self.sendMsg(options, msg, tryCount, cb);
-            }
+    var tryCount = 0;
+    async.whilst(
+        function () { return tryCount < 3;},
+        function (callback) {
+            notifyUtil.send(options, msg, function(err, data){
+                tryCount++;
+                if(err)
+                {
+                    log.error(err);
+                    log.error('第' + tryCount + "次发送消息失败.");
+                    log.error(options);
+                    log.error(msg);
+                }
+                else
+                {
+                    log.info('第' + tryCount + "次发送消息成功.");
+                    log.info(options);
+                    log.info(msg);
+                    tryCount = 3;   //会结束循环
+                }
+                callback();
+            });
+        },
+        function (err) {
+            cb(err);
         }
-        else
-        {
-            log.info(data);
-            cb(err, data);
-        }
-    });
+    );
 }
 
 var notify = new Notify();
