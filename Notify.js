@@ -59,6 +59,7 @@ Notify.prototype.sendNotify = function()
 {
     var self = this;
     self.sendJob = new CronJob('*/10 * * * * *', function () {
+        log.info("扫描通知的心跳信息.");
         async.waterfall([
             //查找所有的要发送通知的渠道
             function(cb)
@@ -168,18 +169,21 @@ Notify.prototype.sendMsg = function(options, msg, cb)
     async.whilst(
         function () { return tryCount < 3;},
         function (callback) {
+            var start = new Date().getTime();
             notifyUtil.send(options, msg, function(err, data){
                 tryCount++;
+                var end = new Date().getTime();
+                var used = end - start;
                 if(err)
                 {
                     log.error(err);
-                    log.error('第' + tryCount + "次发送消息失败.");
+                    log.error('第' + tryCount + "次发送消息失败,用时" + used + "ms.");
                     log.error(options);
                     log.error(msg);
                 }
                 else
                 {
-                    log.info('第' + tryCount + "次发送消息成功.");
+                    log.info('第' + tryCount + "次发送消息成功,用时" + used + "ms.");
                     log.info(options);
                     log.info(msg);
                     tryCount = 3;   //会结束循环
